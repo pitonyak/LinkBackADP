@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BackupSetDialog</class>
+ <widget class="QDialog" name="BackupSetDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1295</width>
+    <height>692</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QLineEdit" name="fromRootLineEdit">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>100</y>
+     <width>1061</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Root location from which the backup begins.</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="toRootLineEdit">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>150</y>
+     <width>1061</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Root location to which the backup is written.</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>190</y>
+     <width>51</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Filters:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>490</y>
+     <width>61</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Criteria:</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="insertFilterButton">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>250</y>
+     <width>61</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Insert new filter at the currently selected filter.</string>
+   </property>
+   <property name="text">
+    <string>Insert</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="downFilterButton">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>340</y>
+     <width>61</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Move the current filter down.</string>
+   </property>
+   <property name="text">
+    <string>Down</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="upFilterButton">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>310</y>
+     <width>61</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Move the current filter up.</string>
+   </property>
+   <property name="text">
+    <string>Up</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="delFilterButton">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>280</y>
+     <width>61</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Delete the selected filter.</string>
+   </property>
+   <property name="text">
+    <string>Delete</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="insertCriteriaButton">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>550</y>
+     <width>61</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Insert</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="upCriteriaButton">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>610</y>
+     <width>61</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Up</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="deleteCriteriaButton">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>580</y>
+     <width>61</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Delete</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="downCriteriaButton">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>640</y>
+     <width>61</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Down</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="cancelButton">
+   <property name="geometry">
+    <rect>
+     <x>1190</x>
+     <y>70</y>
+     <width>85</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Cancel</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="okButton">
+   <property name="geometry">
+    <rect>
+     <x>1190</x>
+     <y>30</y>
+     <width>85</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>OK</string>
+   </property>
+  </widget>
+  <widget class="QTableView" name="filtersTableView">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>190</y>
+     <width>1181</width>
+     <height>301</height>
+    </rect>
+   </property>
+   <property name="selectionMode">
+    <enum>QAbstractItemView::SingleSelection</enum>
+   </property>
+   <attribute name="horizontalHeaderDefaultSectionSize">
+    <number>200</number>
+   </attribute>
+  </widget>
+  <widget class="QTableView" name="criteriaTableView">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>510</y>
+     <width>1181</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <attribute name="horizontalHeaderDefaultSectionSize">
+    <number>150</number>
+   </attribute>
+  </widget>
+  <widget class="QPushButton" name="fromButton">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>100</y>
+     <width>71</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Select the root location from which the backup begins.</string>
+   </property>
+   <property name="text">
+    <string>From</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="toButton">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>150</y>
+     <width>71</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Select the root location to which the backup is written.</string>
+   </property>
+   <property name="text">
+    <string>To</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="hashComboBox">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>20</y>
+     <width>171</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Select the hash method.</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="saveButton">
+   <property name="geometry">
+    <rect>
+     <x>1190</x>
+     <y>150</y>
+     <width>85</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="loadButton">
+   <property name="geometry">
+    <rect>
+     <x>1190</x>
+     <y>110</y>
+     <width>85</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Load</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="configFileLineEdit">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>60</y>
+     <width>1061</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Root location to which the backup is written.</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>60</y>
+     <width>71</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Config File:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>20</y>
+     <width>51</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Hash:</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="copyFilterButton">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>220</y>
+     <width>61</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Move the current filter down.</string>
+   </property>
+   <property name="text">
+    <string>Copy</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="copyCriteriaButton">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>520</y>
+     <width>61</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Move the current filter down.</string>
+   </property>
+   <property name="text">
+    <string>Copy</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>okButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>696</x>
+     <y>690</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>749</x>
+     <y>574</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cancelButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>803</x>
+     <y>688</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>832</x>
+     <y>508</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>delFilterButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>delFilter()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>34</x>
+     <y>200</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>769</x>
+     <y>55</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>downFilterButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>downFilter()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>57</x>
+     <y>264</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>84</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>upFilterButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>upFilter()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>73</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>41</x>
+     <y>330</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>insertCriteriaButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>insertCriteria()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>51</x>
+     <y>508</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>238</x>
+     <y>460</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>insertFilterButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>insertFilter()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>53</x>
+     <y>171</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>595</x>
+     <y>90</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>deleteCriteriaButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>delCriteria()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>70</x>
+     <y>545</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>468</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>downCriteriaButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>downCriteria()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>44</x>
+     <y>602</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>249</x>
+     <y>655</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>upCriteriaButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>upCriteria()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>29</x>
+     <y>574</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>134</x>
+     <y>685</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>hashComboBox</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>selectHashMethod(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1148</x>
+     <y>32</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1032</x>
+     <y>68</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fromButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>selectFromRoot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>45</x>
+     <y>31</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>922</x>
+     <y>11</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>selectToRoot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>67</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>870</x>
+     <y>24</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>saveButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>saveBackupSet()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>86</x>
+     <y>81</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>920</x>
+     <y>142</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>loadButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>loadBackupSet()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>78</x>
+     <y>40</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>901</x>
+     <y>103</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>copyFilterButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>copyFilter()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>50</x>
+     <y>233</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>647</x>
+     <y>345</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>copyCriteriaButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupSetDialog</receiver>
+   <slot>copyCriteria()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>57</x>
+     <y>523</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>67</x>
+     <y>403</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>delFilter()</slot>
+  <slot>upFilter()</slot>
+  <slot>downFilter()</slot>
+  <slot>insertFilter()</slot>
+  <slot>insertCriteria()</slot>
+  <slot>delCriteria()</slot>
+  <slot>upCriteria()</slot>
+  <slot>downCriteria()</slot>
+  <slot>selectHashMethod(QString)</slot>
+  <slot>selectFromRoot()</slot>
+  <slot>selectToRoot()</slot>
+  <slot>saveBackupSet()</slot>
+  <slot>loadBackupSet()</slot>
+  <slot>copyFilter()</slot>
+  <slot>copyCriteria()</slot>
+ </slots>
+</ui>
