@@ -1,13 +1,13 @@
 
 <BackupSet version="1">
-    <From>/home/andy</From>
-    <To>/media/realcrypt6/LinkBackADP/andy</To>
+    <From>/home/andy/VMWare</From>
+    <To>/external/LinkBackADP/VMWare</To>
     <Hash>SHA1</Hash>
     <Filters>
         <Filter>
             <CompareType>Equal</CompareType>
             <CompareField>Name</CompareField>
-            <Value>tmp,temp,cache,VMWare,QtSDK,.cache,.ccache</Value>
+            <Value>tmp,temp,cache,caches,QtSDK</Value>
             <CaseSensitive>False</CaseSensitive>
             <Invert>False</Invert>
             <Accept>False</Accept>
@@ -18,33 +18,11 @@
         <Filter>
             <CompareType>FileSpec</CompareType>
             <CompareField>Name</CompareField>
-            <Value>*~,*.bak,*delme*,*.iso</Value>
+            <Value>*~,*.bak,*delme*,*.log</Value>
             <CaseSensitive>False</CaseSensitive>
             <Invert>False</Invert>
             <Accept>False</Accept>
             <Files>True</Files>
-            <MultiValued>True</MultiValued>
-            <Directories>True</Directories>
-        </Filter>
-        <Filter>
-            <CompareType>Equal</CompareType>
-            <CompareField>Name</CompareField>
-            <Value>.thunderbird,.nerorc,.komodo,.doom3,.mozilla</Value>
-            <CaseSensitive>False</CaseSensitive>
-            <Invert>False</Invert>
-            <Accept>True</Accept>
-            <Files>False</Files>
-            <MultiValued>True</MultiValued>
-            <Directories>True</Directories>
-        </Filter>
-        <Filter>
-            <CompareType>FileSpec</CompareType>
-            <CompareField>Name</CompareField>
-            <Value>*openoffice*,.bibble*</Value>
-            <CaseSensitive>False</CaseSensitive>
-            <Invert>False</Invert>
-            <Accept>True</Accept>
-            <Files>False</Files>
             <MultiValued>True</MultiValued>
             <Directories>True</Directories>
         </Filter>

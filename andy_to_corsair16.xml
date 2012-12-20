@@ -1,13 +1,13 @@
 
 <BackupSet version="1">
     <From>/home/andy</From>
-    <To>/media/realcrypt7/LinkBackADP/andy</To>
+    <To>/run/media/andy/coursair16/LinkBackADP/andy</To>
     <Hash>SHA1</Hash>
     <Filters>
         <Filter>
             <CompareType>Equal</CompareType>
             <CompareField>Name</CompareField>
-            <Value>tmp,temp,cache,VMWare,QtSDK,NetworkTestData,MUSIC,Downloads,Komodo-Edit-7,LearningWCF,cxoffice</Value>
+            <Value>tmp,temp,cache,VMWare,QtSDK,NetworkTestData,MUSIC,Downloads,Komodo-Edit-7,LearningWCF,cxoffice,OO_Source</Value>
             <CaseSensitive>False</CaseSensitive>
             <Invert>False</Invert>
             <Accept>False</Accept>
