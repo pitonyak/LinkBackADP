@@ -4,7 +4,7 @@
 #include "backupset.h"
 #include "simpleloggerroutinginfo.h"
 
-#include <QtGui/QMainWindow>
+#include <QMainWindow>
 #include <QMutex>
 
 namespace Ui
@@ -19,17 +19,19 @@ class LinkBackupADP : public QMainWindow
     Q_OBJECT
 
 public:
-    LinkBackupADP(QWidget *parent = 0);
+    explicit LinkBackupADP(QWidget *parent = 0);
     ~LinkBackupADP();
 
     void cancelBackup();
 
 public slots:
-  void on_actionExit_activated();
-  void on_actionEditBackup_activated();
-  void on_actionStartBackup_activated();
-  void on_actionCancelBackup_activated();
   void formattedMessage(const QString& formattedMessage, SimpleLoggerRoutingInfo::MessageCategory category);
+
+private slots:
+  void on_actionExit_triggered();
+  void on_actionEditBackup_triggered();
+  void on_actionStartBackup_triggered();
+  void on_actionCancelBackup_triggered();
 
 private:
     Ui::LinkBackupADP *ui;

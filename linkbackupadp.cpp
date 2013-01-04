@@ -1,3 +1,4 @@
+#include <QtPrintSupport/QPrinter>
 #include "linkbackupadp.h"
 #include "ui_linkbackupadp.h"
 #include "linkbackupthread.h"
@@ -31,7 +32,7 @@ LinkBackupADP::~LinkBackupADP()
   delete ui;
 }
 
-void LinkBackupADP::on_actionExit_activated()
+void LinkBackupADP::on_actionExit_triggered()
 {
   QSettings settings;
   settings.setValue("mainWindowGeometry", saveGeometry());
@@ -39,7 +40,7 @@ void LinkBackupADP::on_actionExit_activated()
   QApplication::quit();
 }
 
-void LinkBackupADP::on_actionEditBackup_activated()
+void LinkBackupADP::on_actionEditBackup_triggered()
 {
   BackupSetDialog dlg(m_backupSet, this);
   dlg.setConfigFilePath(m_configFilePath);
@@ -49,7 +50,7 @@ void LinkBackupADP::on_actionEditBackup_activated()
   }
 }
 
-void LinkBackupADP::on_actionStartBackup_activated()
+void LinkBackupADP::on_actionStartBackup_triggered()
 {
   cancelBackup();
   if (m_backupThread != 0) {
@@ -60,7 +61,7 @@ void LinkBackupADP::on_actionStartBackup_activated()
   m_backupThread->start();
 }
 
-void LinkBackupADP::on_actionCancelBackup_activated()
+void LinkBackupADP::on_actionCancelBackup_triggered()
 {
   cancelBackup();
 }

@@ -4,6 +4,7 @@
 #include "simpleloggeradp.h"
 #include <QFile>
 
+
 static CopyLinkUtil globalCopyLinkUtil;
 
 SimpleLoggerADP logger;

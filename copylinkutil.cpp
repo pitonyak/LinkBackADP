@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
+#include <unistd.h>  // Contains the "link" method.
 
 CopyLinkUtil::CopyLinkUtil() : m_bytesCopied(0), m_bytesLinked(0), m_bytesHashed(0), m_bytesCopiedHashed(0), m_millisCopied(0), m_millisLinked(0), m_millisHashed(0), m_millisCopiedHashed(0), m_buffer(nullptr), m_bufferSize(0), m_hashGenerator(nullptr), m_timer(nullptr), m_cancelRequested(false), m_useHardLink(true)
 {

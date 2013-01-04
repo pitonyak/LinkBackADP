@@ -130,7 +130,7 @@ const DBFileEntry* DBFileEntries::findEntry(const CriteriaForFileMatch& criteria
       if (!::getCopyLinkUtil().generateHash(matchInitialPath + "/" + entry->getPath()))
       {
         ERROR_MSG(QString(QObject::tr("Error generating hash for %1")).arg(entry->getPath()), 1);
-        return false;
+        return nullptr;
       }
       entry->setHash(getCopyLinkUtil().getLastHash());
     }
