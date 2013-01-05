@@ -67,8 +67,12 @@ public:
   bool isCancelRequested() const;
   void setCancelRequested(bool cancelRequested);
 
+  /*! \brief Get a copy of the copy statistics as a string suitable for display to the user. */
   QString getStats() const;
   QString getBPS(qint64 bytesCopied, qint64 millis) const;
+
+  /*! \brief Reset the stats for a new backup. */
+  void resetStats();
 
   bool isUseHardLink() const;
   bool isUseSymbolicLink() const;

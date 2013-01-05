@@ -24,9 +24,25 @@ class SimpleLoggerRoutingInfo : public QObject
   Q_ENUMS(MessageRouting)
 
 public:
-  enum MessageCategory  {TraceMessage, DebugMessage, InformationMessage, WarningMessage, ErrorMessage};
+  enum MessageCategory  {
+      NoCategory=0x0,
+      TraceMessage = 0x1,
+      DebugMessage = 0x2,
+      InformationMessage = 0x4,
+      WarningMessage = 0x8,
+      ErrorMessage = 0x10,
+      UserMessage = 0x11
+  };
+  Q_DECLARE_FLAGS(MessageCategorys, MessageCategory)
+
   enum MessageComponent {DateTimeComponent, MessageTypeComponent, MessageTextComponent, MessageLocationComponent, MessageText};
-  enum MessageRouting   {RouteFile, RouteEmit, RouteQDebug};
+
+  enum MessageRouting   {
+      RouteFile = 0x1,
+      RouteEmit = 0x2,
+      RouteQDebug = 0x4
+  };
+  Q_DECLARE_FLAGS(MessageRoutings, MessageRouting)
 
   explicit SimpleLoggerRoutingInfo(QObject *parent = 0);
   SimpleLoggerRoutingInfo(const SimpleLoggerRoutingInfo& obj);
@@ -41,8 +57,10 @@ public:
    *  \return True if the routing is explicitly turned on, or for an unknown type.
    */
   bool isRoutingOn(MessageRouting messageRouting) const;
-  void setRoutingOn(MessageRouting messageRouting);
-  void setRoutingOff(MessageRouting messageRouting);
+  void setRoutingOn(MessageRoutings messageRoutings) { setRouting(messageRoutings, true); }
+  void setRoutingOff(MessageRoutings messageRoutings) { setRouting(messageRoutings, false); }
+  void setRouting(MessageRoutings messageRoutings, bool state);
+
 
   void setCategoryLevel(MessageCategory category, int level);
 
@@ -102,6 +120,9 @@ private:
 
   static SimpleLoggerRoutingInfo o;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(SimpleLoggerRoutingInfo::MessageCategorys)
+Q_DECLARE_OPERATORS_FOR_FLAGS(SimpleLoggerRoutingInfo::MessageRoutings)
 
 inline QXmlStreamWriter& operator<<(QXmlStreamWriter& writer, SimpleLoggerRoutingInfo& info)
 {

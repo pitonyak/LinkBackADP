@@ -4,7 +4,6 @@
 #include "simpleloggeradp.h"
 #include <QFile>
 
-
 static CopyLinkUtil globalCopyLinkUtil;
 
 SimpleLoggerADP logger;
@@ -32,13 +31,13 @@ int main(int argc, char *argv[])
   routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageTextComponent, "");
 
   //routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::TraceMessage, 1);
-  //routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::DebugMessage, 1);
+  routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::DebugMessage, 1);
   //routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::InformationMessage, 1);
+  routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::UserMessage, 1);
   routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::WarningMessage, 1);
   routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::ErrorMessage, 1);
-  //routing_01.setRoutingOn(SimpleLoggerRoutingInfo::RouteFile);
+
   routing_01.setRoutingOn(SimpleLoggerRoutingInfo::RouteEmit);
-  //routing_01.setRoutingOn(SimpleLoggerRoutingInfo::RouteQDebug);
   logger.addRouting(routing_01);
 
   // Messages for the log file and also for the console (through QDebug).
@@ -51,18 +50,15 @@ int main(int argc, char *argv[])
   routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " | ");
   routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageTextComponent, "");
 
-  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::TraceMessage, 1);
-  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::DebugMessage, 1);
-  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::InformationMessage, 1);
+  //routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::TraceMessage, 1);
+  //routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::DebugMessage, 1);
+  //routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::InformationMessage, 1);
   routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::WarningMessage, 1);
   routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::ErrorMessage, 1);
-  routing_02.setRoutingOn(SimpleLoggerRoutingInfo::RouteFile);
-  //routing_02.setRoutingOn(SimpleLoggerRoutingInfo::RouteEmit);
-  routing_02.setRoutingOn(SimpleLoggerRoutingInfo::RouteQDebug);
+  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::UserMessage, 1);
+  routing_02.setRoutingOn(SimpleLoggerRoutingInfo::RouteFile | SimpleLoggerRoutingInfo::RouteQDebug);
 
   logger.addRouting(routing_02);
-
-
 
   QFile file3("/andrew0/home/andy/logger3.xml");
   if (file3.open(QIODevice::WriteOnly)) {
@@ -77,7 +73,7 @@ int main(int argc, char *argv[])
   QCoreApplication::setOrganizationDomain("pitonyak.org");
   QCoreApplication::setOrganizationName("Pitonyak");
   QCoreApplication::setApplicationName("Link Backup ADP");
-  QCoreApplication::setApplicationVersion("1.0.0");
+  QCoreApplication::setApplicationVersion("1.0.1");
   LinkBackupADP w;
   qRegisterMetaType<SimpleLoggerRoutingInfo::MessageCategory>( "SimpleLoggerRoutingInfo::MessageCategory" );
 
@@ -103,7 +99,7 @@ void warnMessage(const QString& message, const QString& location, const QDateTim
   logger.receiveMessage(message, location, dateTime, SimpleLoggerRoutingInfo::WarningMessage, level);
 }
 
-void informationMessage(const QString& message, const QString& location, const QDateTime& dateTime, int level)
+void infoMessage(const QString& message, const QString& location, const QDateTime& dateTime, int level)
 {
   logger.receiveMessage(message, location, dateTime, SimpleLoggerRoutingInfo::InformationMessage, level);
 }
@@ -116,4 +112,9 @@ void traceMessage(const QString& message, const QString& location, const QDateTi
 void debugMessage(const QString& message, const QString& location, const QDateTime& dateTime, int level)
 {
   logger.receiveMessage(message, location, dateTime, SimpleLoggerRoutingInfo::DebugMessage, level);
+}
+
+void userMessage(const QString& message, const QString& location, const QDateTime& dateTime, int level)
+{
+    logger.receiveMessage(message, location, dateTime, SimpleLoggerRoutingInfo::UserMessage, level);
 }

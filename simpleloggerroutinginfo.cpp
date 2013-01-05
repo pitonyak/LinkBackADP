@@ -79,14 +79,19 @@ bool SimpleLoggerRoutingInfo::isRoutingOn(MessageRouting messageRouting) const
   return m_routing->value(messageRouting, true);
 }
 
-void SimpleLoggerRoutingInfo::setRoutingOn(MessageRouting messageRouting)
+void SimpleLoggerRoutingInfo::setRouting(MessageRoutings messageRoutings, bool state)
 {
-  m_routing->insert(messageRouting, true);
-}
-
-void SimpleLoggerRoutingInfo::setRoutingOff(MessageRouting messageRouting)
-{
-  m_routing->insert(messageRouting, false);
+    const QMetaObject* metaObj = metaObject();
+    QMetaEnum metaEnum = metaObj->enumerator(metaObj->indexOfEnumerator("MessageRouting"));
+    m_routing = new QMap<MessageRouting, bool>();
+    for (int i=0; i<metaEnum.keyCount(); ++i)
+    {
+      MessageRouting messageRouting = static_cast<MessageRouting>(metaEnum.value(i));
+      if ((messageRoutings & messageRouting) == messageRouting)
+      {
+        m_routing->insert(messageRouting, state);
+      }
+    }
 }
 
 void SimpleLoggerRoutingInfo::setCategoryLevel(MessageCategory category, int level)

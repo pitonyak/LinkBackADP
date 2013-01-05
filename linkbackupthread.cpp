@@ -53,7 +53,7 @@ void LinkBackupThread::run()
     ERROR_MSG(QString(tr("Failed to setup hash generator.")), 0);
     return;
   }
-  ::getCopyLinkUtil().setCancelRequested(false);
+  ::getCopyLinkUtil().resetStats();
 
   setOldEntries(nullptr);
   setCurrentEntries(new DBFileEntries());

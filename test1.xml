@@ -1,7 +1,7 @@
 
 <BackupSet version="1">
-    <From>/andrew0/home/andy/Devsrc/cpp/Qt/Projects/LinkBackADP/002/LinkBackADP/tst</From>
-    <To>/andrew0/home/andy/Devsrc/cpp/Qt/Projects/LinkBackADP/002/TestBackups</To>
+    <From>/andrew0/home/andy/Devsrc/cpp/Qt/Projects/LinkBackADP/tmp/tst_in</From>
+    <To>/andrew0/home/andy/Devsrc/cpp/Qt/Projects/LinkBackADP/tmp/tst_out</To>
     <Hash>SHA1</Hash>
     <Filters>
         <Filter>

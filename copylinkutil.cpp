@@ -50,6 +50,20 @@ CopyLinkUtil::~CopyLinkUtil()
   }
 }
 
+void CopyLinkUtil::resetStats()
+{
+    m_bytesCopied = 0;
+    m_bytesLinked = 0;
+    m_bytesHashed = 0;
+    m_bytesCopiedHashed =0;
+    m_millisCopied = 0;
+    m_millisLinked = 0;
+    m_millisHashed = 0;
+    m_millisCopiedHashed = 0;
+    m_timer = new QElapsedTimer();
+    m_cancelRequested = false;
+}
+
 qint64 CopyLinkUtil::getBytesCopied() const
 {
   return m_bytesCopied;
@@ -212,6 +226,8 @@ bool CopyLinkUtil::copyFileGenerateHash(const QString& copyFromPath, const QStri
 
 bool CopyLinkUtil::internalCopyFile(const QString& copyFromPath, const QString& copyToPath, bool doHash)
 {
+  qDebug(qPrintable(QString("Ready to read from : %1").arg(copyFromPath)));
+  qDebug(qPrintable(QString("Ready to write to  : %1").arg(copyToPath)));
   QFile fileToRead(copyFromPath);
 
   QFile fileToWrite(copyToPath);
@@ -239,6 +255,7 @@ bool CopyLinkUtil::internalCopyFile(const QString& copyFromPath, const QString& 
 
   if (isCancelRequested())
   {
+    qDebug("Cancel Requested, ending copy.");
     return false;
   }
 
@@ -268,9 +285,11 @@ bool CopyLinkUtil::internalCopyFile(const QString& copyFromPath, const QString& 
       m_hashGenerator->addData(m_buffer, numRead);
     }
     numRead = fileToRead.read(m_buffer, m_bufferSize);
+
   }
   if (fileToRead.error() != QFile::NoError || fileToWrite.error() != QFile::NoError || isCancelRequested())
   {
+    qDebug(qPrintable(QString("Removing file because error encountered : %1").arg(copyToPath)));
     fileToWrite.close();
     fileToRead.close();
     fileToWrite.remove();
