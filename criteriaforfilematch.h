@@ -5,6 +5,18 @@
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 
+//**************************************************************************
+//! Represents criteria used to determine if two files match.
+/*!
+ * This object represents criteria such as compare the file name and file size of two files.
+ * This object specifies the criteria, but does not perform the comparison.
+ * Usually, more than one criteria is set; for example, file size and file hash
+ *
+ *  This routine is Copyright (c) by Andrew Pitonyak, and may be used
+ *  without restrictions or renumerations. I make no statement of correctness.
+ ***************************************************************************/
+
+
 class CriteriaForFileMatch : public QObject
 {
   Q_OBJECT

@@ -39,11 +39,9 @@ public:
     /*! \brief Empty all lists and set all strings to be empty. */
     void clear();
 
-    /*! \brief Returns the flags used to describe the item identified by the index.
+    /*! \brief Returns the "FromPath", which is the source of the backup.
      *
-     *  Flags determine whether the item can be checked, edited, and selected.
-     *  \param [in] index Identifies the item of interest based on a row and column.
-     *  \return Flags that apply to the item specified by the index.
+     *  \return The path which is the source of the backup.
      */
     const QString& getFromPath() const;
 
@@ -53,9 +51,9 @@ public:
      */
     void setFromPath(const QString& fromPath);
 
-    /*! \brief Get the path that is backed-up.
+    /*! \brief Get the path to which the back-up is stored.
      *
-     *  \return Path that is backed-up.
+     *  \return Path to which the back-up is stored.
      */
     const QString& getToPath() const;
 
@@ -81,28 +79,28 @@ public:
 
     /*! \brief Write the data to the stream in a manner suitable for saving.
      *
-     *  \param [in] writer XML stream writer to which the data is written.
+     *  \param [in,out] writer XML stream writer to which the data is written.
      *  \return Reference to the XML stream writer.
      */
     QXmlStreamWriter& operator<<(QXmlStreamWriter& writer) const;
 
     /*! \brief Read data from the stream.
      *
-     *  \param [in] reader XML stream reader from which the data is read.
+     *  \param [in,out] reader XML stream reader from which the data is read.
      *  \return Reference to the XML stream writer.
      */
     QXmlStreamReader& operator>>(QXmlStreamReader& reader);
 
-    /*! \brief Read data from the stream.
+    /*! \brief Read XML configuration file to configure this object.
      *
-     *  \param [in] reader XML stream reader from which the data is read.
+     *  \param [in] Full path to the XML file to read.
      *  \return True if no errors are encountered.
      */
     bool readFile(const QString& fullPath);
 
-    /*! \brief Write the data to the stream in a manner suitable for saving.
+    /*! \brief Write configuration data to the file.
      *
-     *  \param [in] writer XML stream writer to which the data is written.
+     *  \param [in] Full path to the XML file to write.
      *  \return True if successful.
      */
     bool writeFile(const QString& fullPath);
@@ -112,7 +110,7 @@ public:
 
     /*! \brief Get a reference to the collection of filters used to determine if a file or directory is used in the backup.
      *
-     *  \return Refernece to the filters.
+     *  \return Reference to the filters.
      */
     const QList<LinkBackFilter>& getFilters() const;
 
@@ -121,10 +119,19 @@ public:
      */
     void setFilters(const QList<LinkBackFilter>& filters);
 
+    /*! \brief Get a reference to the criteria used to determine if two files are the same on disk.
+     *
+     *  \return Reference to the criteria used to determine if two files are the same on disk.
+     */
     const QList<CriteriaForFileMatch>& getCriteria() const;
+
+    /*! \brief Set the criteria used to determine if two files are the same on disk.
+     *
+     *  \param [in] criteria used to determine if two files are the same on disk.
+     */
     void setCriteria(const QList<CriteriaForFileMatch>& criteria);
 
-    /*! \brief Determine if a file or directory is processed.
+    /*! \brief Determine if a file or directory will be processed.
      *
      *  This is where the real magic happens. The file or directory is
      *  compared against every filter. The first filter that matches determines
@@ -139,17 +146,46 @@ public:
     bool passes(const QFileInfo& info) const;
 
 private:
+    /*! \brief Read the BackupSet XML into this object.
+     *
+     *  \param [in,out] reader XML stream from which the data is read.
+     *  \return Reference to the reader so that this can be used as part of streaming operations.
+     */
     QXmlStreamReader& readFilter(QXmlStreamReader& reader);
+
+    /*! \brief Assumes the outer "BackupSet" element has been read. Read the rest of the XML into this object.
+     *
+     *  \param [in,out] reader XML stream from which the data is read.
+     */
     void readInternals(QXmlStreamReader& reader);
+
+    /*! \brief Assumes the outer "Filters" element has been read. Read each "Filter" and add it. Stops when the closing "Filters" element is reached.
+     *
+     *  \param [in,out] reader XML stream from which the data is read.
+     */
     void readFilters(QXmlStreamReader& reader);
+
+    /*! \brief Assumes the outer "MatchCriteria" element has been read. Read each "Criteria" and add it. Stops when the closing "MatchCriteria" element is reached.
+     *
+     *  \param [in,out] reader XML stream from which the data is read.
+     */
     void readCriteria(QXmlStreamReader& reader);
 
 
 private:
+    /*! \brief Path that is backed-up */
     QString m_fromPath;
+
+    /*! \brief Path where the backup is written */
     QString m_toPath;
+
+    /*! \brief Hash method to use. */
     QString m_hashMethod;
+
+    /*! \brief Filters used to determine what is backed-up and what is not. */
     QList<LinkBackFilter> m_filters;
+
+    /*! \brief Criteria used to determine if two files are the same. */
     QList<CriteriaForFileMatch> m_criteria;
 };
 

@@ -68,14 +68,14 @@ void StringHelper::ForceLastChar(QString& s, QChar c, Qt::CaseSensitivity cs)
  */
 bool StringHelper::FNMatch(const QChar* str, const QChar* wild, Qt::CaseSensitivity cs)
 {
-if ( str == 0 )
+if ( str == nullptr )
   {
     //throw ArgumentNullException("source string is null", FILE_LOC());
     qDebug("source string is null in StringHelper::FNMatch");
     return false;
   }
 
-  if ( wild == 0 )
+  if ( wild == nullptr )
   {
     //throw ArgumentNullException("wild card string is null", FILE_LOC());
     qDebug("wild is null in StringHelper::FNMatch");
@@ -147,7 +147,7 @@ if ( str == 0 )
 int StringHelper::QStrLen(const QChar* s)
 {
   int i=0;
-  if (s != 0)
+  if (s != nullptr)
   {
     while (!s->isNull())
     {
