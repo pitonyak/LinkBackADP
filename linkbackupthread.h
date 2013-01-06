@@ -8,6 +8,14 @@ class DBFileEntries;
 class QDir;
 class QCryptographicHash;
 
+//**************************************************************************
+//! TODO:
+/*!
+ * \author Andrew Pitonyak
+ * \copyright Andrew Pitonyak, but you may use without restriction.
+ * \date 2011-2013
+ ***************************************************************************/
+
 class LinkBackupThread : public QThread
 {
     Q_OBJECT

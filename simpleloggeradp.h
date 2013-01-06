@@ -8,6 +8,14 @@
 class QTextStream;
 class QFile;
 
+//**************************************************************************
+//! TODO:
+/*!
+ * \author Andrew Pitonyak
+ * \copyright Andrew Pitonyak, but you may use without restriction.
+ * \date 2011-2013
+ ***************************************************************************/
+
 class SimpleLoggerADP : public QObject
 {
   Q_OBJECT

@@ -83,7 +83,7 @@ void SimpleLoggerRoutingInfo::setRouting(MessageRoutings messageRoutings, bool s
 {
     const QMetaObject* metaObj = metaObject();
     QMetaEnum metaEnum = metaObj->enumerator(metaObj->indexOfEnumerator("MessageRouting"));
-    m_routing = new QMap<MessageRouting, bool>();
+
     for (int i=0; i<metaEnum.keyCount(); ++i)
     {
       MessageRouting messageRouting = static_cast<MessageRouting>(metaEnum.value(i));

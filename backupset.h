@@ -10,8 +10,14 @@
 //**************************************************************************
 //! Hold the settings for a single backup set.
 /*!
- *  This routine is Copyright (c) by Andrew Pitonyak, and may be used
- *  without restrictions or renumerations. I make no statement of correctness.
+ * Primarily, this includes the criteria for two files to be considered the same,
+ * The criteria for ignoring or backing up files and directories, directory from which
+ * to copy the files, the directory to which the files will be written, and the hash method.
+ *
+ * \author Andrew Pitonyak
+ * \copyright Andrew Pitonyak, but you may use without restriction.
+ * \date 2011-2013
+ *
  ***************************************************************************/
 
 class BackupSet
@@ -202,32 +208,32 @@ inline QXmlStreamReader& operator>>(QXmlStreamReader& writer, BackupSet& backupS
 
 inline const QString& BackupSet::getFromPath() const
 {
-  return m_fromPath;
+    return m_fromPath;
 }
 
 inline void BackupSet::setFromPath(const QString& fromPath)
 {
-  m_fromPath = fromPath;
+    m_fromPath = fromPath;
 }
 
 inline const QString& BackupSet::getToPath() const
 {
-  return m_toPath;
+    return m_toPath;
 }
 
 inline void BackupSet::setToPath(const QString& toPath)
 {
-  m_toPath = toPath;
+    m_toPath = toPath;
 }
 
 inline const QString& BackupSet::getHashMethod() const
 {
-  return m_hashMethod;
+    return m_hashMethod;
 }
 
 inline void BackupSet::setHashMethod(const QString& hashMethod)
 {
-  m_hashMethod = hashMethod;
+    m_hashMethod = hashMethod;
 }
 
 inline void BackupSet::setAllDefault() {

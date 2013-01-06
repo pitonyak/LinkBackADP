@@ -11,74 +11,98 @@ class QElapsedTimer;
 //! Class to copy files, link files, and generate a hash value.
 /*!
  * This class also accumulates statistics on how much data moved how quickly.
+ *
+ * \author Andrew Pitonyak
+ * \copyright Andrew Pitonyak, but you may use without restriction.
+ * \date 2011-2013
  **************************************************************************/
 class CopyLinkUtil
 {
 public:
-  /*! \brief Constructor. You must still set the hash type and buffer size. */
-  CopyLinkUtil();
+    /*! \brief Constructor. You must still set the hash type and buffer size. */
+    CopyLinkUtil();
 
-  /*! \brief Constructor. You must still set the buffer size before use.
-   *
-   *  \param [in] hashType Set the hash type for future hash operations.
-   */
-  CopyLinkUtil(const QString& hashType);
+    /*! \brief Constructor. You must still set the buffer size before use.
+     *
+     *  \param [in] hashType Set the hash type for future hash operations.
+     */
+    CopyLinkUtil(const QString& hashType);
 
-  /*! \brief Constructor.
-   *
-   *  \param [in] hashType Set the hash type for future hash operations.
-   *  \param [in] bufferSize Set the buffer size for copying files and calculating hash values.
-   */
-  CopyLinkUtil(const QString& hashType, qint64 bufferSize);
+    /*! \brief Constructor.
+     *
+     *  \param [in] hashType Set the hash type for future hash operations.
+     *  \param [in] bufferSize Set the buffer size for copying files and calculating hash values.
+     */
+    CopyLinkUtil(const QString& hashType, qint64 bufferSize);
 
-  /*! \brief Constructor. You must still set the hash type before calculating a hash.
-   *
-   *  \param [in] bufferSize Set the buffer size for copying files and calculating hash values.
-   */
-  CopyLinkUtil(qint64 bufferSize);
+    /*! \brief Constructor. You must still set the hash type before calculating a hash.
+     *
+     *  \param [in] bufferSize Set the buffer size for copying files and calculating hash values.
+     */
+    CopyLinkUtil(qint64 bufferSize);
 
-  /*! \brief Destructor to delete things such as the internal buffer. */
-  ~CopyLinkUtil();
+    /*! \brief Destructor to delete things such as the internal buffer. */
+    ~CopyLinkUtil();
 
-  qint64 getBytesCopied() const;
-  qint64 getBytesLinked() const;
-  qint64 getBytesHashed() const;
-  qint64 getBytesCopiedHashed() const;
+    /*! \brief Get number of bytes copied during the backup. */
+    qint64 getBytesCopied() const;
 
-  qint64 getMillisCopied() const;
-  qint64 getMillisLinked() const;
-  qint64 getMillisHashed() const;
-  qint64 getMillisCopiedHashed() const;
+    /*! \brief Get number of bytes linked during the backup. */
+    qint64 getBytesLinked() const;
 
-  /*! \brief Create a read buffer.
-   *
-   *  \param [in] bufferSize Size of the read buffer.
-   *  \return True if the command succeeds.
-   */
-  bool setBufferSize(qint64 bufferSize);
-  bool setHashType(const QString& hashType);
-  bool copyFile(const QString& copyFromPath, const QString& copyToPath);
-  bool generateHash(const QString& copyFromPath);
-  bool copyFileGenerateHash(const QString& copyFromPath, const QString& copyToPath);
-  bool linkFile(const QString& linkToThisFile, const QString& placeLinkHere);
+    /*! \brief Get number of bytes hashed during the backup. */
+    qint64 getBytesHashed() const;
 
-  QString getLastHash() const;
+    /*! \brief Get number of bytes copied and hashed (at the same time) during the backup. */
+    qint64 getBytesCopiedHashed() const;
 
-  bool isCancelRequested() const;
-  void setCancelRequested(bool cancelRequested);
+    /*! \brief Get number of milliseconds used to copy data. */
+    qint64 getMillisCopied() const;
 
-  /*! \brief Get a copy of the copy statistics as a string suitable for display to the user. */
-  QString getStats() const;
-  QString getBPS(qint64 bytesCopied, qint64 millis) const;
+    /*! \brief Get number of milliseconds used to link data. */
+    qint64 getMillisLinked() const;
 
-  /*! \brief Reset the stats for a new backup. */
-  void resetStats();
+    /*! \brief Get number of milliseconds used to hash data. */
+    qint64 getMillisHashed() const;
 
-  bool isUseHardLink() const;
-  bool isUseSymbolicLink() const;
+    /*! \brief Get number of milliseconds used to copy and hash data at the same time. */
+    qint64 getMillisCopiedHashed() const;
 
-  void setUseHardLink();
-  void setUseSymbolicLink();
+    /*! \brief Create a read buffer.
+     *
+     *  \param [in] bufferSize Size of the read buffer.
+     *  \return True if the command succeeds.
+     */
+    bool setBufferSize(qint64 bufferSize);
+    bool setHashType(const QString& hashType);
+    bool copyFile(const QString& copyFromPath, const QString& copyToPath);
+    bool generateHash(const QString& copyFromPath);
+    bool copyFileGenerateHash(const QString& copyFromPath, const QString& copyToPath);
+    bool linkFile(const QString& linkToThisFile, const QString& placeLinkHere);
+
+    QString getLastHash() const;
+
+    bool isCancelRequested() const;
+    void setCancelRequested(bool cancelRequested);
+
+    /*! \brief Get a copy of the copy statistics as a string suitable for display to the user. */
+    QString getStats() const;
+    QString getBPS(qint64 bytesCopied, qint64 millis) const;
+
+    /*! \brief Reset the stats for a new backup. */
+    void resetStats();
+
+    /*! \brief Returns True if a hardlink is used to link to duplicate files, and false if a symbolic link is used. Should always be a hard link. */
+    bool isUseHardLink() const;
+
+    /*! \brief Returns True if a softlink is used to link to duplicate files, and false if a hard link is used. Should always be a hard link. */
+    bool isUseSymbolicLink() const;
+
+    /*! \brief Set to use a hardlink between duplicate files. */
+    void setUseHardLink();
+
+    /*! \brief Set to use a symbolic link etween duplicate files. */
+    void setUseSymbolicLink();
 
 private:
 
@@ -105,32 +129,32 @@ private:
 
 inline bool CopyLinkUtil::isCancelRequested() const
 {
-  return m_cancelRequested;
+    return m_cancelRequested;
 }
 
 inline void CopyLinkUtil::setCancelRequested(bool cancelRequested)
 {
-  m_cancelRequested = cancelRequested;
+    m_cancelRequested = cancelRequested;
 }
 
 inline bool CopyLinkUtil::isUseHardLink() const
 {
-  return m_useHardLink;
+    return m_useHardLink;
 }
 
 inline bool CopyLinkUtil::isUseSymbolicLink() const
 {
-  return !m_useHardLink;
+    return !m_useHardLink;
 }
 
 inline void CopyLinkUtil::setUseHardLink()
 {
-  m_useHardLink = true;
+    m_useHardLink = true;
 }
 
 inline void CopyLinkUtil::setUseSymbolicLink()
 {
-  m_useHardLink = false;
+    m_useHardLink = false;
 }
 
 

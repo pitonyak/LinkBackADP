@@ -14,6 +14,14 @@ namespace Ui
 
 class LinkBackupThread;
 
+//**************************************************************************
+//! TODO:
+/*!
+ * \author Andrew Pitonyak
+ * \copyright Andrew Pitonyak, but you may use without restriction.
+ * \date 2011-2013
+ ***************************************************************************/
+
 class LinkBackupADP : public QMainWindow
 {
     Q_OBJECT

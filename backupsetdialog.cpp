@@ -2,7 +2,7 @@
 #include "ui_backupsetdialog.h"
 #include "linkbackfilterdelegate.h"
 #include "criteriaforfilematch.h"
-
+#include "linkbackupglobals.h"
 #include "checkboxonlydelegate.h"
 
 #include <QMessageBox>
@@ -43,17 +43,22 @@ BackupSet BackupSetDialog::getBackupSet() const
 
 void BackupSetDialog::setBackupSet(const BackupSet& backupSet)
 {
+    TRACE_MSG("Setting filters", 10);
     m_filterTableModel.setFilters(backupSet.getFilters());
+    TRACE_MSG("Setting Criteria", 10);
     m_criteriaForFileMatchTableModel.setCriteria(backupSet.getCriteria());
+    TRACE_MSG("Setting line edits", 10);
     ui->toRootLineEdit->setText(backupSet.getToPath());
     ui->fromRootLineEdit->setText(backupSet.getFromPath());
     QString hashMethod = backupSet.getHashMethod();
+    TRACE_MSG("Setting hash combo box", 10);
     for (int i=0; i<ui->hashComboBox->count(); ++i) {
         if (QString::compare(hashMethod, ui->hashComboBox->itemText(i), Qt::CaseInsensitive) == 0) {
             ui->hashComboBox->setCurrentIndex(i);
             break;
         }
     }
+    TRACE_MSG("Leaving setBackupSet", 10);
 }
 
 void BackupSetDialog::initialize()
@@ -164,8 +169,10 @@ void BackupSetDialog::copyCriteria()
 
 void BackupSetDialog::insertCriteria()
 {
+  TRACE_MSG("Enter BackupSetDialog::insertCriteria", 10);
   CriteriaForFileMatch newCriteria;
   m_criteriaForFileMatchTableModel.insertCriteria(ui->criteriaTableView->currentIndex().row(), newCriteria);
+  TRACE_MSG("Exit BackupSetDialog::insertCriteria", 10);
 }
 
 void BackupSetDialog::delCriteria()
@@ -226,15 +233,19 @@ void BackupSetDialog::saveBackupSet()
 
 void BackupSetDialog::loadBackupSet()
 {
+    TRACE_MSG("Enter BackupSetDialog::loadBackupSet", 10);
     QString defaultExtension = tr("XML files (*.xml)");
     QString filePath = QFileDialog::getOpenFileName(this, "Open File", ui->configFileLineEdit->text(), tr("Text files (*.txt);;XML files (*.xml)"), &defaultExtension);
     if (!filePath.isEmpty())
     {
         ui->configFileLineEdit->setText(filePath);
         BackupSet backupSet;
+        TRACE_MSG("Read backup set file", 10);
         if (backupSet.readFile(filePath))
         {
+            TRACE_MSG("Done reading backup set file", 10);
             setBackupSet(backupSet);
+            TRACE_MSG("Backup set configured", 10);
             //QMessageBox::information(this, tr("File Read"), QString(tr("Read file from, %1").arg(filePath)));
         }
         else
@@ -242,6 +253,7 @@ void BackupSetDialog::loadBackupSet()
             QMessageBox::warning(this, tr("File NOT Read"), QString(tr("Failed to read from %1").arg(filePath)));
         }
     }
+    TRACE_MSG("Leaving loadBackupSet", 10);
 }
 
 void BackupSetDialog::currentFilterRowChanged ( const QModelIndex & current, const QModelIndex &)

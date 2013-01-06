@@ -9,6 +9,10 @@
 /*!
  * QString added some of the methods that I wanted that were missing
  * from std::string, but not all of them.
+ *
+ * \author Andrew Pitonyak
+ * \copyright Andrew Pitonyak, but you may use without restriction.
+ * \date 2011-2013
  **************************************************************************/
 class StringHelper
 {

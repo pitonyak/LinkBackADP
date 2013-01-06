@@ -14,8 +14,10 @@ class QRegExp;
 //**************************************************************************
 //! Filter to decide if a specific file or directory matches some criteria.
 /*!
- *  This routine is Copyright (c) by Andrew Pitonyak, and may be used
- *  without restrictions or renumerations. I make no statement of correctness.
+ *
+ * \author Andrew Pitonyak
+ * \copyright Andrew Pitonyak, but you may use without restriction.
+ * \date 2011-2013
  ***************************************************************************/
 
 class LinkBackFilter : public QObject

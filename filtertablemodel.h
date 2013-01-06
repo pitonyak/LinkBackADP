@@ -7,9 +7,10 @@
 //**************************************************************************
 //! Provide a list view for a list of Filters.
 /*!
- *  \author Andrew Pitonyak
- *  This routine is Copyright (c) by Andrew Pitonyak, and may be used
- *  without restrictions or renumerations. I make no statement of correctness.
+ *
+ * \author Andrew Pitonyak
+ * \copyright Andrew Pitonyak, but you may use without restriction.
+ * \date 2011-2013
  ***************************************************************************/
 
 class FilterTableModel : public QAbstractTableModel

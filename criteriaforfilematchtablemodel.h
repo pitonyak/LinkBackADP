@@ -6,6 +6,14 @@
 #include "criteriaforfilematch.h"
 
 
+//**************************************************************************
+//! TODO:
+/*!
+ * \author Andrew Pitonyak
+ * \copyright Andrew Pitonyak, but you may use without restriction.
+ * \date 2011-2013
+ ***************************************************************************/
+
 class CriteriaForFileMatchTableModel : public QAbstractTableModel
 {
   Q_OBJECT

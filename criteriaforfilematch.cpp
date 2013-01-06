@@ -1,18 +1,28 @@
 #include "criteriaforfilematch.h"
+#include "linkbackupglobals.h"
 
-CriteriaForFileMatch::CriteriaForFileMatch(QObject *parent) : QObject(parent)
+
+#include <QMetaEnum>
+#include <QMetaObject>
+
+CriteriaForFileMatch::CriteriaForFileMatch(QObject *parent) : QObject(parent), m_criteria(new QMap<CriteriaField, bool>())
 {
-  m_fileName = false;
-  m_fullPath = true;
-  m_dateTime = false;
-  m_fileSize = true;
-  m_fileHash = true;
+    setField(CriteriaField::FileName | CriteriaField::Time, false);
+    setField(CriteriaField::FullPath | CriteriaField::Size | CriteriaField::Hash, true);
 }
 
-
-CriteriaForFileMatch::CriteriaForFileMatch(const CriteriaForFileMatch& criteria, QObject *parent) : QObject(parent)
+CriteriaForFileMatch::CriteriaForFileMatch(const CriteriaForFileMatch& criteria, QObject *parent) : QObject(parent), m_criteria(new QMap<CriteriaField, bool>())
 {
   copy(criteria);
+}
+
+CriteriaForFileMatch::~CriteriaForFileMatch()
+{
+    if (m_criteria != nullptr)
+    {
+        delete m_criteria;
+        m_criteria = nullptr;
+    }
 }
 
 const CriteriaForFileMatch& CriteriaForFileMatch::operator=(const CriteriaForFileMatch& criteria)
@@ -24,69 +34,48 @@ const CriteriaForFileMatch& CriteriaForFileMatch::copy(const CriteriaForFileMatc
 {
   if (this != & criteria)
   {
-    m_fileName = criteria.m_fileName;
-    m_fullPath = criteria.m_fullPath;
-    m_dateTime = criteria.m_dateTime;
-    m_fileSize = criteria.m_fileSize;
-    m_fileHash = criteria.m_fileHash;
+      *m_criteria = *criteria.m_criteria;
   }
   return *this;
 }
 
-bool CriteriaForFileMatch::getData(CriteriaField field) const
+bool CriteriaForFileMatch::getField(CriteriaField field) const
 {
-  switch (field) {
-  case FileName:
-    return isFileName();
-    break;
-  case FullPath:
-    return isFullPath();
-    break;
-  case DateTime:
-    return isDateTime();
-    break;
-  case FileSize:
-    return isFileSize();
-    break;
-  case FileHash:
-    return isFileHash();
-    break;
-  default:
-    return false;
-    break;
-  }
+    return ((m_criteria != nullptr) && (m_criteria->contains(field))) ? (*m_criteria)[field] : false;
 }
-void CriteriaForFileMatch::setField(CriteriaField field, bool value)
+
+void CriteriaForFileMatch::setField(CriteriaFields fields, bool value)
 {
-  switch (field) {
-  case FileName:
-    m_fileName = value;
-    break;
-  case FullPath:
-    m_fullPath = value;
-    break;
-  case DateTime:
-    m_dateTime = value;
-    break;
-  case FileSize:
-    m_fileSize = value;
-    break;
-  case FileHash:
-    m_fileHash = value;
-    break;
-  default:
-    break;
-  }
+    TRACE_MSG(QString(tr("Enter CriteriaForFileMatch::setField(%1, %2)")).arg(fields).arg(value), 10);
+    if (m_criteria == nullptr)
+    {
+        m_criteria = new QMap<CriteriaField, bool>();
+    }
+
+    const QMetaObject* metaObj = metaObject();
+    QMetaEnum metaEnum = metaObj->enumerator(metaObj->indexOfEnumerator("CriteriaField"));
+    for (int i=0; i<metaEnum.keyCount(); ++i)
+    {
+      CriteriaField criteria = static_cast<CriteriaField>(metaEnum.value(i));
+      if ((fields & criteria) == criteria)
+      {
+        TRACE_MSG(QString(tr("Inserting(%1, %2)")).arg(criteria).arg(value), 15);
+        m_criteria->insert(criteria, value);
+      }
+    }
 }
 
 QXmlStreamWriter& CriteriaForFileMatch::operator<<(QXmlStreamWriter& writer) const
 {
     writer.writeStartElement("Criteria");
-    writer.writeTextElement("FullPath", m_fullPath ? "True" : "False");
-    writer.writeTextElement("FileName", m_fileName ? "True" : "False");
-    writer.writeTextElement("Time", m_dateTime ? "True" : "False");
-    writer.writeTextElement("Size", m_fileSize ? "True" : "False");
-    writer.writeTextElement("Hash", m_fileHash ? "True" : "False");
+
+    const QMetaObject* metaObj = metaObject();
+    QMetaEnum metaEnum = metaObj->enumerator(metaObj->indexOfEnumerator("CriteriaField"));
+    for (int i=0; i<metaEnum.keyCount(); ++i)
+    {
+      CriteriaField criteria = static_cast<CriteriaField>(metaEnum.value(i));
+      writer.writeTextElement(metaEnum.key(i), getField(criteria) ? "True" : "False");
+    }
     writer.writeEndElement();
     return writer;
 }
@@ -100,9 +89,9 @@ void CriteriaForFileMatch::setAllDefault()
     setFileHash();
 }
 
-
 QXmlStreamReader& CriteriaForFileMatch::readCriteria(QXmlStreamReader& reader)
 {
+    TRACE_MSG("Enter readCriteria", 10);
     setAllDefault();
     QString name;
     while (!reader.atEnd()) {
@@ -110,6 +99,7 @@ QXmlStreamReader& CriteriaForFileMatch::readCriteria(QXmlStreamReader& reader)
             name = reader.name().toString();
             if (QString::compare(name, "Criteria", Qt::CaseInsensitive) == 0) {
                 readInternals(reader);
+                TRACE_MSG("Return readCriteria", 10);
                 return reader;
             } else {
                 reader.raiseError(QObject::tr("Not Criteria"));
@@ -119,11 +109,13 @@ QXmlStreamReader& CriteriaForFileMatch::readCriteria(QXmlStreamReader& reader)
         }
         reader.readNext();
     }
+    TRACE_MSG("Exit readCriteria", 10);
     return reader;
 }
 
 void CriteriaForFileMatch::readInternals(QXmlStreamReader& reader)
 {
+    TRACE_MSG("Enter readInternals", 10);
     QString name;
     bool valueIsEmpty;
     bool value;
@@ -172,10 +164,12 @@ void CriteriaForFileMatch::readInternals(QXmlStreamReader& reader)
         } else if (reader.isEndElement()) {
             if (QString::compare(reader.name().toString(), "Criteria", Qt::CaseInsensitive) == 0)
             {
+                TRACE_MSG("Return readInternals", 10);
                 return;
             }
             name = "";
         }
         reader.readNext();
     }
+    TRACE_MSG("Exit readInternals", 10);
 }

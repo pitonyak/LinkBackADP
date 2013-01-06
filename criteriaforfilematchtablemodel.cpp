@@ -1,4 +1,5 @@
 #include "criteriaforfilematchtablemodel.h"
+#include "linkbackupglobals.h"
 
 CriteriaForFileMatchTableModel::CriteriaForFileMatchTableModel(QObject *parent) : QAbstractTableModel(parent)
 {
@@ -46,7 +47,7 @@ QVariant CriteriaForFileMatchTableModel::data( const QModelIndex &index, int rol
   {
   case Qt::DisplayRole:
   case Qt::EditRole:
-    return criteria.getData(static_cast<CriteriaForFileMatch::CriteriaField>(index.column()));
+    return criteria.getField(static_cast<CriteriaForFileMatch::CriteriaField>((int)pow(2, index.column())));
     break;
   case Qt::ToolTipRole:
     switch (index.column())
@@ -57,13 +58,13 @@ QVariant CriteriaForFileMatchTableModel::data( const QModelIndex &index, int rol
     case CriteriaForFileMatch::FullPath:
       return "Full path to the file must match.";
       break;
-    case CriteriaForFileMatch::DateTime:
+    case CriteriaForFileMatch::Time:
       return "File last modified date and time must match.";
       break;
-    case CriteriaForFileMatch::FileSize:
+    case CriteriaForFileMatch::Size:
       return "Filesize must match. I expect that this should ALWAYS be checked.";
       break;
-    case CriteriaForFileMatch::FileHash:
+    case CriteriaForFileMatch::Hash:
       return "File hash functions must match. File size and hash are pretty good indicators.";
       break;
     default:

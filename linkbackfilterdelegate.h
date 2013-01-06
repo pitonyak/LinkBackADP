@@ -9,6 +9,10 @@
  *  As the data grid is edited, this object is called.
  *  This delegate is associated to the filters table view in the BackupSetDialog.
  *  The data is stored in a FilterTableModel.
+ *
+ * \author Andrew Pitonyak
+ * \copyright Andrew Pitonyak, but you may use without restriction.
+ * \date 2011-2013
  ***************************************************************************/
 class LinkBackFilterDelegate : public QItemDelegate
 {

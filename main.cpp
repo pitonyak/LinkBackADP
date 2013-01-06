@@ -50,12 +50,12 @@ int main(int argc, char *argv[])
   routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " | ");
   routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageTextComponent, "");
 
-  //routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::TraceMessage, 1);
-  //routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::DebugMessage, 1);
-  //routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::InformationMessage, 1);
-  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::WarningMessage, 1);
-  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::ErrorMessage, 1);
-  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::UserMessage, 1);
+  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::TraceMessage, 11);
+  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::DebugMessage, 11);
+  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::InformationMessage, 11);
+  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::WarningMessage, 11);
+  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::ErrorMessage, 11);
+  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::UserMessage, 11);
   routing_02.setRoutingOn(SimpleLoggerRoutingInfo::RouteFile | SimpleLoggerRoutingInfo::RouteQDebug);
 
   logger.addRouting(routing_02);

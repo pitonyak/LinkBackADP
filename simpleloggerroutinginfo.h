@@ -13,8 +13,10 @@
 //**************************************************************************
 //! Control what logging messages pass, and where they should be routed.
 /*!
- *  This routine is Copyright (c) by Andrew Pitonyak, and may be used
- *  without restrictions or renumerations. I make no statement of correctness.
+ *
+ * \author Andrew Pitonyak
+ * \copyright Andrew Pitonyak, but you may use without restriction.
+ * \date 2011-2013
  ***************************************************************************/
 class SimpleLoggerRoutingInfo : public QObject
 {
@@ -109,6 +111,7 @@ signals:
 public slots:
 
 private:
+  // internal clear deletes stuff and does not re-initialize, so use it carefully.
   void internalClear();
   void internalEmpty();
   void readInternals(QXmlStreamReader& reader, const QString& version);
