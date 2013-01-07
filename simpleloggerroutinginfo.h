@@ -27,13 +27,12 @@ class SimpleLoggerRoutingInfo : public QObject
 
 public:
   enum MessageCategory  {
-      NoCategory=0x0,
       TraceMessage = 0x1,
       DebugMessage = 0x2,
       InformationMessage = 0x4,
       WarningMessage = 0x8,
       ErrorMessage = 0x10,
-      UserMessage = 0x11
+      UserMessage = 0x20
   };
   Q_DECLARE_FLAGS(MessageCategorys, MessageCategory)
 
@@ -46,18 +45,27 @@ public:
   };
   Q_DECLARE_FLAGS(MessageRoutings, MessageRouting)
 
+  /*! \brief Default constructor */
   explicit SimpleLoggerRoutingInfo(QObject *parent = 0);
-  SimpleLoggerRoutingInfo(const SimpleLoggerRoutingInfo& obj);
+
+  /*! \brief Copy constructor */
+  SimpleLoggerRoutingInfo(const SimpleLoggerRoutingInfo& obj, QObject *parent = 0);
+
+  /*! \brief Destructor */
   ~SimpleLoggerRoutingInfo();
 
+  /*! \brief Copy the parameter object into this object. */
   const SimpleLoggerRoutingInfo& copy(const SimpleLoggerRoutingInfo& obj);
+
+  /*! \brief Assignment operator. */
   const SimpleLoggerRoutingInfo& operator=(const SimpleLoggerRoutingInfo& obj);
 
+  //**************************************************************************
   /*! \brief Return true if the specified routing is on. If the routing is not known, a value of true is returned.
    *
    *  \param [in] messageRouting Routing type to check.
    *  \return True if the routing is explicitly turned on, or for an unknown type.
-   */
+   ***************************************************************************/
   bool isRoutingOn(MessageRouting messageRouting) const;
   void setRoutingOn(MessageRoutings messageRoutings) { setRouting(messageRoutings, true); }
   void setRoutingOff(MessageRoutings messageRoutings) { setRouting(messageRoutings, false); }
@@ -66,31 +74,35 @@ public:
 
   void setCategoryLevel(MessageCategory category, int level);
 
+  //**************************************************************************
   /*! \brief The message category must match this regExp. An empty string will pass everything.
    * The type is set to regular expression, case insensitive, with greedy matching.
    * The regular expression need only find the source in the regular expression, an exact match is not required.
    *  \param [in] regExp String representation of the message category.If invalid, then everything will match.
    *  \return True if the regular expression is valid, false otherwise.
-   */
+   ***************************************************************************/
   bool  setRegExp(const QString& regExp);
 
+  //**************************************************************************
   /*! \brief Return true if the regular expression matches the source, and the category level >= level
    *
    *  \param [in] source Must pass the regular expression, unless both are empty.
    *  \param [in] category Used to find the minimum level to pass.
    *  \param [in] level Message level for this message.
    *  \return Reference to this object.
-   */
+   ***************************************************************************/
   bool passes(const QString& source, const MessageCategory& category, int level) const;
 
   void clearMessageFormat();
+
+  //**************************************************************************
   /*! \brief Add a message format component to format the message.
    *
    *  \param [in] component What part of the text to include.
    *  \param [in] formatString How to format the component. The value is dependent on the component.
    *     For the date/time, if it is missing, ISO formatting is used.
    *  \return Formatted string.
-   */
+   ***************************************************************************/
   void addMessageFormat(MessageComponent component, const QString& formatString);
   QString formatMessage(const QString& message, const QString& location, const QDateTime dateTime, MessageCategory category, int level) const;
 
@@ -104,7 +116,6 @@ public:
   static MessageCategory stringToCategory(const QString& category);
   static MessageComponent stringToComponent(const QString& component);
   static MessageRouting stringToRouting(const QString& routing);
-
 
 signals:
 
@@ -120,6 +131,10 @@ private:
   QMap<MessageRouting, bool>* m_routing;
   QRegExp* m_regExp;
   QList< QPair<MessageComponent, QString> > m_format;
+
+  // TODO: Use the name and enabled.
+  QString m_name;
+  bool m_enabled;
 
   static SimpleLoggerRoutingInfo o;
 };
