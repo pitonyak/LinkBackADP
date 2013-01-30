@@ -20,6 +20,8 @@ int main(int argc, char *argv[])
     file.close();
   }
 
+  int logLevel = 1;
+
   // Add routing specific to the display. Keep it smaller so that it does not fill up.
   SimpleLoggerRoutingInfo routing_01;
   //routing_01.addMessageFormat(SimpleLoggerRoutingInfo::DateTimeComponent, "");
@@ -30,12 +32,12 @@ int main(int argc, char *argv[])
   routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " | ");
   routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageTextComponent, "");
 
-  //routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::TraceMessage, 1);
-  routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::DebugMessage, 1);
-  //routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::InformationMessage, 1);
-  routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::UserMessage, 1);
-  routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::WarningMessage, 1);
-  routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::ErrorMessage, 1);
+  //routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::TraceMessage, logLevel);
+  routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::DebugMessage, logLevel);
+  //routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::InformationMessage, logLevel);
+  routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::UserMessage, logLevel);
+  routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::WarningMessage, logLevel);
+  routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::ErrorMessage, logLevel);
 
   routing_01.setRoutingOn(SimpleLoggerRoutingInfo::RouteEmit);
   logger.addRouting(routing_01);
@@ -50,12 +52,12 @@ int main(int argc, char *argv[])
   routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " | ");
   routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageTextComponent, "");
 
-  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::TraceMessage, 11);
-  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::DebugMessage, 11);
-  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::InformationMessage, 11);
-  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::WarningMessage, 11);
-  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::ErrorMessage, 11);
-  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::UserMessage, 11);
+  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::TraceMessage, logLevel);
+  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::DebugMessage, logLevel);
+  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::InformationMessage, logLevel);
+  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::WarningMessage, logLevel);
+  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::ErrorMessage, logLevel);
+  routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::UserMessage, logLevel);
   routing_02.setRoutingOn(SimpleLoggerRoutingInfo::RouteFile | SimpleLoggerRoutingInfo::RouteQDebug);
 
   logger.addRouting(routing_02);
