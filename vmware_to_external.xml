@@ -7,7 +7,7 @@
         <Filter>
             <CompareType>Equal</CompareType>
             <CompareField>Name</CompareField>
-            <Value>tmp,temp,cache,caches,QtSDK</Value>
+            <Value>tmp,temp,cache,caches,QtSDK,.ccache</Value>
             <CaseSensitive>False</CaseSensitive>
             <Invert>False</Invert>
             <Accept>False</Accept>
@@ -40,15 +40,15 @@
     </Filters>
     <MatchCriteria>
         <Criteria>
-            <FullPath>True</FullPath>
             <FileName>False</FileName>
+            <FullPath>True</FullPath>
             <Time>True</Time>
             <Size>True</Size>
             <Hash>False</Hash>
         </Criteria>
         <Criteria>
-            <FullPath>False</FullPath>
             <FileName>False</FileName>
+            <FullPath>False</FullPath>
             <Time>False</Time>
             <Size>True</Size>
             <Hash>True</Hash>
