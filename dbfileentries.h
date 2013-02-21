@@ -8,8 +8,11 @@
 class CriteriaForFileMatch;
 
 //**************************************************************************
-//! TODO:
+//! Collection of file entries. This may represent a previous backup set or a new backup set as it is created.
 /*!
+ * This object is able to test to see if it already contains a matching object based on matching criteria,
+ * so that sometimes a file is copied, and sometimes a  file is linked.
+ *
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
  * \date 2011-2013
@@ -18,10 +21,16 @@ class CriteriaForFileMatch;
 class DBFileEntries
 {
 public:
+    /*! Constructor */
     DBFileEntries();
+
+    /*! Desctructor, clears all structures and deletes each file entry. */
     virtual ~DBFileEntries();
 
+    /*! Add a new file entry object. This object takes ownership of the file entry. All related datastructures are updated. */
     void addEntry(DBFileEntry *entry);
+
+    /*! Clear all entries, deleting each file entry. */
     void clear();
 
     /*! \brief Find an entry that matches as specified by the criteria.
@@ -84,14 +93,17 @@ public:
      */
     bool write(QTextStream& writer) const;
 
-    /*! \brief Number of entries in the list.
-     *
-     */
+    /*! \brief Number of entries in the list. */
     int count() const;
 
 private:
+    /*! List of files with file size, time, full path, hash value, and the link type on disk in the backup location. Contained entries are owned by this object. */
     QList<DBFileEntry *> m_entries;
+
+    /*! Use a files hash and size to find the file's index in the m_entries variable. This is a multi-hash, so there can be multiple files with the same hash and size. */
     QHash<QString, QMultiHash<quint64, int>* > m_hashToSizeToEntry;
+
+    /*! Use the full path to find the file's index in the m_entries variable. */
     QHash<QString, int> m_pathToEntry;
 };
 

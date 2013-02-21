@@ -8,9 +8,8 @@ class QTextStream;
 class QFileInfo;
 
 //**************************************************************************
-//! Stored data type for a file entry.
+//! Encapsulate the data about a single used to determine if it matches another. This includes file's size, time, full path, hash value, and the link type on disk in the backup location.
 /*!
- *
  *
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.

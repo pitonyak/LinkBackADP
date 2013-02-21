@@ -7,7 +7,7 @@ XMLUtility::XMLUtility()
 {
 }
 
-QString XMLUtility::booleanToString(bool b)
+QString XMLUtility::booleanToString(const bool b)
 {
   return b ? "True" : "False";
 }
@@ -154,5 +154,23 @@ void XMLUtility::writeElementAttribute(QXmlStreamWriter& writer, const QString& 
   {
     writer.writeCharacters(elementValue);
     writer.writeEndElement();
+  }
+}
+
+void XMLUtility::writeElement(QXmlStreamWriter& writer, const QString& elementName, const QString& elementValue)
+{
+  if (elementName.length() == 0)
+  {
+    return;
+  }
+  if (elementValue.length() > 0)
+  {
+    writer.writeStartElement(elementName);
+    writer.writeCharacters(elementValue);
+    writer.writeEndElement();
+  }
+  else
+  {
+    writer.writeEmptyElement(elementName);
   }
 }

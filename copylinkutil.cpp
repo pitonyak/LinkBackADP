@@ -7,6 +7,9 @@
 #include <QDir>
 #include <unistd.h>  // Contains the "link" method.
 
+// Report every 2GB of data.
+qint64 CopyLinkUtil::s_readReportBytes = 2L * 1024L * 1024L * 1024L;
+
 CopyLinkUtil::CopyLinkUtil() : m_bytesCopied(0), m_bytesLinked(0), m_bytesHashed(0), m_bytesCopiedHashed(0), m_millisCopied(0), m_millisLinked(0), m_millisHashed(0), m_millisCopiedHashed(0), m_buffer(nullptr), m_bufferSize(0), m_hashGenerator(nullptr), m_timer(nullptr), m_cancelRequested(false), m_useHardLink(true)
 {
   m_timer = new QElapsedTimer();
@@ -184,6 +187,9 @@ bool CopyLinkUtil::generateHash(const QString& copyFromPath)
 {
   QFile fileToRead(copyFromPath);
 
+  QFileInfo fileInfo(copyFromPath);
+  qint64 lastReportByteCount = 0;
+
   if (isCancelRequested())
   {
     return false;
@@ -203,6 +209,12 @@ bool CopyLinkUtil::generateHash(const QString& copyFromPath)
   {
     totalRead += numRead;
     m_hashGenerator->addData(m_buffer, numRead);
+    if (totalRead - lastReportByteCount > s_readReportBytes)
+    {
+      lastReportByteCount =  totalRead;
+      // TODO: Log message here
+      qDebug(qPrintable(QString("Read %1/%2 from %3").arg(getBPS(totalRead, 0)).arg(fileToRead.size()).arg(fileInfo.fileName())));
+    }
     numRead = fileToRead.read(m_buffer, m_bufferSize);
   }
   if (fileToRead.error() != QFile::NoError || isCancelRequested())
@@ -229,6 +241,9 @@ bool CopyLinkUtil::internalCopyFile(const QString& copyFromPath, const QString& 
   qDebug(qPrintable(QString("Ready to read from : %1").arg(copyFromPath)));
   qDebug(qPrintable(QString("Ready to write to  : %1").arg(copyToPath)));
   QFile fileToRead(copyFromPath);
+
+  QFileInfo fileInfo(copyFromPath);
+  qint64 lastReportByteCount = 0;
 
   QFile fileToWrite(copyToPath);
   QFileInfo fileInfoFileToWrite(copyToPath);
@@ -283,6 +298,12 @@ bool CopyLinkUtil::internalCopyFile(const QString& copyFromPath, const QString& 
     if (doHash)
     {
       m_hashGenerator->addData(m_buffer, numRead);
+    }
+    if (totalRead - lastReportByteCount > s_readReportBytes)
+    {
+      lastReportByteCount =  totalRead;
+      // TODO: Log message here
+      qDebug(qPrintable(QString("Copied %1/%2 from %3").arg(getBPS(totalRead, 0)).arg(fileToRead.size()).arg(fileInfo.fileName())));
     }
     numRead = fileToRead.read(m_buffer, m_bufferSize);
 
@@ -358,7 +379,7 @@ QString CopyLinkUtil::getBPS(qint64 bytesCopied, qint64 millis) const
 {
   if (bytesCopied == 0)
   {
-    return QString("0 Bytes").arg(QString::number(bytesCopied));
+    return QString("0 Bytes");
   }
 
   double dBytesPerSecond = (millis != 0) ? 1000.0 * bytesCopied / millis : bytesCopied;

@@ -19,6 +19,10 @@ class QElapsedTimer;
 class CopyLinkUtil
 {
 public:
+
+    /*! \brief Provide trace output during long reads so that the user knows the software is not locked. This value tells how many bytes to read between reported reads. */
+    static qint64 s_readReportBytes;
+
     /*! \brief Constructor. You must still set the hash type and buffer size. */
     CopyLinkUtil();
 

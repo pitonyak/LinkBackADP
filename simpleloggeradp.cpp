@@ -65,7 +65,7 @@ QString SimpleLoggerADP::getFileName() const
 }
 
 
-void SimpleLoggerADP::receiveMessage(const QString& message, const QString& location, const QDateTime dateTime, SimpleLoggerRoutingInfo::MessageCategory category, int level)
+void SimpleLoggerADP::receiveMessage(const QString& message, const QString& location, const QDateTime dateTime, const SimpleLoggerRoutingInfo::MessageCategory category, const int level)
 {
   for (int i=0; i<m_routing.count(); ++i)
   {

@@ -4,9 +4,9 @@
 #include <QMetaEnum>
 #include <QMetaObject>
 
-SimpleLoggerRoutingInfo SimpleLoggerRoutingInfo::o;
+SimpleLoggerRoutingInfo SimpleLoggerRoutingInfo::privateObjectForMetaData;
 
-SimpleLoggerRoutingInfo::SimpleLoggerRoutingInfo(QObject *parent) : QObject(parent), m_levels(nullptr), m_routing(nullptr), m_regExp(nullptr)
+SimpleLoggerRoutingInfo::SimpleLoggerRoutingInfo(QObject *parent) : QObject(parent), m_levels(nullptr), m_routing(nullptr), m_regExp(nullptr), m_enabled(true)
 {
     const QMetaObject* metaObj = metaObject();
     QMetaEnum metaEnum = metaObj->enumerator(metaObj->indexOfEnumerator("MessageCategory"));
@@ -35,10 +35,10 @@ SimpleLoggerRoutingInfo::SimpleLoggerRoutingInfo(const SimpleLoggerRoutingInfo& 
 
 SimpleLoggerRoutingInfo::~SimpleLoggerRoutingInfo()
 {
-    internalClear();
+    internalDelete();
 }
 
-void SimpleLoggerRoutingInfo::internalEmpty()
+void SimpleLoggerRoutingInfo::internalClear()
 {
     if (m_regExp != nullptr)
     {
@@ -53,9 +53,10 @@ void SimpleLoggerRoutingInfo::internalEmpty()
     {
         m_routing->clear();
     }
+    m_format.clear();
 }
 
-void SimpleLoggerRoutingInfo::internalClear()
+void SimpleLoggerRoutingInfo::internalDelete()
 {
     if (m_regExp != nullptr)
     {
@@ -125,7 +126,7 @@ bool SimpleLoggerRoutingInfo::passes(const QString& source, const MessageCategor
     //qDebug(qPrintable(QString("Contains %1").arg(m_levels->contains(category))));
     //int containedLevel = m_levels->value(category, 0);
     //qDebug(qPrintable(QString("Contained level %1").arg(containedLevel)));
-    bool rc = level <= m_levels->value(category, 0) && source.length() > 0 && (m_regExp == nullptr || m_regExp->indexIn(source) >= 0);
+    bool rc = m_enabled && level <= m_levels->value(category, 0) && source.length() > 0 && (m_regExp == nullptr || m_regExp->indexIn(source) >= 0);
     //qDebug(qPrintable(QString("Passes %1").arg(rc)));
     return rc;
 }
@@ -213,6 +214,7 @@ const SimpleLoggerRoutingInfo& SimpleLoggerRoutingInfo::copy(const SimpleLoggerR
         }
         *m_levels = *obj.m_levels;
         *m_routing = *obj.m_routing;
+        m_enabled = obj.m_enabled;
     }
     return *this;
 }
@@ -224,21 +226,21 @@ const SimpleLoggerRoutingInfo& SimpleLoggerRoutingInfo::operator=(const SimpleLo
 
 QString SimpleLoggerRoutingInfo::categoryToString(MessageCategory category)
 {
-    const QMetaObject* metaObj = o.metaObject();
+    const QMetaObject* metaObj = privateObjectForMetaData.metaObject();
     const QMetaEnum& categoryEnum =  metaObj->enumerator(metaObj->indexOfEnumerator("MessageCategory"));
     return categoryEnum.valueToKey(category);
 }
 
 QString SimpleLoggerRoutingInfo::componentToString(MessageComponent component)
 {
-    const QMetaObject* metaObj = o.metaObject();
+    const QMetaObject* metaObj = privateObjectForMetaData.metaObject();
     const QMetaEnum& categoryEnum =  metaObj->enumerator(metaObj->indexOfEnumerator("MessageComponent"));
     return categoryEnum.valueToKey(component);
 }
 
 QString SimpleLoggerRoutingInfo::routingToString(MessageRouting routing)
 {
-    const QMetaObject* metaObj = o.metaObject();
+    const QMetaObject* metaObj = privateObjectForMetaData.metaObject();
     const QMetaEnum& categoryEnum =  metaObj->enumerator(metaObj->indexOfEnumerator("MessageRouting"));
     return categoryEnum.valueToKey(routing);
 }
@@ -246,21 +248,21 @@ QString SimpleLoggerRoutingInfo::routingToString(MessageRouting routing)
 
 SimpleLoggerRoutingInfo::MessageCategory SimpleLoggerRoutingInfo::stringToCategory(const QString& category)
 {
-    const QMetaObject* metaObj = o.metaObject();
+    const QMetaObject* metaObj = privateObjectForMetaData.metaObject();
     const QMetaEnum& categoryEnum =  metaObj->enumerator(metaObj->indexOfEnumerator("MessageCategory"));
     return static_cast<SimpleLoggerRoutingInfo::MessageCategory>(categoryEnum.keyToValue(qPrintable(category)));
 }
 
 SimpleLoggerRoutingInfo::MessageComponent SimpleLoggerRoutingInfo::stringToComponent(const QString& component)
 {
-    const QMetaObject* metaObj = o.metaObject();
+    const QMetaObject* metaObj = privateObjectForMetaData.metaObject();
     const QMetaEnum& categoryEnum =  metaObj->enumerator(metaObj->indexOfEnumerator("MessageComponent"));
     return static_cast<SimpleLoggerRoutingInfo::MessageComponent>(categoryEnum.keyToValue(qPrintable(component)));
 }
 
 SimpleLoggerRoutingInfo::MessageRouting SimpleLoggerRoutingInfo::stringToRouting(const QString& routing)
 {
-    const QMetaObject* metaObj = o.metaObject();
+    const QMetaObject* metaObj = privateObjectForMetaData.metaObject();
     const QMetaEnum& categoryEnum =  metaObj->enumerator(metaObj->indexOfEnumerator("MessageRouting"));
     return static_cast<SimpleLoggerRoutingInfo::MessageRouting>(categoryEnum.keyToValue(qPrintable(routing)));
 }
@@ -300,14 +302,16 @@ QXmlStreamWriter& SimpleLoggerRoutingInfo::write(QXmlStreamWriter& writer) const
         }
     }
 
+    XMLUtility::writeElement(writer, "Enabled", XMLUtility::booleanToString(m_enabled));
+
     writer.writeEndElement();
     return writer;
 }
 
 QXmlStreamReader& SimpleLoggerRoutingInfo::read(QXmlStreamReader& reader)
 {
-    internalEmpty();
-    qDebug("Ready to read simple info thingy");
+    internalClear();
+    qDebug("Ready SimpleLoggerRoutingInfo::read");
     QString name;
     while (!reader.atEnd()) {
         if (reader.isStartElement()) {
@@ -330,6 +334,8 @@ QXmlStreamReader& SimpleLoggerRoutingInfo::read(QXmlStreamReader& reader)
 
 void SimpleLoggerRoutingInfo::readInternals(QXmlStreamReader& reader, const QString&)
 {
+    // Some elements store a map with the key as an attribute such as: "<Level MessageCategory="UserMessage">3</Level>"
+    // The nameAttrMapprovides the mapping between the element name and the single attribute used to contain the key.
     QMap<QString, QString> nameAttrMap;
     nameAttrMap["level"] = "MessageCategory";
     nameAttrMap["routing"] = "MessageRouting";
@@ -342,6 +348,7 @@ void SimpleLoggerRoutingInfo::readInternals(QXmlStreamReader& reader, const QStr
     {
         if (reader.isStartElement())
         {
+            attributeValue = "";
             name = reader.name().toString();
             foundCharacters = false;
             qDebug(qPrintable(QString("Found start element %1").arg(name)));
@@ -354,23 +361,27 @@ void SimpleLoggerRoutingInfo::readInternals(QXmlStreamReader& reader, const QStr
                     m_regExp = nullptr;
                 }
                 m_regExp = XMLUtility::readRegExp(reader);
-                attributeValue = "";
             }
             else
             {
+                // At a start element that is not a regular expression, so check for the value in the attribute.
                 if (nameAttrMap.contains(name.toLower()) && reader.attributes().hasAttribute(nameAttrMap[name.toLower()]))
                 {
                     attributeValue = reader.attributes().value(nameAttrMap[name.toLower()]).toString();
                 }
-                qDebug(qPrintable(QString("attribute value = %1").arg(attributeValue)));
             }
         }
         else if (reader.isCharacters() && !name.isEmpty())
         {
             QString value = reader.text().toString();
             qDebug(qPrintable(QString("Found characters for name %1 and value (%2)").arg(name, value)));
-            if (attributeValue.length() > 0)
+            if (name.compare("Enabled", Qt::CaseInsensitive) == 0)
             {
+              m_enabled = XMLUtility::stringToBoolean(value);
+            }
+            else if (attributeValue.length() > 0)
+            {
+                // These next guys store their value in the attribute as specified in the nameAttrMap.
                 if (name.compare("Level", Qt::CaseInsensitive) == 0)
                 {
                     m_levels->insert(stringToCategory(attributeValue), value.toInt());

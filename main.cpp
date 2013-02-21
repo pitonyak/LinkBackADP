@@ -1,4 +1,4 @@
-#include <QtGui/QApplication>
+#include <QApplication>
 #include "linkbackupadp.h"
 #include "linkbackupglobals.h"
 #include "simpleloggeradp.h"
