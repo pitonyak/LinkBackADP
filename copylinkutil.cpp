@@ -10,27 +10,36 @@
 // Report every 2GB of data.
 qint64 CopyLinkUtil::s_readReportBytes = 2L * 1024L * 1024L * 1024L;
 
-CopyLinkUtil::CopyLinkUtil() : m_bytesCopied(0), m_bytesLinked(0), m_bytesHashed(0), m_bytesCopiedHashed(0), m_millisCopied(0), m_millisLinked(0), m_millisHashed(0), m_millisCopiedHashed(0), m_buffer(nullptr), m_bufferSize(0), m_hashGenerator(nullptr), m_timer(nullptr), m_cancelRequested(false), m_useHardLink(true)
+CopyLinkUtil::CopyLinkUtil() : m_bytesCopied(0), m_bytesLinked(0), m_bytesHashed(0), m_bytesCopiedHashed(0), m_millisCopied(0), m_millisLinked(0), m_millisHashed(0), m_millisCopiedHashed(0), m_buffer(nullptr), m_bufferSize(0), m_hashGenerator(nullptr), m_timer(nullptr), m_cancelRequested(false), m_useHardLink(true), m_hashMethod(QCryptographicHash::Sha1)
 {
   m_timer = new QElapsedTimer();
 }
 
-CopyLinkUtil::CopyLinkUtil(const QString& hashType) : m_bytesCopied(0), m_bytesLinked(0), m_bytesHashed(0), m_bytesCopiedHashed(0), m_millisCopied(0), m_millisLinked(0), m_millisHashed(0), m_millisCopiedHashed(0), m_buffer(nullptr), m_bufferSize(0), m_hashGenerator(nullptr), m_timer(nullptr), m_cancelRequested(false), m_useHardLink(true)
+// I can only do this because I am using C++11, otherwise I could not use the default constructor.
+CopyLinkUtil::CopyLinkUtil(const CopyLinkUtil& obj) : m_bytesCopied(obj.m_bytesCopied), m_bytesLinked(obj.m_bytesLinked), m_bytesHashed(obj.m_bytesHashed), m_bytesCopiedHashed(obj.m_bytesCopiedHashed), m_millisCopied(obj.m_millisCopied), m_millisLinked(obj.m_millisLinked), m_millisHashed(obj.m_millisHashed), m_millisCopiedHashed(obj.m_millisCopiedHashed), m_buffer(nullptr), m_bufferSize(0), m_hashGenerator(nullptr), m_timer(nullptr), m_cancelRequested(false), m_useHardLink(true), m_hashMethod(obj.m_hashMethod)
 {
   m_timer = new QElapsedTimer();
+  if (obj.m_hashGenerator != nullptr)
+  {
+    setHashType(m_hashMethod);
+  }
+  setBufferSize(obj.m_bufferSize);
+}
+
+
+CopyLinkUtil::CopyLinkUtil(const QString& hashType) : CopyLinkUtil()
+{
   setHashType(hashType);
 }
 
-CopyLinkUtil::CopyLinkUtil(const QString& hashType, qint64 bufferSize) : m_bytesCopied(0), m_bytesLinked(0), m_bytesHashed(0), m_bytesCopiedHashed(0), m_millisCopied(0), m_millisLinked(0), m_millisHashed(0), m_millisCopiedHashed(0), m_buffer(nullptr), m_bufferSize(0), m_hashGenerator(nullptr), m_timer(nullptr), m_cancelRequested(false), m_useHardLink(true)
+CopyLinkUtil::CopyLinkUtil(const QString& hashType, qint64 bufferSize) : CopyLinkUtil()
 {
-  m_timer = new QElapsedTimer();
   setHashType(hashType);
   setBufferSize(bufferSize);
 }
 
-CopyLinkUtil::CopyLinkUtil(qint64 bufferSize) : m_bytesCopied(0), m_bytesLinked(0), m_bytesHashed(0), m_bytesCopiedHashed(0), m_millisCopied(0), m_millisLinked(0), m_millisHashed(0), m_millisCopiedHashed(0), m_buffer(nullptr), m_bufferSize(0), m_hashGenerator(nullptr), m_timer(nullptr), m_cancelRequested(false), m_useHardLink(true)
+CopyLinkUtil::CopyLinkUtil(qint64 bufferSize) : CopyLinkUtil()
 {
-  m_timer = new QElapsedTimer();
   setBufferSize(bufferSize);
 }
 
@@ -132,30 +141,58 @@ bool CopyLinkUtil::setBufferSize(qint64 bufferSize)
 
 bool CopyLinkUtil::setHashType(const QString& hashType)
 {
-  if (m_hashGenerator != nullptr)
-  {
-    delete m_hashGenerator;
-    m_hashGenerator = nullptr;
-  }
   if (hashType.compare("SHA1", Qt::CaseInsensitive) == 0)
   {
-    m_hashGenerator = new QCryptographicHash(QCryptographicHash::Sha1);
+    setHashType(QCryptographicHash::Sha1);
+  }
+  else if (hashType.compare("SHA512", Qt::CaseInsensitive) == 0)
+  {
+    setHashType(QCryptographicHash::Sha512);
+  }
+  else if (hashType.compare("SHA384", Qt::CaseInsensitive) == 0)
+  {
+    setHashType(QCryptographicHash::Sha384);
+  }
+  else if (hashType.compare("SHA256", Qt::CaseInsensitive) == 0)
+  {
+    setHashType(QCryptographicHash::Sha256);
+  }
+  else if (hashType.compare("SHA224", Qt::CaseInsensitive) == 0)
+  {
+    setHashType(QCryptographicHash::Sha224);
   }
   else if (hashType.compare("MD5", Qt::CaseInsensitive) == 0)
   {
-    m_hashGenerator = new QCryptographicHash(QCryptographicHash::Md5);
+    setHashType(QCryptographicHash::Md5);
   }
   else if (hashType.compare("MD4", Qt::CaseInsensitive) == 0)
   {
-    m_hashGenerator = new QCryptographicHash(QCryptographicHash::Md4);
+    setHashType(QCryptographicHash::Md4);
   }
   else
   {
+    delete m_hashGenerator;
+    m_hashGenerator = nullptr;
     qDebug(qPrintable(QString("Unsupported hash type %1").arg(hashType)));
     return false;
   }
   return true;
 }
+
+
+bool CopyLinkUtil::setHashType(QCryptographicHash::Algorithm hashType)
+{
+  if (m_hashGenerator != nullptr)
+  {
+    delete m_hashGenerator;
+    m_hashGenerator = nullptr;
+  }
+  m_hashGenerator = new QCryptographicHash(hashType);
+  return true;
+}
+
+
+
 
 bool CopyLinkUtil::linkFile(const QString& linkToThisFile, const QString& placeLinkHere)
 {

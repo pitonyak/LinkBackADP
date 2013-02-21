@@ -2,8 +2,8 @@
 #define COPYLINKUTIL_H
 
 #include <QString>
+#include <QCryptographicHash>
 
-class QCryptographicHash;
 class QElapsedTimer;
 
 
@@ -25,6 +25,9 @@ public:
 
     /*! \brief Constructor. You must still set the hash type and buffer size. */
     CopyLinkUtil();
+
+    /*! \brief Copy Constructor.*/
+    CopyLinkUtil(const CopyLinkUtil& obj);
 
     /*! \brief Constructor. You must still set the buffer size before use.
      *
@@ -79,6 +82,7 @@ public:
      */
     bool setBufferSize(qint64 bufferSize);
     bool setHashType(const QString& hashType);
+    bool setHashType(QCryptographicHash::Algorithm hashType);
     bool copyFile(const QString& copyFromPath, const QString& copyToPath);
     bool generateHash(const QString& copyFromPath);
     bool copyFileGenerateHash(const QString& copyFromPath, const QString& copyToPath);
@@ -129,6 +133,8 @@ private:
     QElapsedTimer * m_timer;
     bool m_cancelRequested;
     bool m_useHardLink;
+
+    QCryptographicHash::Algorithm m_hashMethod;
 };
 
 inline bool CopyLinkUtil::isCancelRequested() const

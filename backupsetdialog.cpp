@@ -88,6 +88,11 @@ void BackupSetDialog::initialize()
   ui->criteriaTableView->setModel(&(m_criteriaForFileMatchTableModel));
 
   ui->hashComboBox->addItem("SHA1");
+  ui->hashComboBox->addItem("SHA512");
+  ui->hashComboBox->addItem("SHA256");
+  ui->hashComboBox->addItem("SHA384");
+  ui->hashComboBox->addItem("SHA224");
+
   ui->hashComboBox->addItem("MD4");
   ui->hashComboBox->addItem("MD5");
 
@@ -157,7 +162,7 @@ void BackupSetDialog::downFilter()
   m_filterTableModel.moveFilterDown(getSelectedFilterRow());
 }
 
-void setLocalValues(const LinkBackFilter& filter)
+void setLocalValues(const LinkBackFilter& )
 {
   // TODO: Fix this. This should create a standard set of values.
 }
