@@ -170,10 +170,9 @@ void LinkBackupThread::processDir(QDir& currentFromDir, QDir& currentToDir)
           pathToLinkFile = m_toDirRoot;
         }
 
-        bool failedToCopy = false;
-
         if (linkEntry == nullptr)
         {
+          bool failedToCopy = false;
           QString fullFileNameToWrite = m_toDirRoot + "/" + currentEntry->getPath();
           bool needHash = (currentEntry->getHash().length() == 0);
           if (needHash)

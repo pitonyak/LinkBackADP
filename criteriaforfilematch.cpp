@@ -25,18 +25,18 @@ CriteriaForFileMatch::~CriteriaForFileMatch()
     }
 }
 
-const CriteriaForFileMatch& CriteriaForFileMatch::operator=(const CriteriaForFileMatch& criteria)
-{
-  return copy(criteria);
-}
-
-const CriteriaForFileMatch& CriteriaForFileMatch::copy(const CriteriaForFileMatch& criteria)
+CriteriaForFileMatch& CriteriaForFileMatch::operator=(const CriteriaForFileMatch& criteria)
 {
   if (this != & criteria)
   {
       *m_criteria = *criteria.m_criteria;
   }
   return *this;
+}
+
+const CriteriaForFileMatch& CriteriaForFileMatch::copy(const CriteriaForFileMatch& criteria)
+{
+  return operator=(criteria);
 }
 
 bool CriteriaForFileMatch::getField(CriteriaField field) const

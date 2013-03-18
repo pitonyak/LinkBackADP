@@ -59,7 +59,7 @@ public:
    * \returns Reference to this object.
    *
    ***************************************************************************/
-  const CriteriaForFileMatch& operator=(const CriteriaForFileMatch& criteria);
+  CriteriaForFileMatch& operator=(const CriteriaForFileMatch& criteria);
 
   //**************************************************************************
   //! Copy the argument into this object.

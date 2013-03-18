@@ -148,15 +148,26 @@ public:
 
 
 private:
+    /*! \brief File size. */
     quint64 m_size;
+
+    /*! \brief Identifies backup type; C if a copy was made, L if a link was made. */
     QChar m_linkType;
+
+    /*! \brief File date/time */
     QDateTime m_time;
+
+    /*! \brief Path to file relative to backup root directory. */
     QString m_path;
+
+    /*! \brief Hash value. */
     QString m_hash;
 
+    /*! \brief Format for the date/time. */
     static QString dateTimeFormat;
-    static QChar fieldSeparator;
 
+    /*! \brief Character used to separate files in the produced file. This character had better not be written to the file. Current value is a comma, so a file with a comma in the file name will cause a problem. */
+    static QChar fieldSeparator;
 };
 
 inline quint64 DBFileEntry::getSize() const

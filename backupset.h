@@ -40,7 +40,7 @@ public:
      *  \param [in] backupSet Object to copy into this object.
      *  \return Reference to this object.
      */
-    const BackupSet& operator=(const BackupSet& backupSet);
+    BackupSet& operator=(const BackupSet& backupSet);
 
     /*! \brief Empty all lists and set all strings to be empty. */
     void clear();

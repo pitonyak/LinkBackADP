@@ -82,7 +82,24 @@ bool CriteriaForFileMatchTableModel::setData ( const QModelIndex & index, const 
 {
   if (role == Qt::EditRole)
   {
-    m_criteria[index.row()].setField(static_cast<CriteriaForFileMatch::CriteriaField>(index.column()), value.toBool());
+    // According to http://qt-project.org/doc/qt-5.0/qtcore/qabstractitemmodel.html#setData
+    // The dataChanged() signal should be emitted if the data was successfully set.
+    // Must I do this specifically?
+    //
+    // Only set if the data has changed?
+    //
+
+    bool newValue = value.toBool();
+
+    // Field of interest is a binary flag, the column is a zero indexed number from zero.
+    // Convert 0->1, 1->2, 2->4, 3->8, etc.
+    CriteriaForFileMatch::CriteriaField fieldOfInterest = static_cast<CriteriaForFileMatch::CriteriaField>(pow(2, index.column()));
+    CriteriaForFileMatch& criteria = m_criteria[index.row()];
+
+    if (criteria.getField(fieldOfInterest) != newValue) {
+      criteria.setField(fieldOfInterest, newValue);
+      emit dataChanged(index, index);
+    }
     return true;
   }
   return false;

@@ -380,23 +380,23 @@ QString CopyLinkUtil::getLastHash() const
 QString CopyLinkUtil::getStats() const
 {
   QStringList sList;
-  if (m_bytesCopied > 0)
+  if (getBytesCopied() > 0)
   {
-    sList.append(QString("%1 Copied at %2").arg(getBPS(m_bytesCopied, 0), getBPS(m_bytesCopied, m_millisCopied)));
+    sList.append(QString("%1 Copied at %2").arg(getBPS(getBytesCopied(), 0), getBPS(getBytesCopied(), getMillisCopied())));
   }
-  if (m_bytesHashed > 0)
+  if (getBytesHashed() > 0)
   {
-    sList.append(QString("%1 Hashed at %2").arg(getBPS(m_bytesHashed, 0), getBPS(m_bytesHashed, m_millisHashed)));
+    sList.append(QString("%1 Hashed at %2").arg(getBPS(getBytesHashed(), 0), getBPS(getBytesHashed(), getMillisHashed())));
   }
-  if (m_bytesCopiedHashed > 0)
+  if (getBytesCopiedHashed() > 0)
   {
-    sList.append(QString("%1 Copied and Hashed simultaneously at %2").arg(getBPS(m_bytesCopiedHashed, 0), getBPS(m_bytesCopiedHashed, m_millisCopiedHashed)));
+    sList.append(QString("%1 Copied and Hashed simultaneously at %2").arg(getBPS(getBytesCopiedHashed(), 0), getBPS(getBytesCopiedHashed(), getMillisCopiedHashed())));
   }
-  if (m_bytesLinked > 0)
+  if (getBytesLinked() > 0)
   {
-    sList.append(QString("%1 Linked in %2 seconds").arg(getBPS(m_bytesLinked, 0), QString::number(m_millisLinked / 1000)));
+    sList.append(QString("%1 Linked in %2 seconds").arg(getBPS(getBytesLinked(), 0), QString::number(getMillisLinked() / 1000)));
   }
-  sList.append(QString("%1 total copied and %2 total read").arg(getBPS(m_bytesCopiedHashed + m_bytesCopied, 0), getBPS(m_bytesCopiedHashed + m_bytesCopied + m_bytesHashed, 0)));
+  sList.append(QString("%1 total copied and %2 total read (copied and hashed)").arg(getBPS(getBytesCopiedHashed() + getBytesCopied(), 0), getBPS(getBytesCopiedHashed() + getBytesCopied() + getBytesHashed(), 0)));
   QString s;
   for (int i=0; i<sList.count(); ++i)
   {
