@@ -9,7 +9,7 @@ class QDir;
 class QCryptographicHash;
 
 //**************************************************************************
-//! TODO:
+//! Perform the actual work of generating a backup.
 /*!
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
@@ -18,46 +18,113 @@ class QCryptographicHash;
 
 class LinkBackupThread : public QThread
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit LinkBackupThread(QObject *parent = 0);
-    explicit LinkBackupThread(const BackupSet& m_backupSet, QObject *parent = 0);
-    virtual ~LinkBackupThread();
-    bool isCancelRequested() const;
-    void setBackupSet(const BackupSet& m_backupSet);
 
-    QString newestBackDirectory(const QString& parentPath) const;
-    QString createBackDirectory(const QString& parentPath) const;
+  /*! \brief Default constructor with no backup set.
+     *
+     *  \param [in] parent is this object's owner and the destructor will destroys all child objects.
+     */
+  explicit LinkBackupThread(QObject *parent = 0);
+
+  /*! \brief Constructor that sets this objects backupset.
+     *
+     *  \param [in] backupSet is the BackupSet to use for the next backup (contains filter and path information).
+     *  \param [in] parent is this object's owner and the destructor will destroys all child objects.
+     */
+  explicit LinkBackupThread(const BackupSet& backupSet, QObject *parent = 0);
+
+  /*! \brief Destructor. Delete current and old file entries. */
+  virtual ~LinkBackupThread();
+
+  /*! \brief Return true if cancel was requested on the backup set. */
+  bool isCancelRequested() const;
+
+  /*! \brief Set the backup set, which contains path and filter information for the desired backup.
+     *
+     *  \param [in] backupSet is the BackupSet to use for the next backup (contains filter and path information).
+     */
+  void setBackupSet(const BackupSet& backupSet);
+
+  /*! \brief Get the full path to the most recent backup directory contained in the parentPath.
+     *
+     *  \param [in] parentPath is the directory containing existing backups.
+     *  \return Full path to the most recent backup, or an empty string if no backup exists.
+     */
+  static QString newestBackDirectory(const QString& parentPath);
+
+  /*! \brief Create a directory to contain a new backup based on the current date and time in the format "yyyyMMdd-hhmmss".
+     *
+     *  \param [in] parentPath is the directory that will contain the new directory.
+     *  \return Full path to the created directory, or an empty string if an error occurred.
+     */
+  static QString createBackDirectory(const QString& parentPath);
 
 protected:
-    virtual void run();
-    virtual void processDir(QDir& currentFromDir, QDir& currentToDir);
-    void setOldEntries(DBFileEntries* entries);
-    void setCurrentEntries(DBFileEntries* entries);
-    bool passes(const QFileInfo& info) const;
+  /*! \brief Start the thread and do the entire process. */
+  virtual void run();
 
-    int numOldEntries() const;
+  /*! \brief Process an entire directory (as in backup this directory). Recurse as needed.
+     *
+     *  The to and from directory variables are modified as the backup is performed.
+     *
+     *  \param [in, out] currentFromDir is the directory which is being backedup.
+     *  \param [in, out] currentToDir is the directory to which the backup is written.
+     */
+  virtual void processDir(QDir& currentFromDir, QDir& currentToDir);
+
+  /*! \brief Set the entire set of entries for the previous backup set with this one.
+     *
+     *  This object owns the set and will delete it, so, it must be allocated using new.
+     *  Passing in a nullptr simply deletes the existing set freeing up the memory, leaving no entries.
+     *
+     *  \param Previous backup set.
+     */
+  void setOldEntries(DBFileEntries* entries);
+
+  /*! \brief Set the entire set of current entries (current backup set) with this one.
+     *
+     *  This object owns the set and will delete it, so, it must be allocated using new.
+     *  Passing in a nullptr simply deletes the existing set freeing up the memory, leaving no entries.
+     *
+     *  \param New set of file entries.
+     */
+  void setCurrentEntries(DBFileEntries* entries);
+
+  /*! \brief Determine if a file or directory will be processed.
+     *
+     *  This is a thin wrapper around the passes method for the current BackupSet.
+     *
+     *  \param [in] info QFileInfo object referencing the file to be checked.
+     *  \return True if the file or directory passes the backup set filters, false otherwise.
+     *  \sa BackupSet::passes()
+     */
+  bool passes(const QFileInfo& info) const;
+
+  /*! \brief Return the number of entries in the previous backup object. */
+  int numOldEntries() const;
 
 signals:
 
 public slots:
-    void requestCancel();
+  /*! \brief Set the "cancel requested" flag so that the thread knows it should stop. */
+  void requestCancel();
 
 private:
-    /*! \brief Set when the thread should stop running. */
-    bool m_cancelRequested;
-    /*! \brief List of entries built as files are processed. */
-    DBFileEntries* m_currentEntries;
-    /*! \brief . List of entries from the previous backup. */
-    DBFileEntries* m_oldEntries;
-    /*! \brief Path to the new backup, this includes the time/date stamp but not the head directory name where the backup begins. */
-    QString m_toDirRoot;
-    /*! \brief Path to the "from" directory without the first diretcory name. */
-    QString m_fromDirWithoutTopDirName;
-    /*! \brief Path to the last backup, this includes the time/date stamp but not the first root portion. */
-    QString m_previousDirRoot;
-    /*! \brief Contains all backup paratmers such filters and criteria. */
-    BackupSet m_backupSet;
+  /*! \brief Set when the thread should stop running. */
+  bool m_cancelRequested;
+  /*! \brief List of entries built as files are processed. */
+  DBFileEntries* m_currentEntries;
+  /*! \brief . List of entries from the previous backup. */
+  DBFileEntries* m_oldEntries;
+  /*! \brief Path to the new backup, this includes the time/date stamp but not the head directory name where the backup begins. */
+  QString m_toDirRoot;
+  /*! \brief Path to the "from" directory without the first diretcory name. */
+  QString m_fromDirWithoutTopDirName;
+  /*! \brief Path to the last backup, this includes the time/date stamp but not the first root portion. */
+  QString m_previousDirRoot;
+  /*! \brief Contains all backup paratmers such filters and criteria. */
+  BackupSet m_backupSet;
 };
 
 inline bool LinkBackupThread::isCancelRequested() const {

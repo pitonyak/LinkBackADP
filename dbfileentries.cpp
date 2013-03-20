@@ -46,7 +46,7 @@ void DBFileEntries::clear()
   m_hashToSizeToEntry.clear();
 }
 
-bool DBFileEntries::entriesMatch(const CriteriaForFileMatch& criteria, const DBFileEntry* myEntry, DBFileEntry* entryToMatch, const QString& matchInitialPath) const
+bool DBFileEntries::entriesMatch(const CriteriaForFileMatch& criteria, const DBFileEntry* myEntry, DBFileEntry* entryToMatch, const QString& matchInitialPath)
 {
   if (myEntry == nullptr || entryToMatch == nullptr)
   {

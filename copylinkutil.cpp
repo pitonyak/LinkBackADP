@@ -116,7 +116,7 @@ qint64 CopyLinkUtil::getMillisCopiedHashed() const
   return m_millisCopiedHashed;
 }
 
-bool CopyLinkUtil::setBufferSize(qint64 bufferSize)
+bool CopyLinkUtil::setBufferSize(const qint64 bufferSize)
 {
   if (m_buffer != nullptr)
   {
@@ -273,7 +273,7 @@ bool CopyLinkUtil::copyFileGenerateHash(const QString& copyFromPath, const QStri
   return internalCopyFile(copyFromPath, copyToPath, true);
 }
 
-bool CopyLinkUtil::internalCopyFile(const QString& copyFromPath, const QString& copyToPath, bool doHash)
+bool CopyLinkUtil::internalCopyFile(const QString& copyFromPath, const QString& copyToPath, const bool doHash)
 {
   qDebug(qPrintable(QString("Ready to read from : %1").arg(copyFromPath)));
   qDebug(qPrintable(QString("Ready to write to  : %1").arg(copyToPath)));
@@ -412,14 +412,14 @@ QString CopyLinkUtil::getStats() const
   return s;
 }
 
-QString CopyLinkUtil::getBPS(qint64 bytesCopied, qint64 millis) const
+QString CopyLinkUtil::getBPS(const qint64 numBytes, const qint64 millis)
 {
-  if (bytesCopied == 0)
+  if (numBytes == 0)
   {
     return QString("0 Bytes");
   }
 
-  double dBytesPerSecond = (millis != 0) ? 1000.0 * bytesCopied / millis : bytesCopied;
+  double dBytesPerSecond = (millis != 0) ? 1000.0 * numBytes / millis : numBytes;
 
   int i=0;
   const char* terms[] = {"B", "KB", "MB", "GB", "TB", "Petabytes", "Exabytes", "Zettabyte", "Yottabyte", "Brontobyte", "Geopbyte", nullptr};

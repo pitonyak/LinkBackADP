@@ -73,7 +73,7 @@ void LinkBackupADP::cancelBackup()
   }
 }
 
-void LinkBackupADP::formattedMessage(const QString& formattedMessage, SimpleLoggerRoutingInfo::MessageCategory category)
+void LinkBackupADP::formattedMessage(const QString& formattedMessage, const SimpleLoggerRoutingInfo::MessageCategory category)
 {
     if (formattedMessage.length() == 0)
     {

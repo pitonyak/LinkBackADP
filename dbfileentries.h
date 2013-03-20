@@ -63,7 +63,7 @@ public:
      *  \param [in] matchInitialPath When prepended to entry, this yields the full path to the file on disk.
      *  \return Pointer to the file entry, or null if no match is found.
      */
-    bool entriesMatch(const CriteriaForFileMatch& criteria, const DBFileEntry* myEntry, DBFileEntry* entryToMatch, const QString& matchInitialPath) const;
+    static bool entriesMatch(const CriteriaForFileMatch& criteria, const DBFileEntry* myEntry, DBFileEntry* entryToMatch, const QString& matchInitialPath);
 
     /*! \brief Read entry file from the path specified. The file name is not part of the path.
      *
