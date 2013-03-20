@@ -31,7 +31,9 @@ SOURCES += main.cpp\
     copylinkutil.cpp \
     simpleloggeradp.cpp \
     simpleloggerroutinginfo.cpp \
-    xmlutility.cpp
+    xmlutility.cpp \
+    logmessagecontainer.cpp \
+    logmessagequeue.cpp
 
 HEADERS  += linkbackupadp.h \
     backupsetdialog.h \
@@ -50,7 +52,9 @@ HEADERS  += linkbackupadp.h \
     linkbackupglobals.h \
     simpleloggeradp.h \
     simpleloggerroutinginfo.h \
-    xmlutility.h
+    xmlutility.h \
+    logmessagecontainer.h \
+    logmessagequeue.h
 
 FORMS    += linkbackupadp.ui \
     backupsetdialog.ui
