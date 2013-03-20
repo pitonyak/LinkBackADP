@@ -29,23 +29,26 @@ public:
     /*! \brief Copy Constructor.*/
     CopyLinkUtil(const CopyLinkUtil& obj);
 
+    //**************************************************************************
     /*! \brief Constructor. You must still set the buffer size before use.
      *
      *  \param [in] hashType Set the hash type for future hash operations.
-     */
+     ***************************************************************************/
     CopyLinkUtil(const QString& hashType);
 
+    //**************************************************************************
     /*! \brief Constructor.
      *
      *  \param [in] hashType Set the hash type for future hash operations.
      *  \param [in] bufferSize Set the buffer size for copying files and calculating hash values.
-     */
+     ***************************************************************************/
     CopyLinkUtil(const QString& hashType, qint64 bufferSize);
 
+    //**************************************************************************
     /*! \brief Constructor. You must still set the hash type before calculating a hash.
      *
      *  \param [in] bufferSize Set the buffer size for copying files and calculating hash values.
-     */
+     ***************************************************************************/
     CopyLinkUtil(qint64 bufferSize);
 
     /*! \brief Destructor to delete things such as the internal buffer. */
@@ -75,14 +78,16 @@ public:
     /*! \brief Get number of milliseconds used to copy and hash data at the same time. */
     qint64 getMillisCopiedHashed() const;
 
+    //**************************************************************************
     /*! \brief Create a read buffer.
      *
      *  The buffer is resized as needed. Setting to less than 1 bytes leaves no buffer.
      *  \param [in] bufferSize Size of the read buffer.
      *  \return True if the command succeeds.
-     */
+     ***************************************************************************/
     bool setBufferSize(const qint64 bufferSize);
 
+    //**************************************************************************
     /*! \brief Set the hash type based on a string. Case does not matter.
      *
      *  Sadly, the hash type enumeration is not fully supported by the Qt meta-data stuff,
@@ -93,33 +98,37 @@ public:
      *
      *  \param [in] hashType is a string representation of the desired hash type.
      *  \return True if the command succeeds.
-     */
+     ***************************************************************************/
     bool setHashType(const QString& hashType);
 
+    //**************************************************************************
     /*! \brief Set the hash type based on the Qt enumerated type.
      *
      *  \param [in] hashType of the desired hash type.
      *  \return True if the command succeeds.
-     */
+     ***************************************************************************/
     bool setHashType(QCryptographicHash::Algorithm hashType);
 
+    //**************************************************************************
     /*! \brief Copy a file without calculating the hash.
      *
      *  \param [in] copyFromPath Full path to an existing file.
      *  \param [in] copyToPath Full path to where the file will be copied.
      *  \return True on success, false otherwise.
      *  \sa CopyLinkUtil::internalCopyFile()
-     */
+     ***************************************************************************/
     bool copyFile(const QString& copyFromPath, const QString& copyToPath);
 
+    //**************************************************************************
     /*! \brief Generate the hash value for a file. Call getLastHash() to get the hash value.
      *
      *  \param [in] copyFromPath Full path to an existing file.
      *  \return True on success, false otherwise.
      *  \sa CopyLinkUtil::getLastHash()
-     */
+     ***************************************************************************/
     bool generateHash(const QString& copyFromPath);
 
+    //**************************************************************************
     /*! \brief Copy a file and calculate the hash at the same time. Call getLastHash() to get the hash value.
      *
      *  \param [in] copyFromPath Full path to an existing file.
@@ -127,9 +136,10 @@ public:
      *  \return True on success, false otherwise.
      *  \sa CopyLinkUtil::internalCopyFile()
      *  \sa CopyLinkUtil::getLastHash()
-     */
+     ***************************************************************************/
     bool copyFileGenerateHash(const QString& copyFromPath, const QString& copyToPath);
 
+    //**************************************************************************
     /*! \brief Create a link to an existing file.
      *
      *  The "use hard link" property in this object determines if a hard or soft link is created.
@@ -138,7 +148,7 @@ public:
      *  \param [in] linkToThisFile Full path to an existing file. A link will reference this file.
      *  \param [in] placeLinkHere Full path to where the link will be created.
      *  \return True on success, false otherwise.
-     */
+     ***************************************************************************/
     bool linkFile(const QString& linkToThisFile, const QString& placeLinkHere);
 
     /*! \brief Get a upper-case representation of the current hash generator. */
@@ -149,19 +159,21 @@ public:
     /*! \brief Set the "cancel requested" flag. */
     void setCancelRequested(bool cancelRequested);
 
+    //**************************************************************************
     /*! \brief Get a copy of the copy statistics as a string suitable for display to the user.
      *  Contains Bytes Per Second copied, hashed, and copied/hashed. Also contains total bytes linked.
      *  \return Multi-line String representation of the statistics.
-     */
+     ***************************************************************************/
     QString getStats() const;
 
+    //**************************************************************************
     /*! \brief Return a formatted string such as "8 MB/sec" representing "Bytes Per Second".
      * Units are selected such that the number is less than 1024.
      *
      *  \param [in] numBytes is the number of bytes.
      *  \param [in] millis is the number of elapsed milliseconds.
      *  \return Formatted string representing "Bytes Per Second".
-     */
+     ***************************************************************************/
     static QString getBPS(const qint64 numBytes, const qint64 millis);
 
     /*! \brief Reset the stats for a new backup. */
@@ -181,6 +193,7 @@ public:
 
 private:
 
+    //**************************************************************************
     /*! \brief Copy a file and calculate the hash (if requested) at the same time. Call getLastHash() to get the hash value.
      *
      *  \param [in] copyFromPath Full path to an existing file.
@@ -209,19 +222,22 @@ private:
     /*! \brief Total number of milliseconds while files were copied and hashed at the same time since the stats were reset by resetStats(). */
     qint64 m_millisCopiedHashed;
 
+    //**************************************************************************
     /*! \brief Internal buffer used while reading files for copying and hashing.
      *  \sa CopyLinkUtil::setBufferSize()
-     */
+     ***************************************************************************/
     char* m_buffer;
 
+    //**************************************************************************
     /*! \brief Size of the internal buffer used while reading files for copying and hashing.
      *  \sa CopyLinkUtil::setBufferSize()
-     */
+     ***************************************************************************/
     qint64 m_bufferSize;
 
+    //**************************************************************************
     /*! \brief Hash generator to use to generate a hash.
      *  \sa CopyLinkUtil::setHashType()
-     */
+     ***************************************************************************/
     QCryptographicHash* m_hashGenerator;
 
     /*! \brief Used to time operations such as copy, hash, and link. */
@@ -230,15 +246,17 @@ private:
     /*! \brief If true, then a cancel has been requested and copying / hashing is aborted; this is why I use my own copy routines, there is no way to cancel a built-in copy. */
     bool m_cancelRequested;
 
+    //**************************************************************************
     /*! \brief If set to true, hard links are used to reference "duplicate" files. This is expected to always be true.
      *  \sa CopyLinkUtil::setUseHardLink()
      *  \sa CopyLinkUtil::setUseSymbolicLink()
-     */
+     ***************************************************************************/
     bool m_useHardLink;
 
+    //**************************************************************************
     /*! \brief Hash generator type to use to generate a hash.
      *  \sa CopyLinkUtil::setHashType()
-     */
+     ***************************************************************************/
     QCryptographicHash::Algorithm m_hashMethod;
 };
 

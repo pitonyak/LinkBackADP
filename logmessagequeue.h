@@ -20,6 +20,11 @@
 {
   Q_OBJECT
 public:
+  //**************************************************************************
+  /*! \brief Default constructor with no backup set.
+   *
+   *  \param [in] parent is this object's owner and the destructor will destroys all child objects.
+   ***************************************************************************/
   explicit LogMessageQueue(QObject *parent = 0);
 
   //**************************************************************************
