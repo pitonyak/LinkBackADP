@@ -1,7 +1,7 @@
 
 <BackupSet version="1">
     <From>/home/andy/VMWare</From>
-    <To>/external/LinkBackADP/VMWare</To>
+    <To>/run/media/andy/external1t/LinkBackADP/VMWare</To>
     <Hash>SHA1</Hash>
     <Filters>
         <Filter>

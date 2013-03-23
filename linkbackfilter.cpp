@@ -74,7 +74,7 @@ void LinkBackFilter::clearLists(bool deleteLists, bool createIfDoNotExist)
   }
 }
 
-const LinkBackFilter& LinkBackFilter::operator=(const LinkBackFilter& filter)
+LinkBackFilter& LinkBackFilter::operator=(const LinkBackFilter& filter)
 {
   if (this != & filter)
   {

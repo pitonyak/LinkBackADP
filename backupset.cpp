@@ -12,7 +12,7 @@ BackupSet::BackupSet(const BackupSet& backupSet)
   operator=(backupSet);
 }
 
-const BackupSet& BackupSet::operator=(const BackupSet& backupSet)
+BackupSet& BackupSet::operator=(const BackupSet& backupSet)
 {
   if (this != &backupSet)
   {

@@ -65,7 +65,7 @@ public:
    * \param cs    If true, then the search is case sensitive.
    * \return True if the supplied string matches the wildcard, false otherwise.
    ***************************************************************************/
-  static bool FNMatch(const QString& sStr, const QString sWild, Qt::CaseSensitivity cs = Qt::CaseInsensitive)
+  static bool FNMatch(const QString& sStr, const QString& sWild, Qt::CaseSensitivity cs = Qt::CaseInsensitive)
   {
     //QString s = sStr;
     //QString w = sWild;

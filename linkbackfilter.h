@@ -70,7 +70,7 @@ public:
      *  \param [in] filter Filter to copy into this one.
      *  \return Reference to this object.
      */
-    const LinkBackFilter& operator=(const LinkBackFilter& filter);
+    LinkBackFilter& operator=(const LinkBackFilter& filter);
 
     /*! \brief Create a copy of this object that you then own and must delete.
      *

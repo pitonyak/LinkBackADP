@@ -12,19 +12,17 @@ DBFileEntry::DBFileEntry() : m_size(0), m_linkType('C')
 {
 }
 
-DBFileEntry::DBFileEntry(const QFileInfo& info, const QString& rootPath)
+DBFileEntry::DBFileEntry(const QFileInfo& info, const QString& rootPath) : m_size(info.size()), m_time(info.lastModified()), m_path(info.canonicalFilePath())
 {
-  m_time = info.lastModified();
-  m_size = info.size();
-  QString fullPath = info.canonicalFilePath();
-  if (rootPath.length() == 0)
+  if (rootPath.length() > 0)
   {
-    m_path = fullPath;
-  } else if (fullPath.startsWith(rootPath, Qt::CaseSensitive)) {
-    m_path = fullPath.right(fullPath.length() - rootPath.length());
-  } else {
-    qDebug(qPrintable(QString("File path (%1) does not contain root path (%2)").arg(fullPath, rootPath)));
-    m_path = fullPath;
+    if (m_path.startsWith(rootPath, Qt::CaseSensitive)) {
+      // Remove the root-path from the full path.
+      m_path = m_path.right(m_path.length() - rootPath.length());
+    } else {
+      // Unsure how this happened, the full path should always contain the root path.
+      qDebug(qPrintable(QString("File path (%1) does not contain root path (%2)").arg(m_path, rootPath)));
+    }
   }
 }
 

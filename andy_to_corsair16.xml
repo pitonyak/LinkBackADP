@@ -7,7 +7,7 @@
         <Filter>
             <CompareType>Equal</CompareType>
             <CompareField>Name</CompareField>
-            <Value>tmp,temp,cache,VMWare,NetworkTestData,MUSIC,Downloads,Komodo-Edit-7,LearningWCF,cxoffice,OO_Source,Qt5.0.0,.ccache</Value>
+            <Value>tmp,temp,cache,VMWare,NetworkTestData,MUSIC,Downloads,Komodo-Edit-7,LearningWCF,cxoffice,OO_Source,.ccache,netbeans-7.3</Value>
             <CaseSensitive>False</CaseSensitive>
             <Invert>False</Invert>
             <Accept>False</Accept>

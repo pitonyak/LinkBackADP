@@ -62,7 +62,7 @@ public:
   const SimpleLoggerRoutingInfo& copy(const SimpleLoggerRoutingInfo& obj);
 
   /*! \brief Assignment operator. */
-  const SimpleLoggerRoutingInfo& operator=(const SimpleLoggerRoutingInfo& obj);
+  SimpleLoggerRoutingInfo& operator=(const SimpleLoggerRoutingInfo& obj);
 
   //**************************************************************************
   /*! \brief Return true if the specified routing is on. If the routing is not known, a value of true is returned.

@@ -9,13 +9,13 @@
 
 namespace Ui
 {
-    class LinkBackupADP;
+class LinkBackupADP;
 }
 
 class LinkBackupThread;
 
 //**************************************************************************
-//! This is the main application window, which handles menu commands and similar.
+//! Wrapper around the LinkBackupADP main window handing things such as starting and ending backups and exiting the application.
 /*!
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
@@ -24,7 +24,7 @@ class LinkBackupThread;
 
 class LinkBackupADP : public QMainWindow
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
     //**************************************************************************
@@ -89,14 +89,29 @@ private slots:
   void on_actionCancelBackup_triggered();
 
 private:
-    Ui::LinkBackupADP *ui;
-    LinkBackupThread* m_backupThread;
-    QString m_configFilePath;
-    BackupSet m_backupSet;
-    long m_numLinesInEditor;
-    long m_maxLinesInEditor;
-    long m_numLinesDelete;
-    QMutex m_editorMutex;
+  /*!  \brief The User Interface portion of the GUI. */
+  Ui::LinkBackupADP *ui;
+
+  /*!  \brief Any existing backup thread. */
+  LinkBackupThread* m_backupThread;
+
+  /*!  \brief Full path to the cofiguration file (for the BackupSet). */
+  QString m_configFilePath;
+
+  /*!  \brief Controls the backup, contains filters, match criteria, and path information. */
+  BackupSet m_backupSet;
+
+  /*!  \brief Number of lines currently in the text editor. */
+  long m_numLinesInEditor;
+
+  /*!  \brief Max lines to allow in the text editor. */
+  long m_maxLinesInEditor;
+
+  /*!  \brief Number of lines to delete from the text editor (when there are too many lines). */
+  long m_numLinesDelete;
+
+  /*!  \brief Prevent multiple threads from changing the editor at the same time. */
+  QMutex m_editorMutex;
 };
 
 #endif // LINKBACKUPADP_H

@@ -32,7 +32,9 @@ SOURCES += main.cpp\
     simpleloggeradp.cpp \
     simpleloggerroutinginfo.cpp \
     xmlutility.cpp \
-    enhancedqcryptographichash.cpp
+    enhancedqcryptographichash.cpp \
+    logmessagecontainer.cpp \
+    logmessagequeue.cpp
 
 HEADERS  += linkbackupadp.h \
     backupsetdialog.h \
@@ -52,7 +54,9 @@ HEADERS  += linkbackupadp.h \
     simpleloggeradp.h \
     simpleloggerroutinginfo.h \
     xmlutility.h \
-    enhancedqcryptographichash.h
+    enhancedqcryptographichash.h \
+    logmessagecontainer.h \
+    logmessagequeue.h
 
 FORMS    += linkbackupadp.ui \
     backupsetdialog.ui

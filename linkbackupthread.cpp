@@ -170,10 +170,9 @@ void LinkBackupThread::processDir(QDir& currentFromDir, QDir& currentToDir)
           pathToLinkFile = m_toDirRoot;
         }
 
-        bool failedToCopy = false;
-
         if (linkEntry == nullptr)
         {
+          bool failedToCopy = false;
           QString fullFileNameToWrite = m_toDirRoot + "/" + currentEntry->getPath();
           bool needHash = (currentEntry->getHash().length() == 0);
           if (needHash)
@@ -232,13 +231,14 @@ bool LinkBackupThread::passes(const QFileInfo& info) const
   return m_backupSet.passes(info);
 }
 
-QString LinkBackupThread::newestBackDirectory(const QString& parentPath) const
+QString LinkBackupThread::newestBackDirectory(const QString& parentPath)
 {
   QDir dir(parentPath);
   if (!dir.exists()) {
     ERROR_MSG("Directory does not exist in newest Back Directory", 1);
     return "";
   }
+  // File names were created so that sorting the names places them in chronoligical order.
   dir.setFilter(QDir::Dirs);
   dir.setSorting(QDir::Name | QDir::Reversed);
   QFileInfoList list = dir.entryInfoList();
@@ -252,7 +252,7 @@ QString LinkBackupThread::newestBackDirectory(const QString& parentPath) const
   return "";
 }
 
-QString LinkBackupThread::createBackDirectory(const QString& parentPath) const
+QString LinkBackupThread::createBackDirectory(const QString& parentPath)
 {
   QDir dir(parentPath);
   if (!dir.exists()) {
