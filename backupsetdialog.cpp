@@ -4,6 +4,7 @@
 #include "criteriaforfilematch.h"
 #include "linkbackupglobals.h"
 #include "checkboxonlydelegate.h"
+#include "enhancedqcryptographichash.h"
 
 #include <QMessageBox>
 #include <QFileDialog>
@@ -87,14 +88,10 @@ void BackupSetDialog::initialize()
   ui->criteriaTableView->setItemDelegate(new CheckBoxOnlyDelegate(ui->criteriaTableView));
   ui->criteriaTableView->setModel(&(m_criteriaForFileMatchTableModel));
 
-  ui->hashComboBox->addItem("SHA1");
-  ui->hashComboBox->addItem("SHA512");
-  ui->hashComboBox->addItem("SHA256");
-  ui->hashComboBox->addItem("SHA384");
-  ui->hashComboBox->addItem("SHA224");
-
-  ui->hashComboBox->addItem("MD4");
-  ui->hashComboBox->addItem("MD5");
+  for (const QCryptographicHash::Algorithm algorithm : EnhancedQCryptographicHash::getAlgorithmList())
+  {
+      ui->hashComboBox->addItem(EnhancedQCryptographicHash::toAlgorithmString(algorithm));
+  }
 
   // To enable and disable buttons on selection change.
   connect(ui->filtersTableView->selectionModel(), SIGNAL(currentChanged ( const QModelIndex &, const QModelIndex &)), this, SLOT(currentFilterRowChanged ( const QModelIndex &, const QModelIndex &)));

@@ -28,8 +28,8 @@ public:
     //**************************************************************************
     //! Constructor that sets data available from the QFileInfo object, but does not set the hash.
     /*!
-     * \param info File information object. Used to set file size and last modified time.
-     * \param rootPath The path to the file is assumed to start after this path.
+     * \param [in] info File information object. Used to set file size and last modified time.
+     * \param [in] rootPath The path to the file is assumed to start after this path.
      *
      ***************************************************************************/
     DBFileEntry(const QFileInfo& info, const QString& rootPath);
@@ -45,10 +45,10 @@ public:
     //**************************************************************************
     //! Set the file size in bytes.
     /*!
-     * \param fileSize File size in bytes.
+     * \param [in] fileSize File size in bytes.
      *
      ***************************************************************************/
-    void setSize(quint64 fileSize);
+    void setSize(const quint64 fileSize);
 
     //**************************************************************************
     //! Get character representing how the file is copied. C means copy and L means Link.
@@ -61,10 +61,10 @@ public:
     //**************************************************************************
     //! Set character representing how the file is copied. C means copy and L means Link.
     /*!
-     * \param C character representing how the file is copied. C means copy and L means Link.
+     * \param [in] C character representing how the file is copied. C means copy and L means Link.
      *
      ***************************************************************************/
-    void setLinkType(QChar c);
+    void setLinkType(const QChar c);
 
     //**************************************************************************
     //! Shortcut for setting the link type to C.
@@ -91,7 +91,7 @@ public:
     //**************************************************************************
     //! Set the last modified date and time.
     /*!
-     * \param dateTime Date and time the file was last modified.
+     * \param [in] dateTime Date and time the file was last modified.
      *
      ***************************************************************************/
     void setTime(const QDateTime& dateTime);
@@ -123,7 +123,7 @@ public:
     //**************************************************************************
     //! Set the hash value.
     /*!
-     * \param hash Hash value for this entry.
+     * \param [in] hash Hash value for this entry.
      *
      ***************************************************************************/
     void setHash(const QString& hash);
@@ -131,7 +131,7 @@ public:
     //**************************************************************************
     //! Populate the values in this class from the stream.
     /*!
-     * \param stream The entry is filled by reading this stream.
+     * \param [in,out] stream The entry is filled by reading this stream.
      * \returns True if successful, false otherwise.
      *
      ***************************************************************************/
@@ -140,7 +140,7 @@ public:
     //**************************************************************************
     //! Persist this object to the stream.
     /*!
-     * \param stream Stream to which this object is written.
+     * \param [in,out] stream Stream to which this object is written.
      * \returns True if successful, false otherwise.
      *
      ***************************************************************************/
@@ -163,7 +163,7 @@ inline quint64 DBFileEntry::getSize() const
 {
   return m_size;
 }
-inline void DBFileEntry::setSize(quint64 fileSize)
+inline void DBFileEntry::setSize(const quint64 fileSize)
 {
   m_size = fileSize;
 }
@@ -172,7 +172,7 @@ inline QChar DBFileEntry::getLinkType() const
 {
   return m_linkType;
 }
-inline void DBFileEntry::setLinkType(QChar c)
+inline void DBFileEntry::setLinkType(const QChar c)
 {
   m_linkType = c;
 }

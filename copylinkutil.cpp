@@ -1,6 +1,6 @@
 #include "copylinkutil.h"
+#include "enhancedqcryptographichash.h"
 
-#include <QCryptographicHash>
 #include <QElapsedTimer>
 #include <QFile>
 #include <QFileInfo>
@@ -10,7 +10,7 @@
 // Report every 2GB of data.
 qint64 CopyLinkUtil::s_readReportBytes = 2L * 1024L * 1024L * 1024L;
 
-CopyLinkUtil::CopyLinkUtil() : m_bytesCopied(0), m_bytesLinked(0), m_bytesHashed(0), m_bytesCopiedHashed(0), m_millisCopied(0), m_millisLinked(0), m_millisHashed(0), m_millisCopiedHashed(0), m_buffer(nullptr), m_bufferSize(0), m_hashGenerator(nullptr), m_timer(nullptr), m_cancelRequested(false), m_useHardLink(true), m_hashMethod(QCryptographicHash::Sha1)
+CopyLinkUtil::CopyLinkUtil() : m_bytesCopied(0), m_bytesLinked(0), m_bytesHashed(0), m_bytesCopiedHashed(0), m_millisCopied(0), m_millisLinked(0), m_millisHashed(0), m_millisCopiedHashed(0), m_buffer(nullptr), m_bufferSize(0), m_hashGenerator(nullptr), m_timer(nullptr), m_cancelRequested(false), m_useHardLink(true), m_hashMethod(EnhancedQCryptographicHash::getDefaultAlgorithm())
 {
   m_timer = new QElapsedTimer();
 }
@@ -141,33 +141,11 @@ bool CopyLinkUtil::setBufferSize(qint64 bufferSize)
 
 bool CopyLinkUtil::setHashType(const QString& hashType)
 {
-  if (hashType.compare("SHA1", Qt::CaseInsensitive) == 0)
+  bool ok;
+  QCryptographicHash::Algorithm algorithm = EnhancedQCryptographicHash::toAlgorithm(hashType, &ok);
+  if (ok)
   {
-    setHashType(QCryptographicHash::Sha1);
-  }
-  else if (hashType.compare("SHA512", Qt::CaseInsensitive) == 0)
-  {
-    setHashType(QCryptographicHash::Sha512);
-  }
-  else if (hashType.compare("SHA384", Qt::CaseInsensitive) == 0)
-  {
-    setHashType(QCryptographicHash::Sha384);
-  }
-  else if (hashType.compare("SHA256", Qt::CaseInsensitive) == 0)
-  {
-    setHashType(QCryptographicHash::Sha256);
-  }
-  else if (hashType.compare("SHA224", Qt::CaseInsensitive) == 0)
-  {
-    setHashType(QCryptographicHash::Sha224);
-  }
-  else if (hashType.compare("MD5", Qt::CaseInsensitive) == 0)
-  {
-    setHashType(QCryptographicHash::Md5);
-  }
-  else if (hashType.compare("MD4", Qt::CaseInsensitive) == 0)
-  {
-    setHashType(QCryptographicHash::Md4);
+    setHashType(algorithm);
   }
   else
   {
@@ -187,7 +165,7 @@ bool CopyLinkUtil::setHashType(QCryptographicHash::Algorithm hashType)
     delete m_hashGenerator;
     m_hashGenerator = nullptr;
   }
-  m_hashGenerator = new QCryptographicHash(hashType);
+  m_hashGenerator = new EnhancedQCryptographicHash(hashType);
   return true;
 }
 

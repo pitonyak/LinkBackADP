@@ -83,44 +83,44 @@ void LinkBackupADP::formattedMessage(const QString& formattedMessage, SimpleLogg
     try
     {
         m_editorMutex.lock();
-    if (m_numLinesInEditor > m_maxLinesInEditor)
-    {
-        QTextCursor tc = ui->logTextEdit->textCursor();
-        tc.beginEditBlock();
-        tc.movePosition( QTextCursor::Start );
-        tc.movePosition(QTextCursor::Down, QTextCursor::KeepAnchor, m_numLinesDelete);
-        tc.removeSelectedText();
-        tc.endEditBlock();
-        m_numLinesInEditor -= m_numLinesDelete;
-        //ui->logTextEdit->setTextCursor( tc );
-    }
-  bool colorChanged = true;
-  QColor savedColor = ui->logTextEdit->textColor();
-  switch (category)
-  {
-  case SimpleLoggerRoutingInfo::ErrorMessage:
-    ui->logTextEdit->setTextColor(QColor(Qt::red));
-    break;
-  case SimpleLoggerRoutingInfo::WarningMessage:
-    ui->logTextEdit->setTextColor(QColor(Qt::magenta));
-    break;
-  case SimpleLoggerRoutingInfo::DebugMessage:
-    ui->logTextEdit->setTextColor(QColor(Qt::green));
-    break;
-  case SimpleLoggerRoutingInfo::TraceMessage:
-    ui->logTextEdit->setTextColor(QColor(Qt::gray));
-    break;
-  default:
-    colorChanged = false;
-  }
+        if (m_numLinesInEditor > m_maxLinesInEditor)
+        {
+            QTextCursor tc = ui->logTextEdit->textCursor();
+            tc.beginEditBlock();
+            tc.movePosition( QTextCursor::Start );
+            tc.movePosition(QTextCursor::Down, QTextCursor::KeepAnchor, m_numLinesDelete);
+            tc.removeSelectedText();
+            tc.endEditBlock();
+            m_numLinesInEditor -= m_numLinesDelete;
+            //ui->logTextEdit->setTextCursor( tc );
+        }
+        bool colorChanged = true;
+        QColor savedColor = ui->logTextEdit->textColor();
+        switch (category)
+        {
+        case SimpleLoggerRoutingInfo::ErrorMessage:
+            ui->logTextEdit->setTextColor(QColor(Qt::red));
+            break;
+        case SimpleLoggerRoutingInfo::WarningMessage:
+            ui->logTextEdit->setTextColor(QColor(Qt::magenta));
+            break;
+        case SimpleLoggerRoutingInfo::DebugMessage:
+            ui->logTextEdit->setTextColor(QColor(Qt::green));
+            break;
+        case SimpleLoggerRoutingInfo::TraceMessage:
+            ui->logTextEdit->setTextColor(QColor(Qt::gray));
+            break;
+        default:
+            colorChanged = false;
+        }
 
-  ++m_numLinesInEditor;
-  ui->logTextEdit->append(formattedMessage);
-  if (colorChanged)
-  {
-    ui->logTextEdit->setTextColor(savedColor);
-  }
-  m_editorMutex.unlock();
+        ++m_numLinesInEditor;
+        ui->logTextEdit->append(formattedMessage);
+        if (colorChanged)
+        {
+            ui->logTextEdit->setTextColor(savedColor);
+        }
+        m_editorMutex.unlock();
     } catch(...) {
         m_editorMutex.unlock();
     }

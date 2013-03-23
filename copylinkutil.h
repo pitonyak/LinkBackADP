@@ -2,7 +2,7 @@
 #define COPYLINKUTIL_H
 
 #include <QString>
-#include <QCryptographicHash>
+#include "enhancedqcryptographichash.h"
 
 class QElapsedTimer;
 
@@ -129,7 +129,7 @@ private:
     char* m_buffer;
     qint64 m_bufferSize;
 
-    QCryptographicHash* m_hashGenerator;
+    EnhancedQCryptographicHash* m_hashGenerator;
     QElapsedTimer * m_timer;
     bool m_cancelRequested;
     bool m_useHardLink;

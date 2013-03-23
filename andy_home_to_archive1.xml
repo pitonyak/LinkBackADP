@@ -2,12 +2,12 @@
 <BackupSet version="1">
     <From>/andrew0/home</From>
     <To>/archive1/adpLink/home</To>
-    <Hash>SHA1</Hash>
+    <Hash>Sha1</Hash>
     <Filters>
         <Filter>
             <CompareType>Equal</CompareType>
             <CompareField>Name</CompareField>
-            <Value>tmp,temp,cache,ISO,VMWare</Value>
+            <Value>tmp,temp,cache,ISO,VMWare,Download,.ccache</Value>
             <CaseSensitive>False</CaseSensitive>
             <Invert>False</Invert>
             <Accept>False</Accept>
@@ -73,15 +73,15 @@
     </Filters>
     <MatchCriteria>
         <Criteria>
-            <FullPath>True</FullPath>
             <FileName>False</FileName>
+            <FullPath>True</FullPath>
             <Time>True</Time>
             <Size>True</Size>
             <Hash>False</Hash>
         </Criteria>
         <Criteria>
-            <FullPath>False</FullPath>
             <FileName>False</FileName>
+            <FullPath>False</FullPath>
             <Time>False</Time>
             <Size>True</Size>
             <Hash>True</Hash>
