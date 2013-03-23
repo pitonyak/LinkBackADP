@@ -234,17 +234,13 @@ private:
      ***************************************************************************/
     qint64 m_bufferSize;
 
-<<<<<<< HEAD
-    EnhancedQCryptographicHash* m_hashGenerator;
-=======
     //**************************************************************************
     /*! \brief Hash generator to use to generate a hash.
      *  \sa CopyLinkUtil::setHashType()
      ***************************************************************************/
-    QCryptographicHash* m_hashGenerator;
+    EnhancedQCryptographicHash* m_hashGenerator;
 
     /*! \brief Used to time operations such as copy, hash, and link. */
->>>>>>> 180eb6890230f7ba88357bacc54e94baeae7e68f
     QElapsedTimer * m_timer;
 
     /*! \brief If true, then a cancel has been requested and copying / hashing is aborted; this is why I use my own copy routines, there is no way to cancel a built-in copy. */
