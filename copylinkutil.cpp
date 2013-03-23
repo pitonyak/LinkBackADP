@@ -253,8 +253,8 @@ bool CopyLinkUtil::copyFileGenerateHash(const QString& copyFromPath, const QStri
 
 bool CopyLinkUtil::internalCopyFile(const QString& copyFromPath, const QString& copyToPath, const bool doHash)
 {
-  qDebug(qPrintable(QString("Ready to read from : %1").arg(copyFromPath)));
-  qDebug(qPrintable(QString("Ready to write to  : %1").arg(copyToPath)));
+  //qDebug(qPrintable(QString("Ready to read from : %1").arg(copyFromPath)));
+  //qDebug(qPrintable(QString("Ready to write to  : %1").arg(copyToPath)));
   QFile fileToRead(copyFromPath);
 
   QFileInfo fileInfo(copyFromPath);

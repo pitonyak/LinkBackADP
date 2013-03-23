@@ -62,8 +62,17 @@ void LinkBackupThread::run()
   m_previousDirRoot = newestBackDirectory(m_backupSet.getToPath());
   if (m_previousDirRoot.length() > 0) {
     INFO_MSG(QString(tr("Found previous backup in %1")).arg(m_previousDirRoot), 1);
-    setOldEntries(DBFileEntries::read(m_previousDirRoot + "/" + m_backupSet.getHashMethod() + ".txt"));
-    INFO_MSG(QString(tr("Found %1 entries in previous backup.")).arg(numOldEntries()), 1);
+
+    QString previousDBFileEntries = findHashFileCaseInsensitive(m_previousDirRoot, m_backupSet.getHashMethod());
+    if (previousDBFileEntries.isEmpty())
+    {
+        WARN_MSG(QString(tr("Although a previous backup was found in %1, file entries were not found for hash method %2.")).arg(m_previousDirRoot, m_backupSet.getHashMethod()), 1);
+    }
+    else
+    {
+        setOldEntries(DBFileEntries::read(previousDBFileEntries));
+        INFO_MSG(QString(tr("Found %1 entries in previous backup.")).arg(numOldEntries()), 1);
+    }
   } else {
     WARN_MSG(QString(tr("No previous backup found.")), 1);
   }
@@ -250,6 +259,27 @@ QString LinkBackupThread::newestBackDirectory(const QString& parentPath)
     }
   }
   return "";
+}
+
+QString LinkBackupThread::findHashFileCaseInsensitive(const QString& parentPath, const QString& hashName)
+{
+    QDir dir(parentPath);
+    if (!dir.exists()) {
+      ERROR_MSG("Directory does not exist in newest Back Directory", 1);
+      return "";
+    }
+    dir.setFilter(QDir::Files);
+    QFileInfoList list = dir.entryInfoList();
+    QRegExp dirNameRegExp(QString("^%1\\.txt$").arg(hashName));
+    dirNameRegExp.setCaseSensitivity(Qt::CaseInsensitive);
+
+    for (int i = 0; i < list.size(); ++i) {
+      QFileInfo fileInfo = list.at(i);
+      if (dirNameRegExp.exactMatch(fileInfo.fileName())) {
+        return fileInfo.canonicalFilePath();
+      }
+    }
+    return "";
 }
 
 QString LinkBackupThread::createBackDirectory(const QString& parentPath)

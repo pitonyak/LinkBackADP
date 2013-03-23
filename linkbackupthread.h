@@ -53,6 +53,8 @@ public:
      */
   static QString newestBackDirectory(const QString& parentPath);
 
+  static QString findHashFileCaseInsensitive(const QString& parentPath, const QString& hashName);
+
   /*! \brief Create a directory to contain a new backup based on the current date and time in the format "yyyyMMdd-hhmmss".
      *
      *  \param [in] parentPath is the directory that will contain the new directory.
