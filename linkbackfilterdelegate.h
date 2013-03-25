@@ -2,6 +2,7 @@
 #define LINKBACKFILTERDELEGATE_H
 
 #include <QItemDelegate>
+#include <QStyledItemDelegate>
 
 //**************************************************************************
 //! Delegate for the dialog for editing filters.
@@ -14,7 +15,7 @@
  * \copyright Andrew Pitonyak, but you may use without restriction.
  * \date 2011-2013
  ***************************************************************************/
-class LinkBackFilterDelegate : public QItemDelegate
+class LinkBackFilterDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:

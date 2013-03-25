@@ -5,6 +5,7 @@
 #include "logmessagequeue.h"
 #include <QObject>
 #include <QDateTime>
+#include <QMutex>
 
 class QTextStream;
 class QFile;
@@ -68,8 +69,6 @@ public:
    ***************************************************************************/
   QXmlStreamReader& read(QXmlStreamReader& reader);
 
-  void processQueuedMessages();
-
   void processOneMessage(const LogMessageContainer& message);
 
 signals:
@@ -87,7 +86,12 @@ public slots:
    ***************************************************************************/
   void receiveMessage(const QString& message, const QString& location, const QDateTime dateTime, const SimpleLoggerRoutingInfo::MessageCategory category, const int level);
 
+  void processQueuedMessages();
+
 private:
+
+  bool isProcessing();
+
   void readInternals(QXmlStreamReader& reader, const QString& version);
 
   LogMessageQueue* m_messageQueue;
@@ -95,6 +99,7 @@ private:
   QTextStream* m_textStream;
   QList<SimpleLoggerRoutingInfo> m_routing;
   QString m_logFileName;
+  mutable QMutex m_processingMutex;
 };
 
 inline QXmlStreamWriter& operator<<(QXmlStreamWriter& writer, SimpleLoggerADP& logger)

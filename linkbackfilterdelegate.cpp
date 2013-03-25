@@ -5,7 +5,7 @@
 #include <QCheckBox>
 
 LinkBackFilterDelegate::LinkBackFilterDelegate(QObject *parent) :
-    QItemDelegate(parent)
+    QStyledItemDelegate(parent)
 {
 }
 
