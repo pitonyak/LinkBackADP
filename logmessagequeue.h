@@ -27,6 +27,8 @@ public:
    ***************************************************************************/
   explicit LogMessageQueue(QObject *parent = 0);
 
+  ~LogMessageQueue();
+
   //**************************************************************************
   /*! \brief Receive a message and queue it for logging.
    *  \param [in] message Primary message to log.
@@ -39,9 +41,9 @@ public:
 
   //**************************************************************************
   /*! \brief Receive a message and queue it for logging. This is thread-safe.
-   *  \param [in] message is the encapsulated message to log.
+   *  \param [in] message is the encapsulated message to log. I own it, you don't.
    ***************************************************************************/
-  void enqueue(const LogMessageContainer& message);
+  void enqueue(LogMessageContainer* message);
 
   //**************************************************************************
   /*! \brief Determine if the queue is empty.
@@ -49,8 +51,20 @@ public:
    ***************************************************************************/
   bool isEmpty() const;
 
+  //**************************************************************************
+  /*! \brief Take the contents of the contained queue and place them into the parameter.
+   *  On return, the queue in this object will be empty and the parameter queue will
+   *  contain all of the messages in the current queue.
+   *  Any values in the parameter queue are lost.
+   *
+   *  \param [in, out] queue contains the existing elements on return.
+   ***************************************************************************/
+  void getAll(QQueue<LogMessageContainer*>& queue);
+
+  QQueue<LogMessageContainer*>& getQueue() { return m_queue; }
+
 signals:
-  
+
 public slots:
   //**************************************************************************
   /*! \brief Receive a message and queue it for logging.
@@ -64,7 +78,7 @@ public slots:
 
 private:
   mutable QMutex m_mutex;
-  QQueue<LogMessageContainer> m_queue;
+  QQueue<LogMessageContainer*> m_queue;
 
 };
 

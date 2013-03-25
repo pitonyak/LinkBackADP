@@ -2,6 +2,7 @@
 #define SIMPLELOGGERADP_H
 
 #include "simpleloggerroutinginfo.h"
+#include "logmessagequeue.h"
 #include <QObject>
 #include <QDateTime>
 
@@ -67,6 +68,10 @@ public:
    ***************************************************************************/
   QXmlStreamReader& read(QXmlStreamReader& reader);
 
+  void processQueuedMessages();
+
+  void processOneMessage(const LogMessageContainer& message);
+
 signals:
   void formattedMessage(const QString& formattedMessage, SimpleLoggerRoutingInfo::MessageCategory category);
 
@@ -84,6 +89,8 @@ public slots:
 
 private:
   void readInternals(QXmlStreamReader& reader, const QString& version);
+
+  LogMessageQueue* m_messageQueue;
   QFile* m_logFile;
   QTextStream* m_textStream;
   QList<SimpleLoggerRoutingInfo> m_routing;

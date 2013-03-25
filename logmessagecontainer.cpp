@@ -17,7 +17,11 @@ LogMessageContainer::LogMessageContainer(const QString& message, const QString& 
 
 LogMessageContainer& LogMessageContainer::operator=(const LogMessageContainer& x) {
   if (&x != this) {
-
+      m_message = x.m_message;
+      m_location = x.m_location;
+      m_dateTime = x.m_dateTime;
+      m_category = x.m_category;
+      m_level = x.m_level;
   }
   return *this;
 }
