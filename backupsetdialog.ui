@@ -39,7 +39,7 @@
     <string>Root location to which the backup is written.</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="filters_label">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -52,7 +52,7 @@
     <string>Filters:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_6">
+  <widget class="QLabel" name="criteria_label">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -320,7 +320,7 @@
     <string>Root location to which the backup is written.</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_4">
+  <widget class="QLabel" name="config_file_label">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -333,7 +333,7 @@
     <string>Config File:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_5">
+  <widget class="QLabel" name="hash_label">
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -376,6 +376,32 @@
    </property>
    <property name="text">
     <string>Copy</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="priority_label">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>20</y>
+     <width>111</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Thread Priority:</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="priorityComboBox">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>20</y>
+     <width>171</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Priority for the backup thread.</string>
    </property>
   </widget>
  </widget>

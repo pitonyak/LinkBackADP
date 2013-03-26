@@ -11,11 +11,67 @@ class QTextStream;
 class QFile;
 
 //**************************************************************************
-//! Log object that handles all of the logging.
-/*!
+/*! \class SimpleLoggerADP
+ * \brief Log object that handles all of the logging.
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
  * \date 2011-2013
+ *
+ *
+ *
+ * \code{.cpp}
+
+   SimpleLoggerADP logger;
+
+   // Configure using an XML file.
+   QFile file("/path/to/log/config/file/logger.xml");
+   if (file.open(QIODevice::ReadOnly)) {
+     QXmlStreamReader reader(&file);
+     reader >> logger;
+     file.close();
+   }
+
+   // Manually configure the logger
+
+   // Step 1: How is the message formatted?
+   SimpleLoggerRoutingInfo routing;
+   routing.addMessageFormat(SimpleLoggerRoutingInfo::DateTimeComponent, "");
+   routing.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " ");
+   routing.addMessageFormat(SimpleLoggerRoutingInfo::MessageTypeComponent, "");
+   routing.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " ");
+   routing.addMessageFormat(SimpleLoggerRoutingInfo::MessageLocationComponent, "");
+   routing.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " | ");
+   routing.addMessageFormat(SimpleLoggerRoutingInfo::MessageTextComponent, "");
+
+   // Step 2: What messages pass?
+   int logLevel = 1;
+
+   routing.setCategoryLevel(SimpleLoggerRoutingInfo::TraceMessage, 0);
+   routing.setCategoryLevel(SimpleLoggerRoutingInfo::DebugMessage, 0);
+   routing.setCategoryLevel(SimpleLoggerRoutingInfo::InformationMessage, logLevel);
+   routing.setCategoryLevel(SimpleLoggerRoutingInfo::WarningMessage, logLevel);
+   routing.setCategoryLevel(SimpleLoggerRoutingInfo::ErrorMessage, logLevel);
+   routing.setCategoryLevel(SimpleLoggerRoutingInfo::UserMessage, logLevel);
+
+   // Step 3: Where are messages sent?
+   routing.setRoutingOn(SimpleLoggerRoutingInfo::RouteFile | SimpleLoggerRoutingInfo::RouteQDebug);
+
+   // Step 4: Add the routing to the logger.
+   logger.addRouting(routing);
+ * \endcode
+ *
+ * By default, messages are parsed as they come in. For high volumn situations, you probably want to
+ * queue the messages and then parse them in bulk.
+ * code{.cpp}
+
+    // Connect the timer to the processing timer every two seconds.
+    QTimer* logProcessingTimer = new QTimer();
+    connect(logProcessingTimer, SIGNAL(timeout()), &getLogger(), SLOT(processQueuedMessages()));
+    logProcessingTimer->start(2000);
+    getLogger().enableMessageQueue();
+
+ * \endcode
+ *
  ***************************************************************************/
 
 class SimpleLoggerADP : public QObject
@@ -69,7 +125,17 @@ public:
    ***************************************************************************/
   QXmlStreamReader& read(QXmlStreamReader& reader);
 
+  //**************************************************************************
+  /*! \brief Process the single message, which means send it to appropriate log outputs (file, qDebug, and emit).
+   *
+   *  \param [in] message is the message to log.
+   ***************************************************************************/
   void processOneMessage(const LogMessageContainer& message);
+
+  //**************************************************************************
+  /*! \brief Create a message queue (if one does not already exist).
+   ***************************************************************************/
+  void enableMessageQueue();
 
 signals:
   void formattedMessage(const QString& formattedMessage, SimpleLoggerRoutingInfo::MessageCategory category);
@@ -86,10 +152,16 @@ public slots:
    ***************************************************************************/
   void receiveMessage(const QString& message, const QString& location, const QDateTime dateTime, const SimpleLoggerRoutingInfo::MessageCategory category, const int level);
 
+  //**************************************************************************
+  /*! \brief Log all of the messages currently in the message queue.
+   ***************************************************************************/
   void processQueuedMessages();
 
 private:
 
+  //**************************************************************************
+  /*! \brief Check to see if the logger is currently processing messages.
+   ***************************************************************************/
   bool isProcessing();
 
   void readInternals(QXmlStreamReader& reader, const QString& version);
@@ -99,6 +171,11 @@ private:
   QTextStream* m_textStream;
   QList<SimpleLoggerRoutingInfo> m_routing;
   QString m_logFileName;
+
+  //**************************************************************************
+  /*! \brief This is locked while processing messages
+   * \sa processQueuedMessages
+   ***************************************************************************/
   mutable QMutex m_processingMutex;
 };
 

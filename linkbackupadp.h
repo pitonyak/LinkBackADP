@@ -15,8 +15,9 @@ class LinkBackupADP;
 class LinkBackupThread;
 
 //**************************************************************************
-//! Wrapper around the LinkBackupADP main window handing things such as starting and ending backups and exiting the application.
-/*!
+/*! \class LinkBackupADP
+ * \brief Wrapper around the LinkBackupADP main window handing things such as starting and ending backups and exiting the application.
+ *
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
  * \date 2011-2013
@@ -28,31 +29,24 @@ class LinkBackupADP : public QMainWindow
 
 public:
     //**************************************************************************
-    //! Constructor. Builds widgets and other things.
-    /*!
+    /*!\brief Constructor. Builds widgets and other things.
      * \param [in,out] parent Object's owner. Parent object's destructor destroys all child objects.
-     *
      ***************************************************************************/
     explicit LinkBackupADP(QWidget *parent = 0);
 
     //**************************************************************************
-    //! Destructor. Cancels the backup and cleans up all UI items.
-    /*!
-     *
+    /*! \brief Destructor. Cancels the backup and cleans up all UI items.
      ***************************************************************************/
     ~LinkBackupADP();
 
     //**************************************************************************
-    //! Cancels any currently running backup threads.
-    /*!
-     *
+    /*! \brief Cancels any currently running backup threads.
      ***************************************************************************/
     void cancelBackup();
 
 public slots:
     //**************************************************************************
-    //! Display the message in the text editor.
-    /*!
+    /*! \brief Display the message in the text editor.
      * \param [in] formattedMessage Message to print.
      * \param [in] category Message category, used to color code messages.
      *
@@ -61,30 +55,23 @@ public slots:
 
 private slots:
   //**************************************************************************
-  //! Handle exit application. Save window geometry and exit; causes currently running backup to stop.
-  /*!
+  /*! \brief Handle exit application. Save window geometry and exit; causes currently running backup to stop.
    *
    ***************************************************************************/
   void on_actionExit_triggered();
 
   //**************************************************************************
-  //! Edit the backup parameters.
-  /*!
-   *
+  /*! \brief Edit the backup parameters.
    ***************************************************************************/
   void on_actionEditBackup_triggered();
 
   //**************************************************************************
-  //! Begin a backup.
-  /*!
-   *
+  /*! \brief Begin a backup.
    ***************************************************************************/
   void on_actionStartBackup_triggered();
 
   //**************************************************************************
-  //! Cancel an active backup.
-  /*!
-   *
+  /*! \brief Cancel an active backup.
    ***************************************************************************/
   void on_actionCancelBackup_triggered();
 

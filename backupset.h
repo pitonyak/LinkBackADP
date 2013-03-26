@@ -6,10 +6,12 @@
 
 #include <QList>
 #include <QXmlStreamWriter>
+#include <QThread>
 
 //**************************************************************************
-//! Hold the settings for a single backup set.
-/*!
+/*! \class BackupSet
+ * \brief Hold the settings for a single backup set.
+ *
  * Primarily, this includes the criteria for two files to be considered the same,
  * The criteria for ignoring or backing up files and directories, directory from which
  * to copy the files, the directory to which the files will be written, and the hash method.
@@ -83,6 +85,20 @@ public:
      */
     void setHashMethod(const QString& hashMethod);
 
+    /*! \brief Get the thread priority at which the backup runs.
+     *
+     *  \return Thread priority at which the backup runs.
+     */
+    const QString& getPriority() const;
+
+    /*! \brief Set the thread priority at which the backup runs.
+     *
+     *  Default value is usually InheritPriority.
+     *
+     *  \param [in] priority is the thread priority at which the backup runs.
+     */
+    void setPriority(const QString& priority);
+
     /*! \brief Write the data to the stream in a manner suitable for saving.
      *
      *  \param [in,out] writer XML stream writer to which the data is written.
@@ -151,6 +167,12 @@ public:
      */
     bool passes(const QFileInfo& info) const;
 
+    static QString priorityToString(QThread::Priority priority);
+
+    static QThread::Priority stringToPriority(const QString& priority, QThread::Priority defaultPriority = QThread::InheritPriority);
+
+    static QStringList getAllPriorities();
+
 private:
     /*! \brief Read the BackupSet XML into this object.
      *
@@ -187,6 +209,9 @@ private:
 
     /*! \brief Hash method to use. */
     QString m_hashMethod;
+
+    /*! \brief Priority at which the backup thread runs. */
+    QString m_backupPriority;
 
     /*! \brief Filters used to determine what is backed-up and what is not. */
     QList<LinkBackFilter> m_filters;
@@ -234,6 +259,16 @@ inline const QString& BackupSet::getHashMethod() const
 inline void BackupSet::setHashMethod(const QString& hashMethod)
 {
     m_hashMethod = hashMethod;
+}
+
+inline const QString& BackupSet::getPriority() const
+{
+    return m_backupPriority;
+}
+
+inline void BackupSet::setPriority(const QString& priority)
+{
+    m_backupPriority = priority;
 }
 
 inline void BackupSet::setAllDefault() {

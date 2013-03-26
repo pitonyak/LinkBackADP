@@ -94,6 +94,11 @@ CopyLinkUtil& getCopyLinkUtil()
   return globalCopyLinkUtil;
 }
 
+SimpleLoggerADP& getLogger()
+{
+  return logger;
+}
+
 void errorMessage(const QString& message, const QString& location, const QDateTime& dateTime, int level)
 {
   logger.receiveMessage(message, location, dateTime, SimpleLoggerRoutingInfo::ErrorMessage, level);

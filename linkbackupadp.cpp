@@ -3,6 +3,7 @@
 #include "ui_linkbackupadp.h"
 #include "linkbackupthread.h"
 #include "simpleloggerroutinginfo.h"
+#include "linkbackupglobals.h"
 
 #include "backupsetdialog.h"
 #include "ui_backupsetdialog.h"
@@ -12,6 +13,7 @@
 #include <QRegExp>
 #include <QMessageBox>
 #include <QSettings>
+#include <QTimer>
 
 LinkBackupADP::LinkBackupADP(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::LinkBackupADP), m_backupThread(0),
@@ -24,6 +26,12 @@ LinkBackupADP::LinkBackupADP(QWidget *parent)
     restoreGeometry(settings.value("mainWindowGeometry").toByteArray());
     // create docks, toolbars, etc...
     restoreState(settings.value("mainWindowState").toByteArray());
+
+    // Connect the timer to the processing timer every two seconds.
+    QTimer* logProcessingTimer = new QTimer();
+    connect(logProcessingTimer, SIGNAL(timeout()), &getLogger(), SLOT(processQueuedMessages()));
+    logProcessingTimer->start(2000);
+    getLogger().enableMessageQueue();
 }
 
 LinkBackupADP::~LinkBackupADP()
@@ -58,7 +66,8 @@ void LinkBackupADP::on_actionStartBackup_triggered()
     m_backupThread = 0;
   }
   m_backupThread = new LinkBackupThread(m_backupSet, this);
-  m_backupThread->start();
+
+  m_backupThread->start(m_backupSet.stringToPriority(m_backupSet.getPriority(), QThread::InheritPriority));
 }
 
 void LinkBackupADP::on_actionCancelBackup_triggered()

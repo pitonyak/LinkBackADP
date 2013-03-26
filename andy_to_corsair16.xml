@@ -3,6 +3,7 @@
     <From>/home/andy</From>
     <To>/run/media/andy/coursair16/LinkBackADP/andy</To>
     <Hash>Sha1</Hash>
+    <Priority>Idle</Priority>
     <Filters>
         <Filter>
             <CompareType>Equal</CompareType>
