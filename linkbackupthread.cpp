@@ -6,12 +6,10 @@
 
 LinkBackupThread::LinkBackupThread(QObject *parent) : QThread(parent), m_cancelRequested(false), m_currentEntries(nullptr), m_oldEntries(nullptr)
 {
-    setPriority(QThread::IdlePriority);
 }
 
 LinkBackupThread::LinkBackupThread(const BackupSet& backupSet, QObject *parent) : QThread(parent), m_cancelRequested(false), m_currentEntries(nullptr), m_oldEntries(nullptr)
 {
-    setPriority(QThread::IdlePriority);
     setBackupSet(backupSet);
 }
 

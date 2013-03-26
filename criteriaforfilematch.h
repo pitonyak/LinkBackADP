@@ -7,8 +7,9 @@
 #include <QMap>
 
 //**************************************************************************
-//! Represents criteria used to determine if two files match.
-/*!
+/*! \class CriteriaForFileMatch
+ * \brief Represents criteria used to determine if two files match.
+ *
  * This object represents criteria such as compare the file name and file size of two files.
  * This object specifies the criteria, but does not perform the comparison.
  * Usually, more than one criteria is set; for example, file size and file hash
@@ -46,9 +47,7 @@ public:
   explicit CriteriaForFileMatch(const CriteriaForFileMatch& criteria, QObject *parent = 0);
 
   //**************************************************************************
-  //! Destructor
-  /*!
-   *
+  /*! \brief Destructor
    ***************************************************************************/
   ~CriteriaForFileMatch();
 

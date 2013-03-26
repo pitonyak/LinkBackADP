@@ -2,12 +2,13 @@
 <BackupSet version="1">
     <From>/home/andy</From>
     <To>/run/media/andy/coursair16/LinkBackADP/andy</To>
-    <Hash>SHA1</Hash>
+    <Hash>Sha1</Hash>
+    <Priority>Idle</Priority>
     <Filters>
         <Filter>
             <CompareType>Equal</CompareType>
             <CompareField>Name</CompareField>
-            <Value>tmp,temp,cache,VMWare,NetworkTestData,MUSIC,Downloads,Komodo-Edit-7,LearningWCF,cxoffice,OO_Source,.ccache,netbeans-7.3</Value>
+            <Value>tmp,temp,cache,VMWare,NetworkTestData,MUSIC,Downloads,Komodo-Edit-7,LearningWCF,cxoffice,OO_Source,.ccache,netbeans-7.3,.recoll</Value>
             <CaseSensitive>False</CaseSensitive>
             <Invert>False</Invert>
             <Accept>False</Accept>

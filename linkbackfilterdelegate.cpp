@@ -5,7 +5,7 @@
 #include <QCheckBox>
 
 LinkBackFilterDelegate::LinkBackFilterDelegate(QObject *parent) :
-    QItemDelegate(parent)
+  QStyledItemDelegate(parent)
 {
 }
 
@@ -13,9 +13,13 @@ LinkBackFilterDelegate::LinkBackFilterDelegate(QObject *parent) :
 #include <QTextStream>
 #include <QCheckBox>
 
-QWidget *LinkBackFilterDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &,
-                      const QModelIndex &index) const
+QWidget *LinkBackFilterDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem & option,
+                                              const QModelIndex &index) const
 {
+  if (!index.isValid())
+  {
+    return nullptr;
+  }
   QVariant qvar = index.model()->data(index, Qt::EditRole);
   if (qvar.type() == QVariant::StringList)
   {
@@ -27,11 +31,24 @@ QWidget *LinkBackFilterDelegate::createEditor(QWidget *parent, const QStyleOptio
     checkBox->setTristate(false);
     return checkBox;
   }
-  return new QLineEdit(parent);
+
+  //widget = new QLineEdit(parent);
+  // Returns an expanding line editor.
+  QWidget* widget = QStyledItemDelegate::createEditor(parent, option, index);
+
+  // If I do not set this to true, then the "view" data shows through the text while editing.
+  // Also, the expanding editor grows over existing controls, and you can see those through
+  // the edit display as well (distracting).
+  widget->setAutoFillBackground(true);
+  return widget;
 }
 
 void LinkBackFilterDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
+  if (!index.isValid())
+  {
+    return;
+  }
   QVariant qvar = index.model()->data(index, Qt::EditRole);
   if (qvar.type() == QVariant::StringList)
   {
@@ -72,21 +89,25 @@ void LinkBackFilterDelegate::setEditorData(QWidget *editor, const QModelIndex &i
 }
 
 void LinkBackFilterDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
-                  const QModelIndex &index) const
+                                          const QModelIndex &index) const
 {
+  if (!index.isValid())
+  {
+    return;
+  }
   QVariant currentModelValue = index.model()->data(index, Qt::DisplayRole);
   QString s;
-  if (typeid(*editor) ==  typeid(QComboBox))
+  if (dynamic_cast<QComboBox*>(editor) != nullptr)
   {
     QComboBox* comboBox = dynamic_cast<QComboBox*>(editor);
     s = comboBox->currentText();
   }
-  else if (typeid(*editor) ==  typeid(QLineEdit))
+  else if (dynamic_cast<QLineEdit*>(editor) != nullptr)
   {
     QLineEdit* lineEdit = dynamic_cast<QLineEdit*>(editor);
     s = lineEdit->displayText();
   }
-  else if (typeid(*editor) ==  typeid(QCheckBox))
+  else if (dynamic_cast<QCheckBox*>(editor) != nullptr)
   {
     QCheckBox* checkBox = dynamic_cast<QCheckBox*>(editor);
     if (currentModelValue.toBool() != checkBox->isChecked())
@@ -99,23 +120,5 @@ void LinkBackFilterDelegate::setModelData(QWidget *editor, QAbstractItemModel *m
   {
     //qDebug(qPrintable(QString("Setting data (%1) current model (%2) index %3").arg(s, currentModelValue.toString(), QString::number(index.column()))));
     model->setData(index, s, Qt::EditRole);
-  }
-}
-
-void LinkBackFilterDelegate::updateEditorGeometry(QWidget *editor,
-    const QStyleOptionViewItem &option, const QModelIndex &) const
-{
-  editor->setGeometry(option.rect);
-}
-
-void LinkBackFilterDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
-{
-  // This feels wrong, I should not need to do this, but, it works.
-  // If I do not do this, then the underlying text box shows through to the
-  // Editing text box.
-  if ((option.state & (QStyle::State_Active | QStyle::State_HasFocus | QStyle::State_Selected)) == QStyle::State_Selected) {
-    QItemDelegate::drawBackground( painter, option, index );
-   } else {
-    QItemDelegate::paint( painter, option, index );
   }
 }

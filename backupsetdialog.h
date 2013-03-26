@@ -12,8 +12,9 @@ class BackupSetDialog;
 }
 
 //**************************************************************************
-//! Provide a list view for a list of Filters.
-/*!
+/*! \class BackupSetDialog
+ * \brief Provide a list view for a list of Filters.
+ *
  * Represents the dialog used to edit the backup set. Filters and criteria are
  * used in the order in which they appear in the dialogs.
  *

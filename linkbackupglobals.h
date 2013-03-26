@@ -2,9 +2,24 @@
 #define GLOBALCOPYLINEUTIL_H
 
 #include "copylinkutil.h"
+#include "simpleloggeradp.h"
 #include <QDateTime>
 
+//**************************************************************************
+/*! \brief Get the single global instance of the copy link file utility class.
+ * There is one instance because only one backup is run at a time.
+ * TODO: Move this into the thread so that multiple backups can run at the same time.
+ *
+ * \returns The single global instance of the copy link file utility class.
+ ***************************************************************************/
 CopyLinkUtil& getCopyLinkUtil();
+
+//**************************************************************************
+/*! \brief Get the single global instance of the logger.
+ *
+ * \returns The single global instance of the logger.
+ ***************************************************************************/
+SimpleLoggerADP &getLogger();
 
 #define ERROR_MSG(msg, level) errorMessage((msg), QString(QObject::tr("%1:%2")).arg(__FILE__, QString::number(__LINE__)), QDateTime::currentDateTime(), (level));
 #define WARN_MSG( msg, level) warnMessage((msg),  QString(QObject::tr("%1:%2")).arg(__FILE__, QString::number(__LINE__)), QDateTime::currentDateTime(), (level));

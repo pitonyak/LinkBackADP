@@ -8,12 +8,12 @@ SimpleLoggerADP::SimpleLoggerADP(QObject *parent) : QObject(parent), m_messageQu
 {
 }
 
-void SimpleLoggerADP::enableMessageQueu()
+void SimpleLoggerADP::enableMessageQueue()
 {
-    if (m_messageQueue == nullptr)
-    {
-        m_messageQueue = new LogMessageQueue(this);
-    }
+  if (m_messageQueue == nullptr)
+  {
+    m_messageQueue = new LogMessageQueue(this);
+  }
 }
 
 SimpleLoggerADP::~SimpleLoggerADP()
@@ -81,7 +81,6 @@ void SimpleLoggerADP::receiveMessage(const QString& message, const QString& loca
   else
   {
     m_messageQueue->enqueue(new LogMessageContainer(message, location, dateTime, category, level));
-    //processQueuedMessages();
   }
 }
 

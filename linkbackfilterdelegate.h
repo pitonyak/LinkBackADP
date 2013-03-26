@@ -1,12 +1,12 @@
 #ifndef LINKBACKFILTERDELEGATE_H
 #define LINKBACKFILTERDELEGATE_H
 
-#include <QItemDelegate>
 #include <QStyledItemDelegate>
 
 //**************************************************************************
-//! Delegate for the dialog for editing filters.
-/*!
+/*! \class LinkBackFilterDelegate
+ *  \brief Delegate for the dialog for editing filters.
+ *
  *  As the data grid is edited, this object is called.
  *  This delegate is associated to the filters table view in the BackupSetDialog.
  *  The data is stored in a FilterTableModel.
@@ -15,11 +15,11 @@
  * \copyright Andrew Pitonyak, but you may use without restriction.
  * \date 2011-2013
  ***************************************************************************/
-class LinkBackFilterDelegate : public QItemDelegate
+class LinkBackFilterDelegate : public QStyledItemDelegate
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit LinkBackFilterDelegate(QObject *parent = 0);
+  explicit LinkBackFilterDelegate(QObject *parent = 0);
 
   //**************************************************************************
   /*! \brief Returns the widget used to edit the item specified by index for editing.
@@ -32,23 +32,22 @@ public:
                           const QModelIndex &index) const;
 
     //**************************************************************************
-    /*! \brief Set the data into the editor for the location based on the mode.
-     *  The data is obtained from the model.
+    /*! \brief Sets the data to be displayed and edited by the editor from the data model item specified by the model index.
+     *
+     *  \param [in, out] editor will contain the data on exit.
+     *  \param [in] index is the row and column of interest.
      ***************************************************************************/
     void setEditorData(QWidget *editor, const QModelIndex &index) const;
-    void setModelData(QWidget *editor, QAbstractItemModel *model,
-                      const QModelIndex &index) const;
-
-    void updateEditorGeometry(QWidget *editor,
-        const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
     //**************************************************************************
-    /*! \brief Override to avoid a problem while editing; the underlying "view" object and the text edit object are both displayed.
-     *  \param [in, out] painter
-     *  \param [in] option
-     *  \param [in] index
+    /*! \brief Gets data from the editor widget and stores it in the specified model at the item index.
+     *
+     *  \param [in, out] editor from which the data is taken.
+     *  \param [in] model contains the data that is displayed.
+     *  \param [in] index is the row and column of interest.
      ***************************************************************************/
-    void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model,
+                      const QModelIndex &index) const;
 
 signals:
 

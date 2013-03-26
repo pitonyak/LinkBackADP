@@ -25,11 +25,10 @@ QString BackupSetDialog::getConfigFilePath() const
   return ui->configFileLineEdit->text();
 }
 
-void BackupSetDialog::setConfigFilePath(const QString& path)
+void BackupSetDialog::setConfigFilePath(const QString &path)
 {
   ui->configFileLineEdit->setText(path);
 }
-
 
 BackupSet BackupSetDialog::getBackupSet() const
 {
@@ -39,6 +38,7 @@ BackupSet BackupSetDialog::getBackupSet() const
     backupSet.setToPath(ui->toRootLineEdit->text());
     backupSet.setFromPath(ui->fromRootLineEdit->text());
     backupSet.setHashMethod(ui->hashComboBox->currentText());
+    backupSet.setPriority(ui->priorityComboBox->currentText());
     return backupSet;
 }
 
@@ -56,6 +56,13 @@ void BackupSetDialog::setBackupSet(const BackupSet& backupSet)
     for (int i=0; i<ui->hashComboBox->count(); ++i) {
         if (QString::compare(hashMethod, ui->hashComboBox->itemText(i), Qt::CaseInsensitive) == 0) {
             ui->hashComboBox->setCurrentIndex(i);
+            break;
+        }
+    }
+
+    for (int i=0; i<ui->priorityComboBox->count(); ++i) {
+        if (QString::compare(backupSet.getPriority(), ui->priorityComboBox->itemText(i), Qt::CaseInsensitive) == 0) {
+            ui->priorityComboBox->setCurrentIndex(i);
             break;
         }
     }
@@ -92,6 +99,8 @@ void BackupSetDialog::initialize()
   {
       ui->hashComboBox->addItem(EnhancedQCryptographicHash::toAlgorithmString(algorithm));
   }
+
+  ui->priorityComboBox->addItems(BackupSet::getAllPriorities());
 
   // To enable and disable buttons on selection change.
   connect(ui->filtersTableView->selectionModel(), SIGNAL(currentChanged ( const QModelIndex &, const QModelIndex &)), this, SLOT(currentFilterRowChanged ( const QModelIndex &, const QModelIndex &)));

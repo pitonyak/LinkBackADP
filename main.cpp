@@ -10,6 +10,7 @@ static CopyLinkUtil globalCopyLinkUtil;
 SimpleLoggerADP logger;
 void configureTheLogger();
 
+
 int main(int argc, char *argv[])
 {
   // Use a 24MB buffer
@@ -20,6 +21,7 @@ int main(int argc, char *argv[])
   QCoreApplication::setOrganizationName("Pitonyak");
   QCoreApplication::setApplicationName("Link Backup ADP");
   QCoreApplication::setApplicationVersion("1.0.2");
+
   LinkBackupADP w;
   qRegisterMetaType<SimpleLoggerRoutingInfo::MessageCategory>( "SimpleLoggerRoutingInfo::MessageCategory" );
 
@@ -27,11 +29,6 @@ int main(int argc, char *argv[])
 
   // Connect the logger emit messages to the link backup software, which will show the log on screen.
   QObject::connect(&logger, SIGNAL(formattedMessage(const QString&, SimpleLoggerRoutingInfo::MessageCategory)), &w, SLOT(formattedMessage(const QString&, SimpleLoggerRoutingInfo::MessageCategory)));
-
-  QTimer *timer = new QTimer(&w);
-  w.connect(timer, SIGNAL(timeout()), &logger, SLOT(processQueuedMessages()));
-  timer->start(2000);
-  logger.enableMessageQueu();
 
   w.show();
   return a.exec();
@@ -115,6 +112,10 @@ CopyLinkUtil& getCopyLinkUtil()
 //** Logging helpers.
 //**
 //**************************************************************************
+SimpleLoggerADP& getLogger()
+{
+  return logger;
+}
 
 void errorMessage(const QString& message, const QString& location, const QDateTime& dateTime, int level)
 {

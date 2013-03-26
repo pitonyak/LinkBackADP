@@ -8,8 +8,9 @@ class QElapsedTimer;
 
 
 //**************************************************************************
-//! Class to copy files, link files, and generate a hash value.
-/*!
+/*! \class CopyLinkUtil
+ *  \brief Class to copy files, link files, and generate a hash value.
+ *
  * This class also accumulates statistics on how much data moved how quickly.
  *
  * \author Andrew Pitonyak
