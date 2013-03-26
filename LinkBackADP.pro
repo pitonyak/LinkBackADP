@@ -34,8 +34,7 @@ SOURCES += main.cpp\
     xmlutility.cpp \
     enhancedqcryptographichash.cpp \
     logmessagecontainer.cpp \
-    logmessagequeue.cpp \
-    logprocessingthread.cpp
+    logmessagequeue.cpp
 
 HEADERS  += linkbackupadp.h \
     backupsetdialog.h \
@@ -57,8 +56,7 @@ HEADERS  += linkbackupadp.h \
     xmlutility.h \
     enhancedqcryptographichash.h \
     logmessagecontainer.h \
-    logmessagequeue.h \
-    logprocessingthread.h
+    logmessagequeue.h
 
 FORMS    += linkbackupadp.ui \
     backupsetdialog.ui

@@ -8,6 +8,7 @@ static CopyLinkUtil globalCopyLinkUtil;
 
 SimpleLoggerADP logger;
 
+
 int main(int argc, char *argv[])
 {
   // Use a 24MB buffer
