@@ -17,8 +17,6 @@ class QFile;
  * \copyright Andrew Pitonyak, but you may use without restriction.
  * \date 2011-2013
  *
- *
- *
  * \code{.cpp}
 
    SimpleLoggerADP logger;
