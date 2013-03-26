@@ -78,7 +78,7 @@ void configureTheLogger()
     routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " | ");
     routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageTextComponent, "");
 
-    logLevel = 100;
+    logLevel = 1;
 
     routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::TraceMessage, logLevel);
     routing_02.setCategoryLevel(SimpleLoggerRoutingInfo::DebugMessage, logLevel);
