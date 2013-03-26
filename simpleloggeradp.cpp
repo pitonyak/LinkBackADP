@@ -3,15 +3,17 @@
 #include <QFile>
 #include <QMapIterator>
 #include <QTextStream>
-#include <QTimer>
 
 SimpleLoggerADP::SimpleLoggerADP(QObject *parent) : QObject(parent), m_messageQueue(nullptr), m_logFile(nullptr), m_textStream(nullptr)
 {
-  m_messageQueue = new LogMessageQueue(this);
+}
 
-  //QTimer *timer = new QTimer(this);
-  //connect(timer, SIGNAL(timeout()), this, SLOT(processQueuedMessages()));
-  //timer->start(1000);
+void SimpleLoggerADP::enableMessageQueu()
+{
+    if (m_messageQueue == nullptr)
+    {
+        m_messageQueue = new LogMessageQueue(this);
+    }
 }
 
 SimpleLoggerADP::~SimpleLoggerADP()
@@ -79,7 +81,7 @@ void SimpleLoggerADP::receiveMessage(const QString& message, const QString& loca
   else
   {
     m_messageQueue->enqueue(new LogMessageContainer(message, location, dateTime, category, level));
-    processQueuedMessages();
+    //processQueuedMessages();
   }
 }
 

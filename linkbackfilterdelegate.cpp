@@ -5,7 +5,7 @@
 #include <QCheckBox>
 
 LinkBackFilterDelegate::LinkBackFilterDelegate(QObject *parent) :
-    QStyledItemDelegate(parent)
+    QItemDelegate(parent)
 {
 }
 
@@ -106,4 +106,16 @@ void LinkBackFilterDelegate::updateEditorGeometry(QWidget *editor,
     const QStyleOptionViewItem &option, const QModelIndex &) const
 {
   editor->setGeometry(option.rect);
+}
+
+void LinkBackFilterDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
+{
+  // This feels wrong, I should not need to do this, but, it works.
+  // If I do not do this, then the underlying text box shows through to the
+  // Editing text box.
+  if ((option.state & (QStyle::State_Active | QStyle::State_HasFocus | QStyle::State_Selected)) == QStyle::State_Selected) {
+    QItemDelegate::drawBackground( painter, option, index );
+   } else {
+    QItemDelegate::paint( painter, option, index );
+  }
 }

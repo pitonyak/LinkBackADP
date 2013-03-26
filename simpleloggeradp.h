@@ -86,7 +86,15 @@ public slots:
    ***************************************************************************/
   void receiveMessage(const QString& message, const QString& location, const QDateTime dateTime, const SimpleLoggerRoutingInfo::MessageCategory category, const int level);
 
+  //**************************************************************************
+  /*! \brief Process all the messages in the message queue.
+   ***************************************************************************/
   void processQueuedMessages();
+
+  //**************************************************************************
+  /*! \brief Create a message queue. It is your job to call processQueuedMessages()
+   ***************************************************************************/
+  void enableMessageQueu();
 
 private:
 

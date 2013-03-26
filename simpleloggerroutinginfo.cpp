@@ -122,12 +122,14 @@ bool SimpleLoggerRoutingInfo::setRegExp(const QString& regExp)
 
 bool SimpleLoggerRoutingInfo::passes(const QString& source, const MessageCategory& category, int level) const
 {
-  //qDebug(qPrintable(QString("Message level %1").arg(level)));
-  //qDebug(qPrintable(QString("Contains %1").arg(m_levels->contains(category))));
-  //int containedLevel = m_levels->value(category, 0);
-  //qDebug(qPrintable(QString("Contained level %1").arg(containedLevel)));
+  /**
+  qDebug(qPrintable(QString("Message level %1").arg(level)));
+  qDebug(qPrintable(QString("Contains %1").arg(m_levels->contains(category))));
+  int containedLevel = m_levels->value(category, 0);
+  qDebug(qPrintable(QString("Contained level %1").arg(containedLevel)));
+  **/
   bool rc = m_enabled && level <= m_levels->value(category, 0) && source.length() > 0 && (m_regExp == nullptr || m_regExp->indexIn(source) >= 0);
-  //qDebug(qPrintable(QString("Passes %1").arg(rc)));
+  // qDebug(qPrintable(QString("Passes %1").arg(rc)));
   return rc;
 }
 

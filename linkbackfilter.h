@@ -36,11 +36,17 @@ class LinkBackFilter : public QObject
   Q_PROPERTY(QVariant value READ getValue WRITE setValue NOTIFY valueChanged RESET setValueDefault STORED true)
 
 public:
+    //**************************************************************************
     /*! \brief Enumerate the supported comparisons such as Less and Less Equal. */
+    //**************************************************************************
     enum CompareType {Less, LessEqual, Equal, GreaterEqual, Greater, NotEqual, RegularExpression, FileSpec, Contains};
+
+    //**************************************************************************
     /*! \brief Enumerate the parts of a file that can be compared. */
+    //**************************************************************************
     enum CompareField {Date, DateTime, FullPath, Name, Size, Time, PathOnly};
 
+    //**************************************************************************
     /*! \brief Default constructor with the specified parent.
      *
      *  All objects owned by the parent are destroyed in the destructor.
@@ -48,12 +54,14 @@ public:
      */
     explicit LinkBackFilter(QObject *parent = 0);
 
+    //**************************************************************************
     /*! \brief Constructor copied from the specified filter object.
      *
      *  \param [in] filter This filter object is copied into this object.
      */
     LinkBackFilter(const LinkBackFilter& filter);
 
+    //**************************************************************************
     /*! \brief Constructor copied from the specified filter object.
      *
      *  \param [in] filter This filter object is copied into this object.
@@ -61,9 +69,12 @@ public:
      */
     explicit LinkBackFilter(const LinkBackFilter& filter, QObject *parent);
 
+    //**************************************************************************
     /*! \brief Destructor in case I need any special clean-up. */
+    //**************************************************************************
     ~LinkBackFilter();
 
+    //**************************************************************************
     /*! \brief Copy anoter filter into this filter.
      *
      *  This object's parent object will not change.
@@ -72,6 +83,7 @@ public:
      */
     LinkBackFilter& operator=(const LinkBackFilter& filter);
 
+    //**************************************************************************
     /*! \brief Create a copy of this object that you then own and must delete.
      *
      *  \param [in] parent The cloned object's new owner; because that is not copied while cloning.
@@ -79,6 +91,7 @@ public:
      */
     LinkBackFilter* clone(QObject *parent = 0) const;
 
+    //**************************************************************************
     /*! \brief Determine if the fileInfo object passes the filter.
      *
      *  \param [in] fileInfo Information about the file to compare.
@@ -86,6 +99,7 @@ public:
      */
     bool passes(const QFileInfo& fileInfo) const;
 
+    //**************************************************************************
     /*! \brief Determine if this filter is applicable to the fileInfo type. In other words, some filters apply to directories, and some to filenames.
      *
      *  Applicable ignores the inverted flag. Inverted only applies to the comparison.
@@ -108,6 +122,7 @@ public:
     void setCaseSensitivity(Qt::CaseSensitivity caseSensitivity=Qt::CaseInsensitive);
     void setCaseSensitivityDefault();
 
+    //**************************************************************************
     /*! \brief Determine if the filter criteria is inverted before determining acceptance.
      *
      * Inverting a filter provides an easy way to expand the comparison criteria.
