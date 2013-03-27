@@ -3,6 +3,7 @@
 
 #include "copylinkutil.h"
 #include "simpleloggeradp.h"
+#include "qtenummapper.h"
 #include <QDateTime>
 
 //**************************************************************************
@@ -19,7 +20,9 @@ CopyLinkUtil& getCopyLinkUtil();
  *
  * \returns The single global instance of the logger.
  ***************************************************************************/
-SimpleLoggerADP &getLogger();
+SimpleLoggerADP& getLogger();
+
+QtEnumMapper& getEnumMapper();
 
 #define ERROR_MSG(msg, level) errorMessage((msg), QString(QObject::tr("%1:%2")).arg(__FILE__, QString::number(__LINE__)), QDateTime::currentDateTime(), (level));
 #define WARN_MSG( msg, level) warnMessage((msg),  QString(QObject::tr("%1:%2")).arg(__FILE__, QString::number(__LINE__)), QDateTime::currentDateTime(), (level));

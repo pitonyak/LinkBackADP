@@ -6,7 +6,7 @@
 
 SimpleLoggerRoutingInfo SimpleLoggerRoutingInfo::privateObjectForMetaData;
 
-SimpleLoggerRoutingInfo::SimpleLoggerRoutingInfo(QObject *parent) : QObject(parent), m_levels(nullptr), m_routing(nullptr), m_regExp(nullptr), m_enabled(true)
+SimpleLoggerRoutingInfo::SimpleLoggerRoutingInfo(QObject *parent) : QObject(parent), m_levels(nullptr), m_routing(nullptr), m_regExp(nullptr), m_regExpPatternSyntax(QRegExp::RegExp2), m_enabled(true)
 {
   const QMetaObject* metaObj = metaObject();
   QMetaEnum metaEnum = metaObj->enumerator(metaObj->indexOfEnumerator("MessageCategory"));
@@ -109,7 +109,7 @@ bool SimpleLoggerRoutingInfo::setRegExp(const QString& regExp)
   }
   if (regExp.length() > 0)
   {
-    m_regExp = new QRegExp(regExp, Qt::CaseInsensitive, QRegExp::RegExp2);
+    m_regExp = new QRegExp(regExp, Qt::CaseInsensitive, m_regExpPatternSyntax);
     if (!m_regExp->isValid())
     {
       delete m_regExp;

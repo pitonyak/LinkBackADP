@@ -9,14 +9,18 @@
 #include <QDateTime>
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
+#include <QRegExp>
 
 //**************************************************************************
-//! Control what logging messages pass and where they should be routed.
-/*!
+/*! \class SimpleLoggerRoutingInfo
+ * \brief Control what logging messages pass and where they should be routed.
+ *
  * This object accepts or rejects and then formats messages.
  * This object contains the filter criteria that determines if the message is logged and how the message is formatted.
  * This object knows if the message should be logged using qDebug, loging to a file, or emitting a signal, but
  * it is the containing classes job to actually perform the action.
+ *
+ * TODO: Adding a filename here would allow more flexibility.
  *
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
@@ -204,8 +208,23 @@ private:
   /*! \brief Associate message routing to an enable/diable bit. */
   QMap<MessageRouting, bool>* m_routing;
 
-  /*! \brief If not null, a message is only printed if the message source (filename and line number) must the regular expression. */
+  //**************************************************************************
+  /*! \brief If not null, a message is only printed if the message source (filename and line number) must the regular expression.
+   * This is case-insensitive.
+   */
   QRegExp* m_regExp;
+
+  //**************************************************************************
+  /*! \brief How is the regular expression handled.
+   *
+   * - QRegExp::RegExp	A rich Perl-like pattern matching syntax.
+   * - QRegExp::RegExp2	Like RegExp, but with greedy quantifiers. (Introduced in Qt 4.2.)
+   * - QRegExp::Wildcard	This provides a simple pattern matching syntax similar to that used by shells (command interpreters) for "file globbing". See QRegExp wildcard matching.
+   * - QRegExp::WildcardUnix	This is similar to Wildcard but with the behavior of a Unix shell. The wildcard characters can be escaped with the character "\".
+   * - QRegExp::FixedString	The pattern is a fixed string. This is equivalent to using the RegExp pattern on a string in which all metacharacters are escaped using escape().
+   * - QRegExp::W3CXmlSchema11	The pattern is a regular expression as defined by the W3C XML Schema 1.1 specification.
+   ***************************************************************************/
+  QRegExp::PatternSyntax m_regExpPatternSyntax;
 
   /*! \brief Message components are printed in the order that they appear here. A non-empty date/time component causes the date/time to be formatted based on the included format string. */
   QList< QPair<MessageComponent, QString> > m_format;

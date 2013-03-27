@@ -54,25 +54,6 @@ public:
     static Qt::CaseSensitivity stringToCase(const QString& sensitivity);
 
     //**************************************************************************
-    /*! \brief Convert the pattern syntax to a string.
-     *
-     * Expceted return values include: "RegExp", "RegExp2", "Wildcard", "WildcardUnix",
-     * "FixedString", or "W3CXmlSchema11".
-     *
-     *  \param [in] syntax Value to convert to a string.
-     *  \return String representation of the regular expression pattern syntax.
-     ***************************************************************************/
-    static QString patternSyntaxToString(QRegExp::PatternSyntax syntax);
-
-    //**************************************************************************
-    /*! \brief Ignoring case, convert the string returned by patternSyntaxToString() back to a value. If not recognized, RegExp is returned.
-     *
-     *  \param [in] syntax String to convert.
-     *  \return QRegExp::PatternSyntax representation of the string.
-     ***************************************************************************/
-    static QRegExp::PatternSyntax stringToPatternSyntax(const QString& syntax);
-
-    //**************************************************************************
     /*! \brief Write an XML representation of the regular expression.
      *
      * If the regular expression is invalid or empty, or, if the name is empty, nothing is written.

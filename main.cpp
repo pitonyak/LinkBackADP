@@ -8,6 +8,8 @@
 static CopyLinkUtil globalCopyLinkUtil;
 
 SimpleLoggerADP logger;
+QtEnumMapper enumMapper;
+
 void configureTheLogger();
 
 
@@ -105,6 +107,12 @@ void configureTheLogger()
 CopyLinkUtil& getCopyLinkUtil()
 {
   return globalCopyLinkUtil;
+}
+
+
+QtEnumMapper& getEnumMapper()
+{
+  return enumMapper;
 }
 
 //**************************************************************************
