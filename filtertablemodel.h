@@ -4,9 +4,9 @@
 #include <QAbstractTableModel>
 #include "linkbackfilter.h"
 
-//**************************************************************************
-//! Provide a list view for a list of Filters.
-/*!
+/**************************************************************************
+ * \class FilterTableModel
+ * \brief Provide a list view for a list of Filters.
  *
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
