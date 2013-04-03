@@ -162,7 +162,7 @@ QString SimpleLoggerRoutingInfo::formatMessage(const QString& message, const QSt
       }
       break;
     case MessageTypeComponent:
-      s.append(categoryToString(category));
+      s.append(categoryToString(category, pair.second.length()));
       break;
     case MessageTextComponent:
       s.append(message);
@@ -226,25 +226,28 @@ SimpleLoggerRoutingInfo& SimpleLoggerRoutingInfo::operator=(const SimpleLoggerRo
   return *this;
 }
 
-QString SimpleLoggerRoutingInfo::categoryToString(MessageCategory category)
+QString SimpleLoggerRoutingInfo::categoryToString(MessageCategory category, int maxlen)
 {
   const QMetaObject* metaObj = privateObjectForMetaData.metaObject();
   const QMetaEnum& categoryEnum =  metaObj->enumerator(metaObj->indexOfEnumerator("MessageCategory"));
-  return categoryEnum.valueToKey(category);
+  QString s = categoryEnum.valueToKey(category);
+  return (maxlen <= 0) ? s : (s.isRightToLeft() ? s.right(maxlen) : s.left(maxlen));
 }
 
-QString SimpleLoggerRoutingInfo::componentToString(MessageComponent component)
+QString SimpleLoggerRoutingInfo::componentToString(MessageComponent component, int maxlen)
 {
   const QMetaObject* metaObj = privateObjectForMetaData.metaObject();
-  const QMetaEnum& categoryEnum =  metaObj->enumerator(metaObj->indexOfEnumerator("MessageComponent"));
-  return categoryEnum.valueToKey(component);
+  const QMetaEnum& componentEnum =  metaObj->enumerator(metaObj->indexOfEnumerator("MessageComponent"));
+  QString s = componentEnum.valueToKey(component);
+  return (maxlen <= 0) ? s : (s.isRightToLeft() ? s.right(maxlen) : s.left(maxlen));
 }
 
-QString SimpleLoggerRoutingInfo::routingToString(MessageRouting routing)
+QString SimpleLoggerRoutingInfo::routingToString(MessageRouting routing, int maxlen)
 {
   const QMetaObject* metaObj = privateObjectForMetaData.metaObject();
-  const QMetaEnum& categoryEnum =  metaObj->enumerator(metaObj->indexOfEnumerator("MessageRouting"));
-  return categoryEnum.valueToKey(routing);
+  const QMetaEnum& routingEnum =  metaObj->enumerator(metaObj->indexOfEnumerator("MessageRouting"));
+  QString s = routingEnum.valueToKey(routing);
+  return (maxlen <= 0) ? s : (s.isRightToLeft() ? s.right(maxlen) : s.left(maxlen));
 }
 
 
@@ -277,7 +280,7 @@ QXmlStreamWriter& SimpleLoggerRoutingInfo::write(QXmlStreamWriter& writer) const
     QMap<MessageCategory, int>::const_iterator i;
     for (i = m_levels->begin(); i != m_levels->end(); ++i)
     {
-      XMLUtility::writeElementAttribute(writer, "Level", QString::number(i.value()), "MessageCategory", categoryToString(i.key()));
+      XMLUtility::writeElementAttribute(writer, "Level", QString::number(i.value()), "MessageCategory", categoryToString(i.key(), -1));
     }
   }
 
@@ -286,7 +289,7 @@ QXmlStreamWriter& SimpleLoggerRoutingInfo::write(QXmlStreamWriter& writer) const
     QMap<MessageRouting, bool>::const_iterator i;
     for (i = m_routing->begin(); i != m_routing->end(); ++i)
     {
-      XMLUtility::writeElementAttribute(writer, "Routing", XMLUtility::booleanToString(i.value()), "MessageRouting", routingToString(i.key()));
+      XMLUtility::writeElementAttribute(writer, "Routing", XMLUtility::booleanToString(i.value()), "MessageRouting", routingToString(i.key(), -1));
     }
   }
 
@@ -300,7 +303,7 @@ QXmlStreamWriter& SimpleLoggerRoutingInfo::write(QXmlStreamWriter& writer) const
     for (int i=0; i<m_format.size(); ++i)
     {
       const QPair<MessageComponent, QString>& comp = m_format.at(i);
-      XMLUtility::writeElementAttribute(writer, "Format", comp.second, "MessageComponent", componentToString(comp.first));
+      XMLUtility::writeElementAttribute(writer, "Format", comp.second, "MessageComponent", componentToString(comp.first, comp.second.length()));
     }
   }
 

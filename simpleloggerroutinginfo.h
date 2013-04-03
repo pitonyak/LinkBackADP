@@ -145,25 +145,28 @@ public:
   /*! \brief Convert the MessageCategory to a string for display purposes and streaming to XML.
    *
    *  \param [in] category MessageCategory to convert to a string.
+   *  \param [in] maxlen limits the length of the returned string. If less than 1, the entire string is returned.
    *  \return String representation of the MessageCategory.
    ***************************************************************************/
-  static QString categoryToString(MessageCategory category);
+  static QString categoryToString(MessageCategory category, int maxlen = -1);
 
   //**************************************************************************
   /*! \brief Convert the MessageComponent to a string for display purposes and streaming to XML.
    *
    *  \param [in] component MessageComponent to convert to a string.
+   *  \param [in] maxlen limits the length of the returned string. If less than 1, the entire string is returned.
    *  \return String representation of the MessageComponent.
    ***************************************************************************/
-  static QString componentToString(MessageComponent component);
+  static QString componentToString(MessageComponent component, int maxlen = -1);
 
   //**************************************************************************
   /*! \brief Convert the MessageRouting to a string for display purposes and streaming to XML.
    *
    *  \param [in] routing MessageRouting to convert to a string.
+   *  \param [in] maxlen limits the length of the returned string. If less than 1, the entire string is returned.
    *  \return String representation of the MessageRouting.
    ***************************************************************************/
-  static QString routingToString(MessageRouting routing);
+  static QString routingToString(MessageRouting routing, int maxlen = -1);
 
   //**************************************************************************
   /*! \brief Convert the string (as saved as XML) to a MessageCategory.

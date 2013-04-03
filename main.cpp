@@ -51,7 +51,9 @@ void configureTheLogger()
     SimpleLoggerRoutingInfo routing_01;
     //routing_01.addMessageFormat(SimpleLoggerRoutingInfo::DateTimeComponent, "");
     //routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " ");
-    routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageTypeComponent, "");
+
+    // A string of length 1 forces just a single letter to be printed rather than the entire string.
+    routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageTypeComponent, "X");
     routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " ");
     routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageLocationComponent, "");
     routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " | ");
@@ -71,7 +73,7 @@ void configureTheLogger()
     SimpleLoggerRoutingInfo routing_02;
     routing_02.addMessageFormat(SimpleLoggerRoutingInfo::DateTimeComponent, "");
     routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " ");
-    routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageTypeComponent, "");
+    routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageTypeComponent, "X");
     routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " ");
     routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageLocationComponent, "");
     routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " | ");
