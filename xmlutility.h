@@ -8,7 +8,7 @@ class QXmlStreamWriter;
 class QXmlStreamReader;
 
 //**************************************************************************
-//! TODO:
+//! Utility methods used while reading and writing XML.
 /*!
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.

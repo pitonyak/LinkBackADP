@@ -19,7 +19,7 @@
         <Filter>
             <CompareType>RegularExpression</CompareType>
             <CompareField>FullPath</CompareField>
-            <Value>\/Devsrc\/.*\.o$,\/Devsrc\/.*\/moc_,\/Devsrc\/.*\.class$</Value>
+            <Value>\/Devsrc\/.*\.o$,\/Devsrc\/.*\/moc_,\/Devsrc\/.*\.class$,\/glassfish-.*$,\/apache-tomcat-.*$</Value>
             <CaseSensitive>False</CaseSensitive>
             <Invert>False</Invert>
             <Accept>False</Accept>

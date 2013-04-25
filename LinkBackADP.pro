@@ -35,7 +35,8 @@ SOURCES += main.cpp\
     enhancedqcryptographichash.cpp \
     logmessagecontainer.cpp \
     logmessagequeue.cpp \
-    qtenummapper.cpp
+    qtenummapper.cpp \
+    logroutinginfodialog.cpp
 
 HEADERS  += linkbackupadp.h \
     backupsetdialog.h \
@@ -58,7 +59,9 @@ HEADERS  += linkbackupadp.h \
     enhancedqcryptographichash.h \
     logmessagecontainer.h \
     logmessagequeue.h \
-    qtenummapper.h
+    qtenummapper.h \
+    logroutinginfodialog.h
 
 FORMS    += linkbackupadp.ui \
-    backupsetdialog.ui
+    backupsetdialog.ui \
+    logroutinginfodialog.ui

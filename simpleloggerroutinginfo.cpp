@@ -222,6 +222,7 @@ SimpleLoggerRoutingInfo& SimpleLoggerRoutingInfo::operator=(const SimpleLoggerRo
     *m_levels = *obj.m_levels;
     *m_routing = *obj.m_routing;
     m_enabled = obj.m_enabled;
+    m_name = obj.m_name;
   }
   return *this;
 }
@@ -275,6 +276,13 @@ SimpleLoggerRoutingInfo::MessageRouting SimpleLoggerRoutingInfo::stringToRouting
 QXmlStreamWriter& SimpleLoggerRoutingInfo::write(QXmlStreamWriter& writer) const
 {
   writer.writeStartElement("SimpleLoggerRoutingInfo");
+
+  if (m_name.length() > 0)
+  {
+    XMLUtility::writeElement(writer, "Name", m_name);
+  }
+  XMLUtility::writeElement(writer, "Enabled", XMLUtility::booleanToString(m_enabled));
+
   if (m_levels != nullptr && m_levels->size() > 0)
   {
     QMap<MessageCategory, int>::const_iterator i;
@@ -306,8 +314,6 @@ QXmlStreamWriter& SimpleLoggerRoutingInfo::write(QXmlStreamWriter& writer) const
       XMLUtility::writeElementAttribute(writer, "Format", comp.second, "MessageComponent", componentToString(comp.first, comp.second.length()));
     }
   }
-
-  XMLUtility::writeElement(writer, "Enabled", XMLUtility::booleanToString(m_enabled));
 
   writer.writeEndElement();
   return writer;
@@ -383,6 +389,10 @@ void SimpleLoggerRoutingInfo::readInternals(QXmlStreamReader& reader, const QStr
       if (name.compare("Enabled", Qt::CaseInsensitive) == 0)
       {
         m_enabled = XMLUtility::stringToBoolean(value);
+      }
+      else if (name.compare("Name", Qt::CaseInsensitive) == 0)
+      {
+        setName(value.trimmed());
       }
       else if (attributeValue.length() > 0)
       {

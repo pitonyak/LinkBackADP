@@ -91,6 +91,9 @@ public:
    ***************************************************************************/
   bool  setRegExp(const QString& regExp);
 
+  QString getName() const { return m_name; }
+  void setName(const QString& name) { m_name = name; }
+
   //**************************************************************************
   /*! \brief Return true if the regular expression matches the source, and the category level >= level
    *
@@ -234,6 +237,8 @@ private:
 
   /*! \brief Fast way to disable an object. */
   bool m_enabled;
+
+  QString m_name;
 
   /*! \brief This object is used in the static methods to obtain QT meta-data to convert between strings and enums. */
   static SimpleLoggerRoutingInfo privateObjectForMetaData;
