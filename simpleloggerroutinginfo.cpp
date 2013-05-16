@@ -75,6 +75,18 @@ void SimpleLoggerRoutingInfo::internalDelete()
   }
 }
 
+
+bool SimpleLoggerRoutingInfo::isEnabled() const
+{
+  return m_enabled;
+}
+
+bool SimpleLoggerRoutingInfo::setEnabled(bool enabledState)
+{
+  m_enabled = enabledState;
+}
+
+
 bool SimpleLoggerRoutingInfo::isRoutingOn(MessageRouting messageRouting) const
 {
   return m_routing->value(messageRouting, true);
@@ -100,6 +112,11 @@ void SimpleLoggerRoutingInfo::setCategoryLevel(MessageCategory category, int lev
   m_levels->insert(category, level);
 }
 
+int SimpleLoggerRoutingInfo::getCategoryLevel(MessageCategory category) const
+{
+  return m_levels->value(category, -1);
+}
+
 bool SimpleLoggerRoutingInfo::setRegExp(const QString& regExp)
 {
   if (m_regExp != nullptr)
@@ -118,6 +135,26 @@ bool SimpleLoggerRoutingInfo::setRegExp(const QString& regExp)
     }
   }
   return true;
+}
+
+
+QString SimpleLoggerRoutingInfo::getRegExpString() const
+{
+  return (m_regExp == nullptr) ? "" : m_regExp->pattern();
+}
+
+QRegExp::PatternSyntax SimpleLoggerRoutingInfo::getRegExpPatternSyntax() const
+{
+  return m_regExpPatternSyntax;
+}
+
+void SimpleLoggerRoutingInfo::setRegExpPatternSyntax(const QRegExp::PatternSyntax syntax)
+{
+  m_regExpPatternSyntax = syntax;
+  if (m_regExp != nullptr)
+  {
+    m_regExp->setPatternSyntax(syntax);
+  }
 }
 
 bool SimpleLoggerRoutingInfo::passes(const QString& source, const MessageCategory& category, int level) const
@@ -241,6 +278,19 @@ QString SimpleLoggerRoutingInfo::componentToString(MessageComponent component, i
   const QMetaEnum& componentEnum =  metaObj->enumerator(metaObj->indexOfEnumerator("MessageComponent"));
   QString s = componentEnum.valueToKey(component);
   return (maxlen <= 0) ? s : (s.isRightToLeft() ? s.right(maxlen) : s.left(maxlen));
+}
+
+
+QStringList SimpleLoggerRoutingInfo::getMessageRoutingStrings()
+{
+  QStringList qsl;
+  const QMetaObject* metaObj = privateObjectForMetaData.metaObject();
+  const QMetaEnum& componentEnum =  metaObj->enumerator(metaObj->indexOfEnumerator("MessageComponent"));
+  for (int i=0; i<componentEnum.keyCount(); ++i)
+  {
+    qsl << componentEnum.valueToKey(i);
+  }
+  return qsl;
 }
 
 QString SimpleLoggerRoutingInfo::routingToString(MessageRouting routing, int maxlen)

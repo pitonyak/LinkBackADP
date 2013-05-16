@@ -36,7 +36,7 @@ public:
     explicit BackupSetDialog(QWidget *parent = 0);
 
     //**************************************************************************
-    //! Copy Constructor
+    //! Set the object to edit
     /*!
      * \param [in] backupSet Object to copy into this object.
      * \param [in] parent This is a QObject, so you can set a parent that will control the lifetime of this object.

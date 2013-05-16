@@ -10,6 +10,7 @@
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 #include <QRegExp>
+#include <QStringList>
 
 //**************************************************************************
 /*! \class SimpleLoggerRoutingInfo
@@ -79,8 +80,12 @@ public:
   void setRoutingOff(MessageRoutings messageRoutings) { setRouting(messageRoutings, false); }
   void setRouting(MessageRoutings messageRoutings, bool state);
 
+  bool isEnabled() const;
+  bool setEnabled(bool enabledState);
+
 
   void setCategoryLevel(MessageCategory category, int level);
+  int getCategoryLevel(MessageCategory category) const;
 
   //**************************************************************************
   /*! \brief The message category must match this regExp. An empty string will pass everything.
@@ -90,6 +95,14 @@ public:
    *  \return True if the regular expression is valid, false otherwise.
    ***************************************************************************/
   bool  setRegExp(const QString& regExp);
+
+  /*! \brief Get the regular expression string */
+  QString getRegExpString() const;
+
+  // TODO: Provide access to case sensitivity flag.
+
+  QRegExp::PatternSyntax getRegExpPatternSyntax() const;
+  void setRegExpPatternSyntax(const QRegExp::PatternSyntax syntax);
 
   QString getName() const { return m_name; }
   void setName(const QString& name) { m_name = name; }
@@ -195,6 +208,8 @@ public:
    ***************************************************************************/
   static MessageRouting stringToRouting(const QString& routing);
 
+  static QStringList getMessageRoutingStrings();
+
 signals:
 
 public slots:
@@ -238,6 +253,7 @@ private:
   /*! \brief Fast way to disable an object. */
   bool m_enabled;
 
+  /*! \brief Give the object a name that may be meaningful to a user while editing these things. */
   QString m_name;
 
   /*! \brief This object is used in the static methods to obtain QT meta-data to convert between strings and enums. */
