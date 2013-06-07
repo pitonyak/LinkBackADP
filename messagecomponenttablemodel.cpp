@@ -132,12 +132,52 @@ QVariant MessageComponentTableModel::data( const QModelIndex &index, int role ) 
     switch (index.column())
     {
     case fieldColumn:
-      return tr("Message Component that is printed.");
+      switch (component.first)
+      {
+      case SimpleLoggerRoutingInfo::DateTimeComponent:
+        return tr("Date and time the message is logged. Format string is used to format log message if ISO date format is not desired.");
+        break;
+      case SimpleLoggerRoutingInfo::MessageLocationComponent:
+        return tr("Filename and line number where log message originated. Format string is ignored.");
+        break;
+      case SimpleLoggerRoutingInfo::MessageTextComponent:
+        return tr("The actual log message that was requested to be displayed to the user. Format string is ignored.");
+        break;
+      case SimpleLoggerRoutingInfo::MessageTypeComponent:
+        return tr("Include the message type (such as Error or Info) in the log message. Message type is truncated to the length of the format text.");
+        break;
+      case SimpleLoggerRoutingInfo::MessageText:
+        return tr("The format field text string is included verbatim in the log message.");
+        break;
+      default:
+        return tr("Message Component that is printed.");
+        break;
+      }
       break;
     case stringColumn:
-      return tr("Determines how the field is formatted.");
+      switch (component.first)
+      {
+      case SimpleLoggerRoutingInfo::DateTimeComponent:
+        return tr("Used to format date/time. If empty use ISO format. (y)ear, (M)onth, (d)ay, (h)our, (m)inute, (s)econd, (z)millisecond, (AP)or(ap) is AM/PM or am/pm.");
+        break;
+      case SimpleLoggerRoutingInfo::MessageLocationComponent:
+        return tr("Format string is ignored for file location and line number.");
+        break;
+      case SimpleLoggerRoutingInfo::MessageTextComponent:
+        return tr("Format string is ignored for text of the log message.");
+        break;
+      case SimpleLoggerRoutingInfo::MessageTypeComponent:
+        return tr("Message type is truncated to the length of the format text, so X displays only the first letter. No text displays full type name such as Error.");
+        break;
+      case SimpleLoggerRoutingInfo::MessageText:
+        return tr("This text is logged as entered.");
+        break;
+      default:
+        return tr("Determines how the field is formatted.");
+        break;
+      }
     default:
-      return tr("Random unknown tip!");
+      return tr("Help text requested for an unknown column!");
       break;
     }
     break;

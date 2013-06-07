@@ -61,7 +61,7 @@
      <x>0</x>
      <y>0</y>
      <width>917</width>
-     <height>29</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -80,8 +80,15 @@
     <addaction name="actionStartBackup"/>
     <addaction name="actionCancelBackup"/>
    </widget>
+   <widget class="QMenu" name="menuLogging">
+    <property name="title">
+     <string>Logging</string>
+    </property>
+    <addaction name="actionConfigureLog"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuBackup"/>
+   <addaction name="menuLogging"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -115,6 +122,11 @@
   <action name="actionCancelBackup">
    <property name="text">
     <string>Cancel</string>
+   </property>
+  </action>
+  <action name="actionConfigureLog">
+   <property name="text">
+    <string>Configure</string>
    </property>
   </action>
  </widget>

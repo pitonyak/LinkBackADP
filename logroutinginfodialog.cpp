@@ -1,11 +1,23 @@
 #include "logroutinginfodialog.h"
 #include "ui_logroutinginfodialog.h"
+#include "linkbackfilterdelegate.h"
+
+#include <QMessageBox>
 
 LogRoutingInfoDialog::LogRoutingInfoDialog(QWidget *parent) :
   QDialog(parent),
   ui(new Ui::LogRoutingInfoDialog)
 {
   initialize();
+}
+
+
+LogRoutingInfoDialog::LogRoutingInfoDialog(const SimpleLoggerRoutingInfo& routingInfo, QWidget *parent) :
+  QDialog(parent), ui(new Ui::LogRoutingInfoDialog)
+{
+  m_messageComponentTableModel.setMessageComponents(routingInfo.getMessageComponents());
+  initialize();
+  setRoutingInfo(routingInfo);
 }
 
 LogRoutingInfoDialog::~LogRoutingInfoDialog()
@@ -21,13 +33,31 @@ SimpleLoggerRoutingInfo LogRoutingInfoDialog::getRoutingInfo() const
   info.setRouting(SimpleLoggerRoutingInfo::RouteEmit, ui->enableScreenCheckBox->checkState() == Qt::Checked ? true : false);
   info.setRouting(SimpleLoggerRoutingInfo::RouteQDebug, ui->enableQDebugBox->checkState() == Qt::Checked ? true : false);
   info.setRouting(SimpleLoggerRoutingInfo::RouteFile, ui->enableFileCheckBox->checkState() == Qt::Checked ? true : false);
-  // TODO:
+
+  info.setCategoryLevel(SimpleLoggerRoutingInfo::TraceMessage, ui->traceSpinBox->value());
+  info.setCategoryLevel(SimpleLoggerRoutingInfo::DebugMessage, ui->debugSpinBox->value());
+  info.setCategoryLevel(SimpleLoggerRoutingInfo::InformationMessage, ui->infoSpinBox->value());
+  info.setCategoryLevel(SimpleLoggerRoutingInfo::WarningMessage, ui->warnSpinBox->value());
+  info.setCategoryLevel(SimpleLoggerRoutingInfo::ErrorMessage, ui->errorSpinBox->value());
+  info.setCategoryLevel(SimpleLoggerRoutingInfo::UserMessage, ui->userSpinBox->value());
+
+  QString s = ui->regExpEdit->displayText();
+  if (!s.isEmpty())
+  {
+    info.setRegExp(s);
+  }
+
+  for (int i=0; i<m_messageComponentTableModel.rowCount(); ++i)
+  {
+    const QPair<SimpleLoggerRoutingInfo::MessageComponent, QString> & pair = m_messageComponentTableModel.getMessageComponents()[i];
+    info.addMessageFormat(pair.first, pair.second);
+  }
+
   return info;
 }
 
 void LogRoutingInfoDialog::setRoutingInfo(const SimpleLoggerRoutingInfo &routingInfo)
 {
-  // TODO:
   ui->nameEdit->setText(routingInfo.getName());
   ui->regExpEdit->setText(routingInfo.getRegExpString());
   ui->enabledCheckBox->setCheckState(routingInfo.isEnabled() ? Qt::Checked : Qt::Unchecked);
@@ -47,92 +77,110 @@ void LogRoutingInfoDialog::setRoutingInfo(const SimpleLoggerRoutingInfo &routing
 void LogRoutingInfoDialog::initialize()
 {
   ui->setupUi(this);
-  /**
-  ui->filtersTableView->setModel(&(m_filterTableModel));
-  LinkBackFilterDelegate* delegate = new LinkBackFilterDelegate(ui->filtersTableView);
-  ui->filtersTableView->setItemDelegate(delegate);
-  CheckBoxOnlyDelegate * cboDelegate = new CheckBoxOnlyDelegate(ui->filtersTableView);
-  ui->filtersTableView->setItemDelegateForColumn(m_filterTableModel.invertColumn, cboDelegate);
-  ui->filtersTableView->setItemDelegateForColumn(m_filterTableModel.caseColumn, cboDelegate);
-  ui->filtersTableView->setItemDelegateForColumn(m_filterTableModel.filesColumn, cboDelegate);
-  ui->filtersTableView->setItemDelegateForColumn(m_filterTableModel.dirsColumn, cboDelegate);
-  ui->filtersTableView->setItemDelegateForColumn(m_filterTableModel.multiColumn, cboDelegate);
+  ui->componentTableView->setModel(&m_messageComponentTableModel);
+  LinkBackFilterDelegate* delegate = new LinkBackFilterDelegate(ui->componentTableView);
+  ui->componentTableView->setItemDelegate(delegate);
+  ui->componentTableView->setColumnWidth(m_messageComponentTableModel.fieldColumn, 240);
+  ui->componentTableView->setColumnWidth(m_messageComponentTableModel.stringColumn, 240);
 
-  ui->filtersTableView->setColumnWidth(m_filterTableModel.fieldColumn, 120);
-  ui->filtersTableView->setColumnWidth(m_filterTableModel.methodColumn, 140);
-  ui->filtersTableView->setColumnWidth(m_filterTableModel.invertColumn, 100);
-  ui->filtersTableView->setColumnWidth(m_filterTableModel.acceptColumn, 110);
-  ui->filtersTableView->setColumnWidth(m_filterTableModel.caseColumn, 125);
-  ui->filtersTableView->setColumnWidth(m_filterTableModel.valueColumn, 325);
-  ui->filtersTableView->setColumnWidth(m_filterTableModel.filesColumn, 70);
-  ui->filtersTableView->setColumnWidth(m_filterTableModel.dirsColumn, 70);
-  ui->filtersTableView->setColumnWidth(m_filterTableModel.multiColumn, 70);
+  connect(ui->componentTableView->selectionModel(), SIGNAL(currentChanged ( const QModelIndex &, const QModelIndex &)), this, SLOT(currentMessageCategoryRowChanged ( const QModelIndex &, const QModelIndex &)));
+  connect(ui->copyCompButton, SIGNAL(clicked(bool)), this, SLOT( copyMessageCategory()));
+  connect(ui->insertCompButton, SIGNAL(clicked(bool)), this, SLOT(insertMessageCategory()));
+  connect(ui->upCompButton, SIGNAL(clicked(bool)), this, SLOT(upMessageCategory()));
+  connect(ui->downCompButton, SIGNAL(clicked(bool)), this, SLOT(downMessageCategory()));
+  connect(ui->delCompButton, SIGNAL(clicked(bool)), this, SLOT(delMessageCategory()));
 
-  ui->criteriaTableView->setItemDelegate(new CheckBoxOnlyDelegate(ui->criteriaTableView));
-  ui->criteriaTableView->setModel(&(m_criteriaForFileMatchTableModel));
+  connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(closeRequested()));
+  connect(ui->testButton, SIGNAL(clicked(bool)), this, SLOT(testMessage()));
 
-  for (const QCryptographicHash::Algorithm algorithm : EnhancedQCryptographicHash::getAlgorithmList())
-  {
-      ui->hashComboBox->addItem(EnhancedQCryptographicHash::toAlgorithmString(algorithm));
-  }
-
-  ui->priorityComboBox->addItems(BackupSet::getAllPriorities());
-
-  // To enable and disable buttons on selection change.
-  connect(ui->filtersTableView->selectionModel(), SIGNAL(currentChanged ( const QModelIndex &, const QModelIndex &)), this, SLOT(currentFilterRowChanged ( const QModelIndex &, const QModelIndex &)));
-  connect(ui->criteriaTableView->selectionModel(), SIGNAL(currentChanged ( const QModelIndex &, const QModelIndex &)), this, SLOT(currentCriteriaRowChanged ( const QModelIndex &, const QModelIndex &)));
   enableButtons();
-  **/
 }
 
 int LogRoutingInfoDialog::getSelectedCatRow() const
 {
-  // TODO:
-  return -1;
+  return ui->componentTableView->currentIndex().row();
 }
 
 void LogRoutingInfoDialog::enableButtons()
 {
-  // TODO:
+  int count = m_messageComponentTableModel.messageComponentCount();
+  int row = count > 0 ? getSelectedCatRow() : -1;
+  bool b = count > 0 && row >= 0;
+  ui->copyCompButton->setEnabled(b);
+  ui->delCompButton->setEnabled(b);
+  //ui->upCompButton->setEnabled(b && row > 0);
+  //ui->downCompButton->setEnabled(b && row < (count - 1));
 }
 
 bool LogRoutingInfoDialog::isCatSelected() const
 {
-  // TODO:
-  return false;
+  return m_messageComponentTableModel.messageComponentCount() > 0 && ui->componentTableView->currentIndex().row() >= 0;
 }
 
 void LogRoutingInfoDialog::copyMessageCategory()
 {
-  // TODO:
+  m_messageComponentTableModel.copyMessageComponent(ui->componentTableView->currentIndex().row());
 }
 
 void LogRoutingInfoDialog::insertMessageCategory()
 {
-  // TODO:
+  const QPair<SimpleLoggerRoutingInfo::MessageComponent, QString> component(SimpleLoggerRoutingInfo::MessageText, "");
+  m_messageComponentTableModel.insertMessageComponent(ui->componentTableView->currentIndex().row(), component);
 }
 
 void LogRoutingInfoDialog::delMessageCategory()
 {
-  // TODO:
+  m_messageComponentTableModel.removeMessageComponent(ui->componentTableView->currentIndex().row());
 }
 
 void LogRoutingInfoDialog::upMessageCategory()
 {
-  // TODO:
+  m_messageComponentTableModel.moveMessageComponentUp(ui->componentTableView->currentIndex().row());
 }
 
 void LogRoutingInfoDialog::downMessageCategory()
 {
-  // TODO:
+  m_messageComponentTableModel.moveMessageComponentDown(ui->componentTableView->currentIndex().row());
 }
 
 void LogRoutingInfoDialog::currentMessageCategoryRowChanged(const QModelIndex &current, const QModelIndex &previous)
 {
-  // TODO:
+  // Avoid a compiler warning
+  (void)previous;
+
+  int row = current.row();
+  bool b = (row >= 0);
+  ui->copyCompButton->setEnabled(b);
+  ui->delCompButton->setEnabled(b);
+
+  //int count = m_messageComponentTableModel.messageComponentCount();
+  //ui->upCompButton->setEnabled(b && row > 0);
+  //ui->downCompButton->setEnabled(b && row < (count - 1));
 }
 
-void LogRoutingInfoDialog::currentCriteriaRowChanged(const QModelIndex &current, const QModelIndex &previous)
+void LogRoutingInfoDialog::closeRequested()
 {
-  // TODO:
+  // TODO: Validate
+  QString s = ui->regExpEdit->displayText();
+  if (!s.isEmpty())
+  {
+    QRegExp regExp(s);
+    if (!regExp.isValid())
+    {
+      QPalette pal = ui->regExpEdit->palette();
+      pal.setColor(QPalette::Text, Qt::red);
+      ui->regExpEdit->setPalette(pal);
+
+      QMessageBox::warning(this, tr("ERROR"), tr("Invalid Regular Expression"));
+      return;
+    }
+  }
+  ui->regExpEdit->setBackgroundRole(QPalette::NoRole);
+
+  accept();
+}
+
+void LogRoutingInfoDialog::testMessage()
+{
+  // TODO: Generate a test message!
 }

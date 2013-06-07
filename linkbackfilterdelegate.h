@@ -11,6 +11,9 @@
  *  This delegate is associated to the filters table view in the BackupSetDialog.
  *  The data is stored in a FilterTableModel.
  *
+ *  Other edit things were found that can use this with good effect, so this is used
+ *  in other places as well; for example, editing a log router information object.
+ *
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
  * \date 2011-2013

@@ -276,9 +276,13 @@ void BackupSetDialog::currentFilterRowChanged ( const QModelIndex & current, con
 
 void BackupSetDialog::currentCriteriaRowChanged ( const QModelIndex & current, const QModelIndex &)
 {
-  bool b = (current.row() >= 0);
+  int row = current.row();
+  int count = m_criteriaForFileMatchTableModel.criteriaCount();
+  bool b = (row >= 0);
   ui->copyCriteriaButton->setEnabled(b);
   ui->deleteCriteriaButton->setEnabled(b);
 
+  ui->upCriteriaButton->setEnabled(b && row > 0);
+  ui->downCriteriaButton->setEnabled(b && row < (count - 1));
 }
 

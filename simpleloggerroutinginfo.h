@@ -210,6 +210,8 @@ public:
 
   static QStringList getMessageRoutingStrings();
 
+  const QList< QPair<MessageComponent, QString> > & getMessageComponents() const { return m_format; }
+
 signals:
 
 public slots:

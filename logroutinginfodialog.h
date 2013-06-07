@@ -4,6 +4,7 @@
 #include <QDialog>
 
 #include "simpleloggerroutinginfo.h"
+#include "messagecomponenttablemodel.h"
 
 
 //**************************************************************************
@@ -89,13 +90,13 @@ public slots:
   /*! \brief Enables and disables buttons such as "up" and "down" */
   void currentMessageCategoryRowChanged ( const QModelIndex & current, const QModelIndex &    previous );
 
-  /*! \brief Enables and disables buttons such as "up" and "down" */
-  void currentCriteriaRowChanged ( const QModelIndex & current, const QModelIndex &    previous );
+  void closeRequested();
+
+  void testMessage();
 
 private:
   Ui::LogRoutingInfoDialog *ui;
-  //MessageCategoryTableModel m_messageCategoryTableModel;
-  //CriteriaForFileMatchTableModel m_criteriaForFileMatchTableModel;
+  MessageComponentTableModel m_messageComponentTableModel;
 };
 
 #endif // LOGROUTINGINFODIALOG_H

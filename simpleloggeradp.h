@@ -93,6 +93,8 @@ public:
    ***************************************************************************/
   void addRouting(const SimpleLoggerRoutingInfo& routing);
 
+  QList<SimpleLoggerRoutingInfo> & getRouting() {return m_routing;}
+
   //**************************************************************************
   /*! \brief Set the log file name,
    *

@@ -40,7 +40,6 @@ public:
    ***************************************************************************/
   bool setData ( const QModelIndex & index, const QVariant & value, int role = Qt::EditRole );
 
-
   //**************************************************************************
   /*! \brief Returns the data for the given role and section in the header with the specified orientation.
    *  \param [in] section For horizontal headers, the section number corresponds to the column number. Similarly, for vertical headers, the section number corresponds to the row number.

@@ -4,6 +4,7 @@
 #include "linkbackupthread.h"
 #include "simpleloggerroutinginfo.h"
 #include "linkbackupglobals.h"
+#include "logroutinginfodialog.h"
 
 #include "backupsetdialog.h"
 #include "ui_backupsetdialog.h"
@@ -134,4 +135,25 @@ void LinkBackupADP::formattedMessage(const QString& formattedMessage, const Simp
         m_editorMutex.unlock();
     }
 
+}
+
+
+void LinkBackupADP::on_actionConfigureLog_triggered()
+{
+
+  QList<SimpleLoggerRoutingInfo> & all_Routes = getLogger().getRouting();
+  if (all_Routes.size() > 0)
+  {
+    LogRoutingInfoDialog dlg(all_Routes[0], this);
+    dlg.exec();
+  }
+  else
+  {
+    QMessageBox msgBox;
+    msgBox.setText(tr("Nothing to configure"));
+    msgBox.setInformativeText("There are no routes");
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.exec();
+  }
 }
