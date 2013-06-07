@@ -180,7 +180,37 @@ void LogRoutingInfoDialog::closeRequested()
   accept();
 }
 
+QString LogRoutingInfoDialog::isValid() const
+{
+  QString s = ui->regExpEdit->displayText();
+  if (!s.isEmpty())
+  {
+    QRegExp regExp(s);
+    if (!regExp.isValid())
+    {
+      return tr("Invalid Regular Expression");
+    }
+  }
+  return "";
+}
+
 void LogRoutingInfoDialog::testMessage()
 {
-  // TODO: Generate a test message!
+  QString s = isValid();
+  if (s.isEmpty())
+  {
+    // TODO: Generate a test message!
+    SimpleLoggerRoutingInfo info = getRoutingInfo();
+    s = info.formatMessage(tr("Test log message"), QString(QObject::tr("%1:%2")).arg(__FILE__, QString::number(__LINE__)), QDateTime::currentDateTime(), SimpleLoggerRoutingInfo::ErrorMessage, 1);
+    // TODO: Add more test messages
+
+//#define ERROR_MSG(msg, level) errorMessage((msg), QString(QObject::tr("%1:%2")).arg(__FILE__, QString::number(__LINE__)), QDateTime::currentDateTime(), (level));
+//#define WARN_MSG( msg, level) warnMessage((msg),  QString(QObject::tr("%1:%2")).arg(__FILE__, QString::number(__LINE__)), QDateTime::currentDateTime(), (level));
+//#define INFO_MSG( msg, level) infoMessage((msg),  QString(QObject::tr("%1:%2")).arg(__FILE__, QString::number(__LINE__)), QDateTime::currentDateTime(), (level));
+//#define TRACE_MSG(msg, level) traceMessage((msg), QString(QObject::tr("%1:%2")).arg(__FILE__, QString::number(__LINE__)), QDateTime::currentDateTime(), (level));
+//#define DEBUG_MSG(msg, level) debugMessage((msg), QString(QObject::tr("%1:%2")).arg(__FILE__, QString::number(__LINE__)), QDateTime::currentDateTime(), (level));
+//#define USER_MSG( msg, level) userMessage((msg),  QString(QObject::tr("%1:%2")).arg(__FILE__, QString::number(__LINE__)), QDateTime::currentDateTime(), (level));
+
+  }
+  ui->sampleTextEdit->setText(s);
 }

@@ -94,6 +94,8 @@ public slots:
 
   void testMessage();
 
+  QString isValid() const;
+
 private:
   Ui::LogRoutingInfoDialog *ui;
   MessageComponentTableModel m_messageComponentTableModel;
