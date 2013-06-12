@@ -15,6 +15,7 @@
  **************************************************************************/
 
 class QLineEdit;
+class QTableView;
 
 class LogConfigDialog : public QDialog
 {
@@ -30,6 +31,8 @@ signals:
   
 public slots:
   void editSelectedRouting();
+  void delSelectedRouting();
+  void addRouting();
   void loadLogConfiguration();
   void saveLogConfiguration();
   void selectLogFile();
@@ -39,6 +42,7 @@ private:
 
   QLineEdit* m_configFilePath;
   QLineEdit* m_logFilePath;
+  QTableView* m_Components;
 };
 
 #endif // LOGCONFIGDIALOG_H

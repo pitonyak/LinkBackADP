@@ -81,7 +81,7 @@ public:
   void setRouting(MessageRoutings messageRoutings, bool state);
 
   bool isEnabled() const;
-  bool setEnabled(bool enabledState);
+  void setEnabled(bool enabledState);
 
 
   void setCategoryLevel(MessageCategory category, int level);

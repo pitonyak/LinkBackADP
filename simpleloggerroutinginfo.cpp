@@ -81,7 +81,7 @@ bool SimpleLoggerRoutingInfo::isEnabled() const
   return m_enabled;
 }
 
-bool SimpleLoggerRoutingInfo::setEnabled(bool enabledState)
+void SimpleLoggerRoutingInfo::setEnabled(bool enabledState)
 {
   m_enabled = enabledState;
 }
