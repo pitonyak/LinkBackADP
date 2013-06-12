@@ -5,6 +5,7 @@
 #include "simpleloggerroutinginfo.h"
 #include "linkbackupglobals.h"
 #include "logroutinginfodialog.h"
+#include "logconfigdialog.h"
 
 #include "backupsetdialog.h"
 #include "ui_backupsetdialog.h"
@@ -144,7 +145,8 @@ void LinkBackupADP::on_actionConfigureLog_triggered()
   QList<SimpleLoggerRoutingInfo> & all_Routes = getLogger().getRouting();
   if (all_Routes.size() > 0)
   {
-    LogRoutingInfoDialog dlg(all_Routes[0], this);
+    LogConfigDialog dlg(this);
+    //LogRoutingInfoDialog dlg(all_Routes[0], this);
     dlg.exec();
   }
   else
