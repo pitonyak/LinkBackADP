@@ -143,7 +143,10 @@ signals:
 public slots:
   //**************************************************************************
   /*! \brief Receive a message and log it based on the routings.
-   *  TODO: Convert this to cache the messages so that they are processed in another thread.
+   *
+   *  Messages are cached and processed in another thread rather than being written immediately
+   *  when they are received.
+   *
    *  \param [in] message Primary message to log.
    *  \param [in] location Location provided compiler macros; usually file name and line number.
    *  \param [in] dateTime Date and time the message was created.
@@ -166,10 +169,29 @@ private:
 
   void readInternals(QXmlStreamReader& reader, const QString& version);
 
+  //**************************************************************************
+  /*! \brief
+   ***************************************************************************/
   LogMessageQueue* m_messageQueue;
+
+  //**************************************************************************
+  /*! \brief Logs written to a file are written here!
+   ***************************************************************************/
   QFile* m_logFile;
+
+  //**************************************************************************
+  /*! \brief Stream used to write to a log file.
+   ***************************************************************************/
   QTextStream* m_textStream;
+
+  //**************************************************************************
+  /*! \brief List of routing objects.
+   ***************************************************************************/
   QList<SimpleLoggerRoutingInfo> m_routing;
+
+  //**************************************************************************
+  /*! \brief When writing logs to a file, this is where the files are written.
+   ***************************************************************************/
   QString m_logFileName;
 
   //**************************************************************************

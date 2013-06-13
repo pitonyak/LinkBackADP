@@ -20,6 +20,7 @@ LogConfigDialog::~LogConfigDialog()
 {
   QSettings settings;
   settings.setValue("LogConfigDialogGeometry", saveGeometry());
+  settings.setValue("LogConfigDialogLastConfigPath", getConfigFilePath());
 }
 
 void LogConfigDialog::buildDialog()
@@ -91,11 +92,28 @@ void LogConfigDialog::buildDialog()
 
   QSettings settings;
   restoreGeometry(settings.value("LogConfigDialogGeometry").toByteArray());
+  setConfigFilePath(settings.value("LogConfigDialogLastConfigPath").toString());
 }
 
 void LogConfigDialog::configureDialog(const SimpleLoggerADP& logger)
 {
+  if (m_logFilePath != nullptr)
+  {
+    m_logFilePath->setText(logger.getFileName());
+  }
+}
 
+void LogConfigDialog::setConfigFilePath(const QString& path)
+{
+  if (m_configFilePath != nullptr)
+  {
+    m_configFilePath->setText(path);
+  }
+}
+
+QString LogConfigDialog::getConfigFilePath() const
+{
+  return (m_configFilePath != nullptr) ? m_configFilePath->text() : "";
 }
 
 void LogConfigDialog::configureLogger(SimpleLoggerADP& logger)

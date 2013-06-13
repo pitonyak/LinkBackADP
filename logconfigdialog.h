@@ -27,6 +27,9 @@ public:
   void configureDialog(const SimpleLoggerADP& logger);
   void configureLogger(SimpleLoggerADP& logger);
 
+  void setConfigFilePath(const QString& path);
+  QString getConfigFilePath() const;
+
 signals:
   
 public slots:

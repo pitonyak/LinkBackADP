@@ -163,10 +163,15 @@ void SimpleLoggerADP::processQueuedMessages()
               }
               else
               {
+                if (m_textStream != nullptr)
+                {
+                  delete m_textStream;
+                  m_textStream = nullptr;
+                }
                 m_textStream = new QTextStream(m_logFile);
               }
             }
-            if (m_logFile != nullptr)
+            if (m_textStream != nullptr)
             {
               *m_textStream << finalMessage << "\n";
               flushLog = true;
