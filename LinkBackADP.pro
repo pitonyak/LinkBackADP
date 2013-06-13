@@ -38,7 +38,8 @@ SOURCES += main.cpp\
     qtenummapper.cpp \
     logroutinginfodialog.cpp \
     messagecomponenttablemodel.cpp \
-    logconfigdialog.cpp
+    logconfigdialog.cpp \
+    logroutinginfotablemodel.cpp
 
 HEADERS  += linkbackupadp.h \
     backupsetdialog.h \
@@ -64,7 +65,8 @@ HEADERS  += linkbackupadp.h \
     qtenummapper.h \
     logroutinginfodialog.h \
     messagecomponenttablemodel.h \
-    logconfigdialog.h
+    logconfigdialog.h \
+    logroutinginfotablemodel.h
 
 FORMS    += linkbackupadp.ui \
     backupsetdialog.ui \

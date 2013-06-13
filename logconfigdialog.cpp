@@ -118,11 +118,13 @@ QString LogConfigDialog::getConfigFilePath() const
 
 void LogConfigDialog::configureLogger(SimpleLoggerADP& logger)
 {
+  setConfigFilePath(logger.getFileName());
+  // TODO:
 }
 
 void LogConfigDialog::editSelectedRouting()
 {
-
+  // TODO:
 }
 
 void LogConfigDialog::delSelectedRouting()
@@ -132,7 +134,7 @@ void LogConfigDialog::delSelectedRouting()
 
 void LogConfigDialog::addRouting()
 {
-
+  // TODO:
 }
 
 
