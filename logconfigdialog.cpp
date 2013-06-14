@@ -1,4 +1,7 @@
 #include "logconfigdialog.h"
+#include "logroutinginfotablemodel.h"
+#include "linkbackfilterdelegate.h"
+#include "checkboxonlydelegate.h"
 
 #include <QSettings>
 #include <QVBoxLayout>
@@ -11,7 +14,7 @@
 #include <QTableView>
 
 LogConfigDialog::LogConfigDialog(QWidget *parent) :
-  QDialog(parent), m_configFilePath(nullptr), m_logFilePath(nullptr), m_Components(nullptr)
+  QDialog(parent), m_configFilePath(nullptr), m_logFilePath(nullptr), m_routingTableView(nullptr)
 {
   buildDialog();
 }
@@ -21,6 +24,24 @@ LogConfigDialog::~LogConfigDialog()
   QSettings settings;
   settings.setValue("LogConfigDialogGeometry", saveGeometry());
   settings.setValue("LogConfigDialogLastConfigPath", getConfigFilePath());
+  //m_routingTableView
+  // m_tableModel
+  if (m_tableModel != nullptr && m_routingTableView != nullptr)
+  {
+    QString s;
+    for (int i=0; i<LogRoutingInfoTableModel::numColumns; ++i)
+    {
+      if (s.length() > 0)
+      {
+        s = s + QString(",%1").arg(m_routingTableView->columnWidth(i));
+      }
+      else
+      {
+        s = QString("%1").arg(m_routingTableView->columnWidth(i));
+      }
+    }
+    settings.setValue("LogConfigDialogRoutingColumnWidths", s);
+  }
 }
 
 void LogConfigDialog::buildDialog()
@@ -78,8 +99,20 @@ void LogConfigDialog::buildDialog()
   vLayout->addStretch();
   hLayout->addLayout(vLayout);
 
-  m_Components = new QTableView();
-  hLayout->addWidget(m_Components);
+  m_routingTableView = new QTableView();
+  m_tableModel = new LogRoutingInfoTableModel();
+  m_routingTableView->setModel(m_tableModel);
+
+  LinkBackFilterDelegate* delegate = new LinkBackFilterDelegate(m_routingTableView);
+  m_routingTableView->setItemDelegate(delegate);
+
+  CheckBoxOnlyDelegate * cboDelegate = new CheckBoxOnlyDelegate(m_routingTableView);
+  m_routingTableView->setItemDelegateForColumn(LogRoutingInfoTableModel::enabledColumn, cboDelegate);
+  m_routingTableView->setItemDelegateForColumn(LogRoutingInfoTableModel::routFileColumn, cboDelegate);
+  m_routingTableView->setItemDelegateForColumn(LogRoutingInfoTableModel::routScreenColumn, cboDelegate);
+  m_routingTableView->setItemDelegateForColumn(LogRoutingInfoTableModel::routDebugColumn, cboDelegate);
+
+  hLayout->addWidget(m_routingTableView);
   fLayout->addRow(hLayout);
 
 
@@ -93,6 +126,20 @@ void LogConfigDialog::buildDialog()
   QSettings settings;
   restoreGeometry(settings.value("LogConfigDialogGeometry").toByteArray());
   setConfigFilePath(settings.value("LogConfigDialogLastConfigPath").toString());
+  QString s = settings.value("LogConfigDialogRoutingColumnWidths").toString();
+  if (s.length() > 0)
+  {
+    QStringList list = s.split(',');
+    bool ok = true;
+    for (int i=0; i<list.count() && i<LogRoutingInfoTableModel::numColumns; ++i)
+    {
+      int width = list[i].toInt(&ok);
+      if (ok && width > 0)
+      {
+        m_routingTableView->setColumnWidth(i, width);
+      }
+    }
+  }
 }
 
 void LogConfigDialog::configureDialog(const SimpleLoggerADP& logger)
@@ -100,6 +147,10 @@ void LogConfigDialog::configureDialog(const SimpleLoggerADP& logger)
   if (m_logFilePath != nullptr)
   {
     m_logFilePath->setText(logger.getFileName());
+    if (m_tableModel != nullptr)
+    {
+      m_tableModel->setRoutings(logger.getRouting());
+    }
   }
 }
 

@@ -16,6 +16,7 @@
 
 class QLineEdit;
 class QTableView;
+class LogRoutingInfoTableModel;
 
 class LogConfigDialog : public QDialog
 {
@@ -45,7 +46,8 @@ private:
 
   QLineEdit* m_configFilePath;
   QLineEdit* m_logFilePath;
-  QTableView* m_Components;
+  QTableView* m_routingTableView;
+  LogRoutingInfoTableModel* m_tableModel;
 };
 
 #endif // LOGCONFIGDIALOG_H

@@ -1,12 +1,16 @@
 #include "logroutinginfotablemodel.h"
 
 
-const int LogRoutingInfoTableModel::numColumns = 5;
+const int LogRoutingInfoTableModel::numColumns = 8;
 const int LogRoutingInfoTableModel::enabledColumn = 0;
 const int LogRoutingInfoTableModel::nameColumn = 1;
-const int LogRoutingInfoTableModel::componentColumn = 2;
-const int LogRoutingInfoTableModel::levelsColumn = 3;
-const int LogRoutingInfoTableModel::regExpColumn = 4;
+const int LogRoutingInfoTableModel::regExpColumn = 2;
+const int LogRoutingInfoTableModel::routFileColumn = 3;
+const int LogRoutingInfoTableModel::routScreenColumn = 4;
+const int LogRoutingInfoTableModel::routDebugColumn = 5;
+const int LogRoutingInfoTableModel::levelsColumn = 6;
+const int LogRoutingInfoTableModel::componentColumn = 7;
+
 
 LogRoutingInfoTableModel::LogRoutingInfoTableModel(QObject *parent) :
   QAbstractTableModel(parent)
@@ -24,7 +28,7 @@ void LogRoutingInfoTableModel::clear()
   }
 }
 
-void LogRoutingInfoTableModel::appendMessageComponents(const QList<SimpleLoggerRoutingInfo> routing)
+void LogRoutingInfoTableModel::appendRoutings(const QList<SimpleLoggerRoutingInfo> &routing)
 {
     clear();
     if (routing.count() > 0)
@@ -35,7 +39,7 @@ void LogRoutingInfoTableModel::appendMessageComponents(const QList<SimpleLoggerR
     }
 }
 
-void LogRoutingInfoTableModel::setMessageComponents(const QList<SimpleLoggerRoutingInfo> routing)
+void LogRoutingInfoTableModel::setRoutings(const QList<SimpleLoggerRoutingInfo>& routing)
 {
     clear();
     if (routing.count() > 0)
@@ -59,7 +63,7 @@ int LogRoutingInfoTableModel::rowCount( const QModelIndex & parent) const
 
 int LogRoutingInfoTableModel::columnCount( const QModelIndex &) const
 {
-  return numMessageComponentTableModelColumns;
+  return numColumns;
 }
 
 #include <QFile>
@@ -69,18 +73,34 @@ bool LogRoutingInfoTableModel::setData ( const QModelIndex & index, const QVaria
 {
   if (role == Qt::EditRole)
   {
-    QPair<SimpleLoggerRoutingInfo::MessageComponent, QString>& component = m_routings[index.row()];
+    SimpleLoggerRoutingInfo& info = m_routings[index.row()];
     QString s;
     switch (index.column())
     {
-    case fieldColumn:
-      component.first = SimpleLoggerRoutingInfo::stringToComponent(value.toString());
+    case enabledColumn:
+      info.setEnabled(value.toBool());
       break;
-    case stringColumn:
-      // TODO: Validation?
-      component.second = value.toString();
+    case nameColumn:
+      info.setName(value.toString());
+      break;
+    case regExpColumn:
+      if (!info.setRegExp(value.toString()))
+      {
+        // TODO: Print an error!
+        return false;
+      }
+      break;
+    case routFileColumn:
+      info.setRouting(SimpleLoggerRoutingInfo::RouteFile, value.toBool());
+      break;
+    case routScreenColumn:
+      info.setRouting(SimpleLoggerRoutingInfo::RouteEmit, value.toBool());
+      break;
+    case routDebugColumn:
+      info.setRouting(SimpleLoggerRoutingInfo::RouteQDebug, value.toBool());
       break;
     default:
+      // No other column is setable here!
       return false;
       break;
     }
@@ -93,19 +113,41 @@ bool LogRoutingInfoTableModel::setData ( const QModelIndex & index, const QVaria
 
 QVariant LogRoutingInfoTableModel::data( const QModelIndex &index, int role ) const
 {
-  const QPair<SimpleLoggerRoutingInfo::MessageComponent, QString>& component = m_routings[index.row()];
+  const SimpleLoggerRoutingInfo& info = m_routings[index.row()];
   switch( role )
   {
   case Qt::DisplayRole:
     switch (index.column())
     {
-    case fieldColumn:
-      return SimpleLoggerRoutingInfo::componentToString(component.first);
+    case enabledColumn:
+      return info.isEnabled();
       break;
-    case stringColumn:
-      return component.second;
+    case nameColumn:
+      return info.getName();
+      break;
+    case regExpColumn:
+      return info.getRegExpString();
+      break;
+    case routFileColumn:
+      return info.isRoutingOn(SimpleLoggerRoutingInfo::RouteFile);
+      break;
+    case routScreenColumn:
+      return info.isRoutingOn(SimpleLoggerRoutingInfo::RouteEmit);
+      break;
+    case routDebugColumn:
+      return info.isRoutingOn(SimpleLoggerRoutingInfo::RouteQDebug);
+      break;
+    case componentColumn:
+      return info.formatMessage(tr("message"), QString(QObject::tr("%1:%2")).arg(__FILE__, QString::number(__LINE__)), QDateTime::currentDateTime(), SimpleLoggerRoutingInfo::ErrorMessage, 1);
+      break;
+    case levelsColumn:
+      return info.getLevelsAsString();
+    {
+
+    }
       break;
     default:
+      // No other column is valid
       break;
     }
     return (index.row()+1) * (index.column()+1);
@@ -113,18 +155,23 @@ QVariant LogRoutingInfoTableModel::data( const QModelIndex &index, int role ) co
   case Qt::EditRole:
     switch (index.column())
     {
-    case fieldColumn:
-      {
-        QStringList qsl;
-        qsl << SimpleLoggerRoutingInfo::componentToString(component.first);
-        qsl << SimpleLoggerRoutingInfo::getMessageRoutingStrings();
-        return QVariant(qsl);
-      }
+    case enabledColumn:
+      return info.isEnabled();
       break;
-    case stringColumn:
-      {
-        return component.second;
-      }
+    case nameColumn:
+      return info.getName();
+      break;
+    case regExpColumn:
+      return info.getRegExpString();
+      break;
+    case routFileColumn:
+      return info.isRoutingOn(SimpleLoggerRoutingInfo::RouteFile);
+      break;
+    case routScreenColumn:
+      return info.isRoutingOn(SimpleLoggerRoutingInfo::RouteEmit);
+      break;
+    case routDebugColumn:
+      return info.isRoutingOn(SimpleLoggerRoutingInfo::RouteQDebug);
       break;
     default:
       break;
@@ -135,58 +182,37 @@ QVariant LogRoutingInfoTableModel::data( const QModelIndex &index, int role ) co
 
     switch (index.column())
     {
-    case fieldColumn:
-      switch (component.first)
-      {
-      case SimpleLoggerRoutingInfo::DateTimeComponent:
-        return tr("Date and time the message is logged. Format string is used to format log message if ISO date format is not desired.");
-        break;
-      case SimpleLoggerRoutingInfo::MessageLocationComponent:
-        return tr("Filename and line number where log message originated. Format string is ignored.");
-        break;
-      case SimpleLoggerRoutingInfo::MessageTextComponent:
-        return tr("The actual log message that was requested to be displayed to the user. Format string is ignored.");
-        break;
-      case SimpleLoggerRoutingInfo::MessageTypeComponent:
-        return tr("Include the message type (such as Error or Info) in the log message. Message type is truncated to the length of the format text.");
-        break;
-      case SimpleLoggerRoutingInfo::MessageText:
-        return tr("The format field text string is included verbatim in the log message.");
-        break;
-      default:
-        return tr("Message Component that is printed.");
-        break;
-      }
+    case enabledColumn:
+      return tr("Enable or disable this routing.");
       break;
-    case stringColumn:
-      switch (component.first)
-      {
-      case SimpleLoggerRoutingInfo::DateTimeComponent:
-        return tr("Used to format date/time. If empty use ISO format. (y)ear, (M)onth, (d)ay, (h)our, (m)inute, (s)econd, (z)millisecond, (AP)or(ap) is AM/PM or am/pm.");
-        break;
-      case SimpleLoggerRoutingInfo::MessageLocationComponent:
-        return tr("Format string is ignored for file location and line number.");
-        break;
-      case SimpleLoggerRoutingInfo::MessageTextComponent:
-        return tr("Format string is ignored for text of the log message.");
-        break;
-      case SimpleLoggerRoutingInfo::MessageTypeComponent:
-        return tr("Message type is truncated to the length of the format text, so X displays only the first letter. No text displays full type name such as Error.");
-        break;
-      case SimpleLoggerRoutingInfo::MessageText:
-        return tr("This text is logged as entered.");
-        break;
-      default:
-        return tr("Determines how the field is formatted.");
-        break;
-      }
+    case nameColumn:
+      return tr("User recognizable name used only in this dialog.");
+      break;
+    case regExpColumn:
+      return tr("Regular expression pattern used to match the message source location.");
+      break;
+    case componentColumn:
+      return tr("Components printed as part of the message.");
+      break;
+    case levelsColumn:
+      return tr("Only messages with level less than or equal to the level are passed.");
+      break;
+      break;
+    case routFileColumn:
+      return tr("Send log messages to the log file.");
+      break;
+    case routScreenColumn:
+      return tr("Send log messages to all log listeners such as the screen.");
+      break;
+    case routDebugColumn:
+      return tr("Use qDebug to send log messages to the console.");
+      break;
     default:
-      return tr("Help text requested for an unknown column!");
+      return QVariant();
       break;
     }
-    break;
   default:
-    return QVariant();
+    break;
   }
   return QVariant();
 }
@@ -197,7 +223,7 @@ QVariant LogRoutingInfoTableModel::headerData( int section, Qt::Orientation orie
   {
     return QVariant();
   }
-  const char* headers[] = {"Component", "Format"};
+  const char* headers[] = {"Enabled", "Name", "Reg Ex", "To File", "To Screen", "To Console", "Levels", "Message"};
   if (orientation == Qt::Vertical)
   {
     return section + 1;
@@ -217,6 +243,9 @@ Qt::ItemFlags LogRoutingInfoTableModel::flags( const QModelIndex &index ) const
   case enabledColumn:
   case nameColumn:
   case regExpColumn:
+  case routFileColumn:
+  case routScreenColumn:
+  case routDebugColumn:
     return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable;
     break;
   default:
@@ -226,16 +255,16 @@ Qt::ItemFlags LogRoutingInfoTableModel::flags( const QModelIndex &index ) const
   return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 }
 
-void LogRoutingInfoTableModel::copyMessageComponent(int row)
+void LogRoutingInfoTableModel::copyRouting(int row)
 {
   if (row < 0)
   {
     return;
   }
-  insertMessageComponent(row, m_routings.at(row));
+  insertRouting(row, m_routings.at(row));
 }
 
-void LogRoutingInfoTableModel::insertMessageComponent(int row, const QPair<SimpleLoggerRoutingInfo::MessageComponent, QString>& component)
+void LogRoutingInfoTableModel::insertRouting(int row, const SimpleLoggerRoutingInfo& routing)
 {
   if (row < 0)
   {
@@ -246,11 +275,11 @@ void LogRoutingInfoTableModel::insertMessageComponent(int row, const QPair<Simpl
   }
 
   beginInsertRows(QModelIndex(), row, row);
-  m_routings.insert(row, component);
+  m_routings.insert(row, routing);
   endInsertRows();
 }
 
-void LogRoutingInfoTableModel::removeMessageComponent(int row)
+void LogRoutingInfoTableModel::removeRouting(int row)
 {
   if (0 <= row && row < m_routings.count())
   {
@@ -260,7 +289,7 @@ void LogRoutingInfoTableModel::removeMessageComponent(int row)
   }
 }
 
-void LogRoutingInfoTableModel::moveMessageComponentUp(int row)
+void LogRoutingInfoTableModel::moveRoutingUp(int row)
 {
   if (0 < row && row < m_routings.count())
   {
@@ -272,7 +301,7 @@ void LogRoutingInfoTableModel::moveMessageComponentUp(int row)
   }
 }
 
-void LogRoutingInfoTableModel::moveMessageComponentDown(int row)
+void LogRoutingInfoTableModel::moveRoutingDown(int row)
 {
   if (0 <= row && row < m_routings.count() - 1)
   {
@@ -285,8 +314,7 @@ void LogRoutingInfoTableModel::moveMessageComponentDown(int row)
   }
 }
 
-int LogRoutingInfoTableModel::messageComponentCount() const
+int LogRoutingInfoTableModel::count() const
 {
   return m_routings.count();
 }
-

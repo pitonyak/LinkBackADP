@@ -3,11 +3,12 @@
     <From>/andrew0/home</From>
     <To>/archive1/adpLink/home</To>
     <Hash>Sha1</Hash>
+    <Priority>Inherit</Priority>
     <Filters>
         <Filter>
             <CompareType>Equal</CompareType>
             <CompareField>Name</CompareField>
-            <Value>tmp,temp,cache,ISO,VMWare,Download,.ccache</Value>
+            <Value>tmp,temp,cache,ISO,VMWare,Download,.ccache,netbeans-7.3</Value>
             <CaseSensitive>False</CaseSensitive>
             <Invert>False</Invert>
             <Accept>False</Accept>

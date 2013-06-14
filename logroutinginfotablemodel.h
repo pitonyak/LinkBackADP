@@ -2,6 +2,7 @@
 #define LOGROUTINGINFOTABLEMODEL_H
 
 #include <QAbstractTableModel>
+#include "simpleloggerroutinginfo.h"
 
 class LogRoutingInfoTableModel : public QAbstractTableModel
 {
@@ -64,15 +65,15 @@ public:
 
   //**************************************************************************
   /*! \brief Append the MessageComponents to the internal MessageComponent list.
-   *  \param [in] MessageComponents MessageComponents to add to the current list.
+   *  \param [in] routing Routings to add to the current list.
    ***************************************************************************/
-  void appendMessageComponents(const QList<SimpleLoggerRoutingInfo> routing);
+  void appendRoutings(const QList<SimpleLoggerRoutingInfo>& routing);
 
   //**************************************************************************
   /*! \brief Clear the list then add these MessageComponents to the list.
-   *  \param [in] components MessageComponents that become the current list.
+   *  \param [in] routing Routings that become the current list.
    ***************************************************************************/
-  void setMessageComponents(const QList<SimpleLoggerRoutingInfo> routing);
+  void setRoutings(const QList<SimpleLoggerRoutingInfo> &routing);
 
   //**************************************************************************
   /*! \brief Get the current MessageComponent lits.
@@ -84,12 +85,16 @@ public:
   void copyRouting(int row);
   void removeRouting(int row);
   void clear();
+  void moveRoutingUp(int row);
+  void moveRoutingDown(int row);
+
+  int count() const;
 
 private:
   //**************************************************************************
   /*! \brief List of routing objects.
    ***************************************************************************/
-  QList<SimpleLoggerRoutingInfo> m_routing;
+  QList<SimpleLoggerRoutingInfo> m_routings;
 
 public:
   static const int numColumns;
@@ -98,7 +103,10 @@ public:
   static const int regExpColumn;
   static const int levelsColumn;
   static const int componentColumn;
-  
+  static const int routFileColumn;
+  static const int routScreenColumn;
+  static const int routDebugColumn;
+
 signals:
   
 public slots:

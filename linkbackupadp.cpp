@@ -146,8 +146,12 @@ void LinkBackupADP::on_actionConfigureLog_triggered()
   if (all_Routes.size() > 0)
   {
     LogConfigDialog dlg(this);
+    dlg.configureDialog(getLogger());
     //LogRoutingInfoDialog dlg(all_Routes[0], this);
-    dlg.exec();
+    if (dlg.exec() ==  QDialog::Accepted)
+    {
+      dlg.configureLogger(getLogger());
+    }
   }
   else
   {

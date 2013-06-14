@@ -3,6 +3,7 @@
 #include <QRegExp>
 #include <QMetaEnum>
 #include <QMetaObject>
+#include <QMapIterator>
 
 SimpleLoggerRoutingInfo SimpleLoggerRoutingInfo::privateObjectForMetaData;
 
@@ -119,21 +120,22 @@ int SimpleLoggerRoutingInfo::getCategoryLevel(MessageCategory category) const
 
 bool SimpleLoggerRoutingInfo::setRegExp(const QString& regExp)
 {
-  if (m_regExp != nullptr)
-  {
-    delete m_regExp;
-    m_regExp = nullptr;
-  }
+  QRegExp* newRegExpr = nullptr;
   if (regExp.length() > 0)
   {
-    m_regExp = new QRegExp(regExp, Qt::CaseInsensitive, m_regExpPatternSyntax);
-    if (!m_regExp->isValid())
+    newRegExpr = new QRegExp(regExp, Qt::CaseInsensitive, m_regExpPatternSyntax);
+    if (!newRegExpr->isValid())
     {
-      delete m_regExp;
-      m_regExp = nullptr;
+      delete newRegExpr;
       return false;
     }
   }
+
+  if (m_regExp != nullptr)
+  {
+    delete m_regExp;
+  }
+  m_regExp = newRegExpr;
   return true;
 }
 
@@ -264,15 +266,19 @@ SimpleLoggerRoutingInfo& SimpleLoggerRoutingInfo::operator=(const SimpleLoggerRo
   return *this;
 }
 
-QString SimpleLoggerRoutingInfo::categoryToString(MessageCategory category, int maxlen)
+QString SimpleLoggerRoutingInfo::categoryToString(MessageCategory category, const int maxlen, const bool brief)
 {
   const QMetaObject* metaObj = privateObjectForMetaData.metaObject();
   const QMetaEnum& categoryEnum =  metaObj->enumerator(metaObj->indexOfEnumerator("MessageCategory"));
   QString s = categoryEnum.valueToKey(category);
+  if (brief && s.length() > 7)
+  {
+    s = s.left(s.length() - 7);
+  }
   return (maxlen <= 0) ? s : (s.isRightToLeft() ? s.right(maxlen) : s.left(maxlen));
 }
 
-QString SimpleLoggerRoutingInfo::componentToString(MessageComponent component, int maxlen)
+QString SimpleLoggerRoutingInfo::componentToString(MessageComponent component, const int maxlen)
 {
   const QMetaObject* metaObj = privateObjectForMetaData.metaObject();
   const QMetaEnum& componentEnum =  metaObj->enumerator(metaObj->indexOfEnumerator("MessageComponent"));
@@ -293,7 +299,7 @@ QStringList SimpleLoggerRoutingInfo::getMessageRoutingStrings()
   return qsl;
 }
 
-QString SimpleLoggerRoutingInfo::routingToString(MessageRouting routing, int maxlen)
+QString SimpleLoggerRoutingInfo::routingToString(MessageRouting routing, const int maxlen)
 {
   const QMetaObject* metaObj = privateObjectForMetaData.metaObject();
   const QMetaEnum& routingEnum =  metaObj->enumerator(metaObj->indexOfEnumerator("MessageRouting"));
@@ -475,4 +481,24 @@ void SimpleLoggerRoutingInfo::readInternals(QXmlStreamReader& reader, const QStr
     }
     reader.readNext();
   }
+}
+
+
+QString SimpleLoggerRoutingInfo::getLevelsAsString() const
+{
+  QString s = "";
+  QMapIterator<MessageCategory, int> i(*m_levels);
+  while (i.hasNext())
+  {
+      i.next();
+      if (s.length() > 0)
+      {
+        s = s + QString("|%1:%2").arg(categoryToString(i.key(), -1, true)).arg(i.value());
+      }
+      else
+      {
+        s = QString("%1:%2").arg(categoryToString(i.key(), -1, true)).arg(i.value());
+      }
+  }
+  return s;
 }

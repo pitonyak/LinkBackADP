@@ -89,8 +89,11 @@ public:
 
   //**************************************************************************
   /*! \brief The message category must match this regExp. An empty string will pass everything.
+   *
    * The type is set to regular expression, case insensitive, with greedy matching.
    * The regular expression need only find the source in the regular expression, an exact match is not required.
+   * If the regular expression is not valid, the regular expression is left unchanged.
+   *
    *  \param [in] regExp String representation of the message category.If invalid, then everything will match.
    *  \return True if the regular expression is valid, false otherwise.
    ***************************************************************************/
@@ -162,9 +165,10 @@ public:
    *
    *  \param [in] category MessageCategory to convert to a string.
    *  \param [in] maxlen limits the length of the returned string. If less than 1, the entire string is returned.
+   *  \param [in] brief Remove the trailing "Message" text from the string.
    *  \return String representation of the MessageCategory.
    ***************************************************************************/
-  static QString categoryToString(MessageCategory category, int maxlen = -1);
+  static QString categoryToString(MessageCategory category, const int maxlen = -1, const bool brief=false);
 
   //**************************************************************************
   /*! \brief Convert the MessageComponent to a string for display purposes and streaming to XML.
@@ -173,7 +177,7 @@ public:
    *  \param [in] maxlen limits the length of the returned string. If less than 1, the entire string is returned.
    *  \return String representation of the MessageComponent.
    ***************************************************************************/
-  static QString componentToString(MessageComponent component, int maxlen = -1);
+  static QString componentToString(MessageComponent component, const int maxlen = -1);
 
   //**************************************************************************
   /*! \brief Convert the MessageRouting to a string for display purposes and streaming to XML.
@@ -182,7 +186,7 @@ public:
    *  \param [in] maxlen limits the length of the returned string. If less than 1, the entire string is returned.
    *  \return String representation of the MessageRouting.
    ***************************************************************************/
-  static QString routingToString(MessageRouting routing, int maxlen = -1);
+  static QString routingToString(MessageRouting routing, const int maxlen = -1);
 
   //**************************************************************************
   /*! \brief Convert the string (as saved as XML) to a MessageCategory.
@@ -211,6 +215,8 @@ public:
   static QStringList getMessageRoutingStrings();
 
   const QList< QPair<MessageComponent, QString> > & getMessageComponents() const { return m_format; }
+
+  QString getLevelsAsString() const;
 
 signals:
 
