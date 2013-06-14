@@ -44,6 +44,11 @@ void SimpleLoggerADP::addRouting(const SimpleLoggerRoutingInfo& routing)
   m_routing.append(routing);
 }
 
+void SimpleLoggerADP::addRouting(const QList<SimpleLoggerRoutingInfo>& routings)
+{
+  m_routing.append(routings);
+}
+
 void SimpleLoggerADP::setFileName(const QString& logFileName)
 {
   if (logFileName != m_logFileName)
@@ -117,7 +122,7 @@ void SimpleLoggerADP::processQueuedMessages()
       for (int i=0; i<m_routing.count(); ++i)
       {
         SimpleLoggerRoutingInfo& routing(m_routing[i]);
-        if (routing.passes(message->getLocation(), message->getCategory(), message->getLevel()))
+        if (routing.passes(message->getLocation(), message->getCategory(), message->getLevel(), message->getMessage()))
         {
           QString finalMessage = routing.formatMessage(message->getMessage(), message->getLocation(), message->getDateTime(), message->getCategory(), message->getLevel());
           if (routing.isRoutingOn(SimpleLoggerRoutingInfo::RouteQDebug))
@@ -203,7 +208,7 @@ void SimpleLoggerADP::processOneMessage(const LogMessageContainer& message)
   for (int i=0; i<m_routing.count(); ++i)
   {
     SimpleLoggerRoutingInfo& routing(m_routing[i]);
-    if (routing.passes(message.getLocation(), message.getCategory(), message.getLevel()))
+    if (routing.passes(message.getLocation(), message.getCategory(), message.getLevel(), message.getMessage()))
     {
       QString finalMessage = routing.formatMessage(message.getMessage(), message.getLocation(), message.getDateTime(), message.getCategory(), message.getLevel());
       if (routing.isRoutingOn(SimpleLoggerRoutingInfo::RouteQDebug))

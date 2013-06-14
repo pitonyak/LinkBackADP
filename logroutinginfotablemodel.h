@@ -81,6 +81,7 @@ public:
    ***************************************************************************/
   const QList<SimpleLoggerRoutingInfo>& getRoutings() const;
 
+  void updateRouting(int row, const SimpleLoggerRoutingInfo& routing);
   void insertRouting(int row, const SimpleLoggerRoutingInfo& routing);
   void copyRouting(int row);
   void removeRouting(int row);
@@ -100,7 +101,8 @@ public:
   static const int numColumns;
   static const int nameColumn;
   static const int enabledColumn;
-  static const int regExpColumn;
+  static const int locationRegExpColumn;
+  static const int messageRegExpColumn;
   static const int levelsColumn;
   static const int componentColumn;
   static const int routFileColumn;

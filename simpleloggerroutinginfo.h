@@ -88,24 +88,136 @@ public:
   int getCategoryLevel(MessageCategory category) const;
 
   //**************************************************************************
-  /*! \brief The message category must match this regExp. An empty string will pass everything.
+  /*! \brief The message location string (filename and line number) must match this regExp. An empty string passes everything.
    *
-   * The type is set to regular expression, case insensitive, with greedy matching.
-   * The regular expression need only find the source in the regular expression, an exact match is not required.
+   * The regular expression need only find the source in the regular expression, an exact match is not required unless the regular expression dictates it is so.
    * If the regular expression is not valid, the regular expression is left unchanged.
    *
    *  \param [in] regExp String representation of the message category.If invalid, then everything will match.
    *  \return True if the regular expression is valid, false otherwise.
    ***************************************************************************/
-  bool  setRegExp(const QString& regExp);
+  bool  setLocationRegExp(const QString& regExp);
 
-  /*! \brief Get the regular expression string */
-  QString getRegExpString() const;
+  //**************************************************************************
+  /*! \brief Get the regular expression string for Location (filename and line number).
+   *
+   *  \return Regular expression string for Location.
+   ***************************************************************************/
+  QString getLocationRegExpString() const;
 
-  // TODO: Provide access to case sensitivity flag.
+  //**************************************************************************
+  /*! \brief Get the regular expression pattern syntax for Location (filename and line number).
+   *
+   * <table border>
+   * <tr><td><b>Syntax</b></td><td><b>Description</b></td></tr>
+   * <tr><td>QRegExp::RegExp</td><td>Perl-like pattern matching syntax without greedy quantifiers.</td></tr>
+   * <tr><td>QRegExp::RegExp2</td><td>Perl-like pattern matching syntax with greedy quantifiers.</td></tr>
+   * <tr><td>QRegExp::Wildcard</td><td>Dimple pattern matching syntax similar to that used by shells (command interpreters) for "file globbing".</td></tr>
+   * <tr><td>QRegExp::WildcardUnix</td><td>Wildcard with the behavior of a Unix shell. The wildcard characters can be escaped with the character "\".</td></tr>
+   * <tr><td>QRegExp::FixedString</td><td>The pattern is a fixed string. This is equivalent to using the RegExp pattern on a string in which all metacharacters are escaped using escape().</td></tr>
+   * <tr><td>QRegExp::W3CXmlSchema11</td><td>The pattern is a regular expression as defined by the W3C XML Schema 1.1 specification.</td></tr>
+   * </table>
+   *
+   *  \return Regular expression pattern syntax for Location.
+   ***************************************************************************/
+  QRegExp::PatternSyntax getLocationRegExpPatternSyntax() const;
 
-  QRegExp::PatternSyntax getRegExpPatternSyntax() const;
-  void setRegExpPatternSyntax(const QRegExp::PatternSyntax syntax);
+  //**************************************************************************
+  /*! \brief Set the regular expression pattern syntax for Location (filename and line number).
+   *
+   * <table border>
+   * <tr><td><b>Syntax</b></td><td><b>Description</b></td></tr>
+   * <tr><td>QRegExp::RegExp</td><td>Perl-like pattern matching syntax without greedy quantifiers.</td></tr>
+   * <tr><td>QRegExp::RegExp2</td><td>Perl-like pattern matching syntax with greedy quantifiers.</td></tr>
+   * <tr><td>QRegExp::Wildcard</td><td>Dimple pattern matching syntax similar to that used by shells (command interpreters) for "file globbing".</td></tr>
+   * <tr><td>QRegExp::WildcardUnix</td><td>Wildcard with the behavior of a Unix shell. The wildcard characters can be escaped with the character "\".</td></tr>
+   * <tr><td>QRegExp::FixedString</td><td>The pattern is a fixed string. This is equivalent to using the RegExp pattern on a string in which all metacharacters are escaped using escape().</td></tr>
+   * <tr><td>QRegExp::W3CXmlSchema11</td><td>The pattern is a regular expression as defined by the W3C XML Schema 1.1 specification.</td></tr>
+   * </table>
+   *
+   *  \param [in] syntax Regular expression pattern syntax.
+   ***************************************************************************/
+  void setLocationRegExpPatternSyntax(const QRegExp::PatternSyntax syntax);
+
+  //**************************************************************************
+  /*! \brief Get case sensitivity flag for the location (filename and line number) regExp.
+   *
+   * \return Case sensitivity flag for the location (filename and line number) regExp.
+   ***************************************************************************/
+  Qt::CaseSensitivity getLocationRegExpCaseSensitivity() const;
+
+  //**************************************************************************
+  /*! \brief Set the case sensitivity flag for the location (filename and line number) regExp.
+   *
+   *  \param [in] cs Case Sensitivity flag to use.
+   ***************************************************************************/
+  void setLocationRegExpCaseSensitivity(const Qt::CaseSensitivity cs = Qt::CaseInsensitive);
+
+  //**************************************************************************
+  /*! \brief The unformatted message string must match this regExp. An empty string passes everything.
+   *
+   * The regular expression need only find the source in the regular expression, an exact match is not required unless the regular expression dictates it is so.
+   * If the regular expression is not valid, the regular expression is left unchanged.
+   *
+   *  \param [in] regExp String representation of the message category.If invalid, then everything will match.
+   *  \return True if the regular expression is valid, false otherwise.
+   ***************************************************************************/
+  bool  setMessageRegExp(const QString& regExp);
+
+  //**************************************************************************
+  /*! \brief Get the regular expression string for the unformatted message.
+   *
+   *  \return Regular expression string for Message.
+   ***************************************************************************/
+  QString getMessageRegExpString() const;
+
+  //**************************************************************************
+  /*! \brief Get the regular expression pattern syntax for the unformatted message.
+   *
+   * <table border>
+   * <tr><td><b>Syntax</b></td><td><b>Description</b></td></tr>
+   * <tr><td>QRegExp::RegExp</td><td>Perl-like pattern matching syntax without greedy quantifiers.</td></tr>
+   * <tr><td>QRegExp::RegExp2</td><td>Perl-like pattern matching syntax with greedy quantifiers.</td></tr>
+   * <tr><td>QRegExp::Wildcard</td><td>Dimple pattern matching syntax similar to that used by shells (command interpreters) for "file globbing".</td></tr>
+   * <tr><td>QRegExp::WildcardUnix</td><td>Wildcard with the behavior of a Unix shell. The wildcard characters can be escaped with the character "\".</td></tr>
+   * <tr><td>QRegExp::FixedString</td><td>The pattern is a fixed string. This is equivalent to using the RegExp pattern on a string in which all metacharacters are escaped using escape().</td></tr>
+   * <tr><td>QRegExp::W3CXmlSchema11</td><td>The pattern is a regular expression as defined by the W3C XML Schema 1.1 specification.</td></tr>
+   * </table>
+   *
+   *  \return Regular expression pattern syntax for Message.
+   ***************************************************************************/
+  QRegExp::PatternSyntax getMessageRegExpPatternSyntax() const;
+
+  //**************************************************************************
+  /*! \brief Set the regular expression pattern syntax for the unformatted message.
+   *
+   * <table border>
+   * <tr><td><b>Syntax</b></td><td><b>Description</b></td></tr>
+   * <tr><td>QRegExp::RegExp</td><td>Perl-like pattern matching syntax without greedy quantifiers.</td></tr>
+   * <tr><td>QRegExp::RegExp2</td><td>Perl-like pattern matching syntax with greedy quantifiers.</td></tr>
+   * <tr><td>QRegExp::Wildcard</td><td>Dimple pattern matching syntax similar to that used by shells (command interpreters) for "file globbing".</td></tr>
+   * <tr><td>QRegExp::WildcardUnix</td><td>Wildcard with the behavior of a Unix shell. The wildcard characters can be escaped with the character "\".</td></tr>
+   * <tr><td>QRegExp::FixedString</td><td>The pattern is a fixed string. This is equivalent to using the RegExp pattern on a string in which all metacharacters are escaped using escape().</td></tr>
+   * <tr><td>QRegExp::W3CXmlSchema11</td><td>The pattern is a regular expression as defined by the W3C XML Schema 1.1 specification.</td></tr>
+   * </table>
+   *
+   *  \param [in] syntax Regular expression pattern syntax.
+   ***************************************************************************/
+  void setMessageRegExpPatternSyntax(const QRegExp::PatternSyntax syntax);
+
+  //**************************************************************************
+  /*! \brief Get case sensitivity flag for the unformatted message regExp.
+   *
+   * \return Case sensitivity flag for the Message (filename and line number) regExp.
+   ***************************************************************************/
+  Qt::CaseSensitivity getMessageRegExpCaseSensitivity() const;
+
+  //**************************************************************************
+  /*! \brief Set the case sensitivity flag for the unformatted message regExp.
+   *
+   *  \param [in] cs Case Sensitivity flag to use.
+   ***************************************************************************/
+  void setMessageRegExpCaseSensitivity(const Qt::CaseSensitivity cs = Qt::CaseInsensitive);
 
   QString getName() const { return m_name; }
   void setName(const QString& name) { m_name = name; }
@@ -118,7 +230,7 @@ public:
    *  \param [in] level Message level for this message.
    *  \return Reference to this object.
    ***************************************************************************/
-  bool passes(const QString& source, const MessageCategory& category, int level) const;
+  bool passes(const QString& source, const MessageCategory& category, int level, const QString& message) const;
 
   /*! \brief Clear the message formats. */
   void clearMessageFormat();
@@ -240,8 +352,10 @@ private:
   //**************************************************************************
   /*! \brief If not null, a message is only printed if the message source (filename and line number) must the regular expression.
    * This is case-insensitive.
-   */
-  QRegExp* m_regExp;
+   ***************************************************************************/
+  QRegExp* m_locationRegExp;
+
+  QRegExp* m_messageRegExp;
 
   //**************************************************************************
   /*! \brief How is the regular expression handled.
@@ -253,7 +367,12 @@ private:
    * - QRegExp::FixedString	The pattern is a fixed string. This is equivalent to using the RegExp pattern on a string in which all metacharacters are escaped using escape().
    * - QRegExp::W3CXmlSchema11	The pattern is a regular expression as defined by the W3C XML Schema 1.1 specification.
    ***************************************************************************/
-  QRegExp::PatternSyntax m_regExpPatternSyntax;
+  QRegExp::PatternSyntax m_locationRegExpPatternSyntax;
+  QRegExp::PatternSyntax m_messageRegExpPatternSyntax;
+
+
+  Qt::CaseSensitivity m_locRegExpCaseSensitivity;
+  Qt::CaseSensitivity m_messageRegExpCaseSensitivity;
 
   /*! \brief Message components are printed in the order that they appear here. A non-empty date/time component causes the date/time to be formatted based on the included format string. */
   QList< QPair<MessageComponent, QString> > m_format;

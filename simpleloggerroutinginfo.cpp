@@ -7,7 +7,7 @@
 
 SimpleLoggerRoutingInfo SimpleLoggerRoutingInfo::privateObjectForMetaData;
 
-SimpleLoggerRoutingInfo::SimpleLoggerRoutingInfo(QObject *parent) : QObject(parent), m_levels(nullptr), m_routing(nullptr), m_regExp(nullptr), m_regExpPatternSyntax(QRegExp::RegExp2), m_enabled(true)
+SimpleLoggerRoutingInfo::SimpleLoggerRoutingInfo(QObject *parent) : QObject(parent), m_levels(nullptr), m_routing(nullptr), m_locationRegExp(nullptr), m_messageRegExp(nullptr), m_locationRegExpPatternSyntax(QRegExp::RegExp2), m_messageRegExpPatternSyntax(QRegExp::RegExp2), m_enabled(true)
 {
   const QMetaObject* metaObj = metaObject();
   QMetaEnum metaEnum = metaObj->enumerator(metaObj->indexOfEnumerator("MessageCategory"));
@@ -26,7 +26,7 @@ SimpleLoggerRoutingInfo::SimpleLoggerRoutingInfo(QObject *parent) : QObject(pare
   }
 }
 
-SimpleLoggerRoutingInfo::SimpleLoggerRoutingInfo(const SimpleLoggerRoutingInfo& obj, QObject *parent) : QObject(parent), m_levels(nullptr), m_routing(nullptr), m_regExp(nullptr)
+SimpleLoggerRoutingInfo::SimpleLoggerRoutingInfo(const SimpleLoggerRoutingInfo& obj, QObject *parent) : QObject(parent), m_levels(nullptr), m_routing(nullptr), m_locationRegExp(nullptr), m_messageRegExp(nullptr)
 {
   m_levels = new QMap<MessageCategory, int>();
   m_routing = new QMap<MessageRouting, bool>();
@@ -41,10 +41,15 @@ SimpleLoggerRoutingInfo::~SimpleLoggerRoutingInfo()
 
 void SimpleLoggerRoutingInfo::internalClear()
 {
-  if (m_regExp != nullptr)
+  if (m_locationRegExp != nullptr)
   {
-    delete m_regExp;
-    m_regExp = nullptr;
+    delete m_locationRegExp;
+    m_locationRegExp = nullptr;
+  }
+  if (m_messageRegExp != nullptr)
+  {
+    delete m_messageRegExp;
+    m_messageRegExp = nullptr;
   }
   if (m_levels != nullptr)
   {
@@ -59,10 +64,15 @@ void SimpleLoggerRoutingInfo::internalClear()
 
 void SimpleLoggerRoutingInfo::internalDelete()
 {
-  if (m_regExp != nullptr)
+  if (m_locationRegExp != nullptr)
   {
-    delete m_regExp;
-    m_regExp = nullptr;
+    delete m_locationRegExp;
+    m_locationRegExp = nullptr;
+  }
+  if (m_messageRegExp != nullptr)
+  {
+    delete m_messageRegExp;
+    m_messageRegExp = nullptr;
   }
   if (m_levels != nullptr)
   {
@@ -118,12 +128,12 @@ int SimpleLoggerRoutingInfo::getCategoryLevel(MessageCategory category) const
   return m_levels->value(category, -1);
 }
 
-bool SimpleLoggerRoutingInfo::setRegExp(const QString& regExp)
+bool SimpleLoggerRoutingInfo::setLocationRegExp(const QString& regExp)
 {
   QRegExp* newRegExpr = nullptr;
   if (regExp.length() > 0)
   {
-    newRegExpr = new QRegExp(regExp, Qt::CaseInsensitive, m_regExpPatternSyntax);
+    newRegExpr = new QRegExp(regExp, Qt::CaseInsensitive, m_locationRegExpPatternSyntax);
     if (!newRegExpr->isValid())
     {
       delete newRegExpr;
@@ -131,35 +141,109 @@ bool SimpleLoggerRoutingInfo::setRegExp(const QString& regExp)
     }
   }
 
-  if (m_regExp != nullptr)
+  if (m_locationRegExp != nullptr)
   {
-    delete m_regExp;
+    delete m_locationRegExp;
   }
-  m_regExp = newRegExpr;
+  m_locationRegExp = newRegExpr;
   return true;
 }
 
 
-QString SimpleLoggerRoutingInfo::getRegExpString() const
+QString SimpleLoggerRoutingInfo::getLocationRegExpString() const
 {
-  return (m_regExp == nullptr) ? "" : m_regExp->pattern();
+  return (m_locationRegExp == nullptr) ? "" : m_locationRegExp->pattern();
 }
 
-QRegExp::PatternSyntax SimpleLoggerRoutingInfo::getRegExpPatternSyntax() const
+QRegExp::PatternSyntax SimpleLoggerRoutingInfo::getLocationRegExpPatternSyntax() const
 {
-  return m_regExpPatternSyntax;
+  return m_locationRegExpPatternSyntax;
 }
 
-void SimpleLoggerRoutingInfo::setRegExpPatternSyntax(const QRegExp::PatternSyntax syntax)
+void SimpleLoggerRoutingInfo::setLocationRegExpPatternSyntax(const QRegExp::PatternSyntax syntax)
 {
-  m_regExpPatternSyntax = syntax;
-  if (m_regExp != nullptr)
+  m_locationRegExpPatternSyntax = syntax;
+  if (m_locationRegExp != nullptr)
   {
-    m_regExp->setPatternSyntax(syntax);
+    m_locationRegExp->setPatternSyntax(syntax);
   }
 }
 
-bool SimpleLoggerRoutingInfo::passes(const QString& source, const MessageCategory& category, int level) const
+Qt::CaseSensitivity SimpleLoggerRoutingInfo::getLocationRegExpCaseSensitivity() const
+{
+  return m_locRegExpCaseSensitivity;
+}
+
+void SimpleLoggerRoutingInfo::setLocationRegExpCaseSensitivity(const Qt::CaseSensitivity cs)
+{
+  if (cs != m_locRegExpCaseSensitivity)
+  {
+    m_locRegExpCaseSensitivity = cs;
+    if (m_locationRegExp != nullptr)
+    {
+      m_locationRegExp->setCaseSensitivity(cs);
+    }
+  }
+}
+
+bool SimpleLoggerRoutingInfo::setMessageRegExp(const QString& regExp)
+{
+  QRegExp* newRegExpr = nullptr;
+  if (regExp.length() > 0)
+  {
+    newRegExpr = new QRegExp(regExp, Qt::CaseInsensitive, m_locationRegExpPatternSyntax);
+    if (!newRegExpr->isValid())
+    {
+      delete newRegExpr;
+      return false;
+    }
+  }
+
+  if (m_messageRegExp != nullptr)
+  {
+    delete m_messageRegExp;
+  }
+  m_messageRegExp = newRegExpr;
+  return true;
+}
+
+QString SimpleLoggerRoutingInfo::getMessageRegExpString() const
+{
+  return (m_messageRegExp == nullptr) ? "" : m_messageRegExp->pattern();
+}
+
+QRegExp::PatternSyntax SimpleLoggerRoutingInfo::getMessageRegExpPatternSyntax() const
+{
+  return m_messageRegExpPatternSyntax;
+}
+
+void SimpleLoggerRoutingInfo::setMessageRegExpPatternSyntax(const QRegExp::PatternSyntax syntax)
+{
+  m_messageRegExpPatternSyntax = syntax;
+  if (m_messageRegExp != nullptr)
+  {
+    m_messageRegExp->setPatternSyntax(syntax);
+  }
+}
+
+Qt::CaseSensitivity SimpleLoggerRoutingInfo::getMessageRegExpCaseSensitivity() const
+{
+  return m_messageRegExpCaseSensitivity;
+}
+
+void SimpleLoggerRoutingInfo::setMessageRegExpCaseSensitivity(const Qt::CaseSensitivity cs)
+{
+  if (cs != m_messageRegExpCaseSensitivity)
+  {
+    m_messageRegExpCaseSensitivity = cs;
+    if (m_messageRegExp != nullptr)
+    {
+      m_messageRegExp->setCaseSensitivity(cs);
+    }
+  }
+}
+
+bool SimpleLoggerRoutingInfo::passes(const QString& source, const MessageCategory& category, int level, const QString &message) const
 {
   /**
   qDebug(qPrintable(QString("Message level %1").arg(level)));
@@ -167,7 +251,7 @@ bool SimpleLoggerRoutingInfo::passes(const QString& source, const MessageCategor
   int containedLevel = m_levels->value(category, 0);
   qDebug(qPrintable(QString("Contained level %1").arg(containedLevel)));
   **/
-  bool rc = m_enabled && level <= m_levels->value(category, 0) && source.length() > 0 && (m_regExp == nullptr || m_regExp->indexIn(source) >= 0);
+  bool rc = m_enabled && level <= m_levels->value(category, 0) && source.length() > 0 && (m_locationRegExp == nullptr || m_locationRegExp->indexIn(source) >= 0) && (m_messageRegExp == nullptr || m_messageRegExp->indexIn(message) >= 0);
   // qDebug(qPrintable(QString("Passes %1").arg(rc)));
   return rc;
 }
@@ -249,15 +333,26 @@ SimpleLoggerRoutingInfo& SimpleLoggerRoutingInfo::operator=(const SimpleLoggerRo
     m_routing->clear();
     m_format.append(obj.m_format);
 
-    if (m_regExp != nullptr)
+    if (m_locationRegExp != nullptr)
     {
-      delete m_regExp;
-      m_regExp = nullptr;
+      delete m_locationRegExp;
+      m_locationRegExp = nullptr;
     }
-    if (obj.m_regExp != nullptr)
+    if (obj.m_locationRegExp != nullptr)
     {
-      m_regExp = new QRegExp(*m_regExp);
+      m_locationRegExp = new QRegExp(*(obj.m_locationRegExp));
     }
+
+    if (m_messageRegExp != nullptr)
+    {
+      delete m_messageRegExp;
+      m_messageRegExp = nullptr;
+    }
+    if (obj.m_messageRegExp != nullptr)
+    {
+      m_messageRegExp = new QRegExp(*(obj.m_messageRegExp));
+    }
+
     *m_levels = *obj.m_levels;
     *m_routing = *obj.m_routing;
     m_enabled = obj.m_enabled;
@@ -357,9 +452,14 @@ QXmlStreamWriter& SimpleLoggerRoutingInfo::write(QXmlStreamWriter& writer) const
     }
   }
 
-  if (m_regExp != nullptr)
+  if (m_locationRegExp != nullptr)
   {
-    XMLUtility::write(writer, *m_regExp, "RegEx");
+    XMLUtility::write(writer, *m_locationRegExp, "LocationRegEx");
+  }
+
+  if (m_messageRegExp != nullptr)
+  {
+    XMLUtility::write(writer, *m_messageRegExp, "MessageRegEx");
   }
 
   if (m_format.size() > 0)
@@ -420,14 +520,23 @@ void SimpleLoggerRoutingInfo::readInternals(QXmlStreamReader& reader, const QStr
       foundCharacters = false;
       qDebug(qPrintable(QString("Found start element %1").arg(name)));
 
-      if (QString::compare(name, "RegEx", Qt::CaseInsensitive) == 0)
+      if (QString::compare(name, "LocationRegEx", Qt::CaseInsensitive) == 0)
       {
-        if (m_regExp != nullptr)
+        if (m_locationRegExp != nullptr)
         {
-          delete m_regExp;
-          m_regExp = nullptr;
+          delete m_locationRegExp;
+          m_locationRegExp = nullptr;
         }
-        m_regExp = XMLUtility::readRegExp(reader);
+        m_locationRegExp = XMLUtility::readRegExp(reader);
+      }
+      else if (QString::compare(name, "MessageRegEx", Qt::CaseInsensitive) == 0)
+      {
+        if (m_messageRegExp != nullptr)
+        {
+          delete m_messageRegExp;
+          m_messageRegExp = nullptr;
+        }
+        m_messageRegExp = XMLUtility::readRegExp(reader);
       }
       else
       {
@@ -493,11 +602,11 @@ QString SimpleLoggerRoutingInfo::getLevelsAsString() const
       i.next();
       if (s.length() > 0)
       {
-        s = s + QString("|%1:%2").arg(categoryToString(i.key(), -1, true)).arg(i.value());
+        s = s + QString("|%1:%2").arg(categoryToString(i.key(), 1)).arg(i.value());
       }
       else
       {
-        s = QString("%1:%2").arg(categoryToString(i.key(), -1, true)).arg(i.value());
+        s = QString("%1:%2").arg(categoryToString(i.key(), 1)).arg(i.value());
       }
   }
   return s;

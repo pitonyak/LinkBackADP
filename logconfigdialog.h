@@ -31,11 +31,15 @@ public:
   void setConfigFilePath(const QString& path);
   QString getConfigFilePath() const;
 
+  bool isRoutingSelected() const;
+  int getSelectedRouting() const;
+
 signals:
   
 public slots:
   void editSelectedRouting();
   void delSelectedRouting();
+  void copyRouting();
   void addRouting();
   void loadLogConfiguration();
   void saveLogConfiguration();

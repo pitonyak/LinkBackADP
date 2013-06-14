@@ -1,15 +1,16 @@
 #include "logroutinginfotablemodel.h"
 
 
-const int LogRoutingInfoTableModel::numColumns = 8;
+const int LogRoutingInfoTableModel::numColumns = 9;
 const int LogRoutingInfoTableModel::enabledColumn = 0;
 const int LogRoutingInfoTableModel::nameColumn = 1;
-const int LogRoutingInfoTableModel::regExpColumn = 2;
-const int LogRoutingInfoTableModel::routFileColumn = 3;
-const int LogRoutingInfoTableModel::routScreenColumn = 4;
-const int LogRoutingInfoTableModel::routDebugColumn = 5;
-const int LogRoutingInfoTableModel::levelsColumn = 6;
-const int LogRoutingInfoTableModel::componentColumn = 7;
+const int LogRoutingInfoTableModel::locationRegExpColumn = 2;
+const int LogRoutingInfoTableModel::messageRegExpColumn = 3;
+const int LogRoutingInfoTableModel::routFileColumn = 4;
+const int LogRoutingInfoTableModel::routScreenColumn = 5;
+const int LogRoutingInfoTableModel::routDebugColumn = 6;
+const int LogRoutingInfoTableModel::levelsColumn = 7;
+const int LogRoutingInfoTableModel::componentColumn = 8;
 
 
 LogRoutingInfoTableModel::LogRoutingInfoTableModel(QObject *parent) :
@@ -50,11 +51,10 @@ void LogRoutingInfoTableModel::setRoutings(const QList<SimpleLoggerRoutingInfo>&
     }
 }
 
-const QList<SimpleLoggerRoutingInfo> &LogRoutingInfoTableModel::getRoutings() const
+const QList<SimpleLoggerRoutingInfo> & LogRoutingInfoTableModel::getRoutings() const
 {
     return m_routings;
 }
-
 
 int LogRoutingInfoTableModel::rowCount( const QModelIndex & parent) const
 {
@@ -83,8 +83,15 @@ bool LogRoutingInfoTableModel::setData ( const QModelIndex & index, const QVaria
     case nameColumn:
       info.setName(value.toString());
       break;
-    case regExpColumn:
-      if (!info.setRegExp(value.toString()))
+    case locationRegExpColumn:
+      if (!info.setLocationRegExp(value.toString()))
+      {
+        // TODO: Print an error!
+        return false;
+      }
+      break;
+    case messageRegExpColumn:
+      if (!info.setMessageRegExp(value.toString()))
       {
         // TODO: Print an error!
         return false;
@@ -125,8 +132,11 @@ QVariant LogRoutingInfoTableModel::data( const QModelIndex &index, int role ) co
     case nameColumn:
       return info.getName();
       break;
-    case regExpColumn:
-      return info.getRegExpString();
+    case locationRegExpColumn:
+      return info.getLocationRegExpString();
+      break;
+    case messageRegExpColumn:
+      return info.getMessageRegExpString();
       break;
     case routFileColumn:
       return info.isRoutingOn(SimpleLoggerRoutingInfo::RouteFile);
@@ -161,8 +171,11 @@ QVariant LogRoutingInfoTableModel::data( const QModelIndex &index, int role ) co
     case nameColumn:
       return info.getName();
       break;
-    case regExpColumn:
-      return info.getRegExpString();
+    case locationRegExpColumn:
+      return info.getLocationRegExpString();
+      break;
+    case messageRegExpColumn:
+      return info.getMessageRegExpString();
       break;
     case routFileColumn:
       return info.isRoutingOn(SimpleLoggerRoutingInfo::RouteFile);
@@ -188,8 +201,11 @@ QVariant LogRoutingInfoTableModel::data( const QModelIndex &index, int role ) co
     case nameColumn:
       return tr("User recognizable name used only in this dialog.");
       break;
-    case regExpColumn:
+    case locationRegExpColumn:
       return tr("Regular expression pattern used to match the message source location.");
+      break;
+    case messageRegExpColumn:
+      return tr("Regular expression pattern used to match the unformatted message.");
       break;
     case componentColumn:
       return tr("Components printed as part of the message.");
@@ -223,7 +239,7 @@ QVariant LogRoutingInfoTableModel::headerData( int section, Qt::Orientation orie
   {
     return QVariant();
   }
-  const char* headers[] = {"Enabled", "Name", "Reg Ex", "To File", "To Screen", "To Console", "Levels", "Message"};
+  const char* headers[] = {"Enabled", "Name", "Loc Reg Ex", "Msg Reg Ex", "To File", "To Screen", "To Console", "Levels", "Message"};
   if (orientation == Qt::Vertical)
   {
     return section + 1;
@@ -242,7 +258,8 @@ Qt::ItemFlags LogRoutingInfoTableModel::flags( const QModelIndex &index ) const
   {
   case enabledColumn:
   case nameColumn:
-  case regExpColumn:
+  case locationRegExpColumn:
+  case messageRegExpColumn:
   case routFileColumn:
   case routScreenColumn:
   case routDebugColumn:
@@ -277,6 +294,14 @@ void LogRoutingInfoTableModel::insertRouting(int row, const SimpleLoggerRoutingI
   beginInsertRows(QModelIndex(), row, row);
   m_routings.insert(row, routing);
   endInsertRows();
+}
+
+void LogRoutingInfoTableModel::updateRouting(int row, const SimpleLoggerRoutingInfo& routing)
+{
+  if (0 <= row && row < m_routings.count())
+  {
+    m_routings[row] = routing;
+  }
 }
 
 void LogRoutingInfoTableModel::removeRouting(int row)

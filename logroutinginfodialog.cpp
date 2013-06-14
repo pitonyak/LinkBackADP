@@ -41,11 +41,10 @@ SimpleLoggerRoutingInfo LogRoutingInfoDialog::getRoutingInfo() const
   info.setCategoryLevel(SimpleLoggerRoutingInfo::ErrorMessage, ui->errorSpinBox->value());
   info.setCategoryLevel(SimpleLoggerRoutingInfo::UserMessage, ui->userSpinBox->value());
 
-  QString s = ui->regExpEdit->displayText();
-  if (!s.isEmpty())
-  {
-    info.setRegExp(s);
-  }
+  info.setLocationRegExp(ui->locRegExpEdit->displayText());
+  info.setMessageRegExp(ui->msgRegExpEdit->displayText());
+
+  // TODO: Get regular expression case sensitivity and pattern type.
 
   for (int i=0; i<m_messageComponentTableModel.rowCount(); ++i)
   {
@@ -59,7 +58,8 @@ SimpleLoggerRoutingInfo LogRoutingInfoDialog::getRoutingInfo() const
 void LogRoutingInfoDialog::setRoutingInfo(const SimpleLoggerRoutingInfo &routingInfo)
 {
   ui->nameEdit->setText(routingInfo.getName());
-  ui->regExpEdit->setText(routingInfo.getRegExpString());
+  ui->locRegExpEdit->setText(routingInfo.getLocationRegExpString());
+  ui->msgRegExpEdit->setText(routingInfo.getMessageRegExpString());
   ui->enabledCheckBox->setCheckState(routingInfo.isEnabled() ? Qt::Checked : Qt::Unchecked);
   ui->enableScreenCheckBox->setCheckState(routingInfo.isRoutingOn(SimpleLoggerRoutingInfo::RouteEmit) ? Qt::Checked : Qt::Unchecked);
   ui->enableQDebugBox->setCheckState(routingInfo.isRoutingOn(SimpleLoggerRoutingInfo::RouteQDebug) ? Qt::Checked : Qt::Unchecked);
@@ -71,6 +71,8 @@ void LogRoutingInfoDialog::setRoutingInfo(const SimpleLoggerRoutingInfo &routing
   ui->warnSpinBox->setValue(routingInfo.getCategoryLevel(SimpleLoggerRoutingInfo::WarningMessage));
   ui->errorSpinBox->setValue(routingInfo.getCategoryLevel(SimpleLoggerRoutingInfo::ErrorMessage));
   ui->userSpinBox->setValue(routingInfo.getCategoryLevel(SimpleLoggerRoutingInfo::UserMessage));
+
+  // TODO: Set regular expression states
 
 }
 
@@ -92,6 +94,35 @@ void LogRoutingInfoDialog::initialize()
 
   connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(closeRequested()));
   connect(ui->testButton, SIGNAL(clicked(bool)), this, SLOT(testMessage()));
+
+  ui->locCaseSensitive->addItem(tr("Case Sensitive"), Qt::CaseSensitive);
+  ui->locCaseSensitive->addItem(tr("Case Insensitive"), Qt::CaseInsensitive);
+  ui->locCaseSensitive->setToolTip(tr("Set location regular expression case sensitivity."));
+
+  ui->msgCaseSensitive->addItem(tr("Case Sensitive"), Qt::CaseSensitive);
+  ui->msgCaseSensitive->addItem(tr("Case Insensitive"), Qt::CaseInsensitive);
+  ui->msgCaseSensitive->setToolTip(tr("Set location regular expression case sensitivity."));
+
+  ui->locSyntax->addItem(tr("Perl No Greedy"), QRegExp::RegExp);
+  ui->locSyntax->addItem(tr("Perl Greedy"), QRegExp::RegExp2);
+  ui->locSyntax->addItem(tr("Wildcard"), QRegExp::Wildcard);
+  ui->locSyntax->addItem(tr("Wildcard Unix"), QRegExp::WildcardUnix);
+  ui->locSyntax->addItem(tr("String"), QRegExp::FixedString);
+  ui->locSyntax->addItem(tr("W3C XML"), QRegExp::W3CXmlSchema11);
+  ui->locSyntax->setToolTip(tr("Set location regular expression pattern syntax."));
+
+  ui->msgSyntax->addItem(tr("Perl No Greedy"), QRegExp::RegExp);
+  ui->msgSyntax->addItem(tr("Perl Greedy"), QRegExp::RegExp2);
+  ui->msgSyntax->addItem(tr("Wildcard"), QRegExp::Wildcard);
+  ui->msgSyntax->addItem(tr("Wildcard Unix"), QRegExp::WildcardUnix);
+  ui->msgSyntax->addItem(tr("String"), QRegExp::FixedString);
+  ui->msgSyntax->addItem(tr("W3C XML"), QRegExp::W3CXmlSchema11);
+  ui->locSyntax->setToolTip(tr("Set unformatted message regular expression pattern syntax."));
+
+  ui->locRegExpEdit->setToolTip(tr("Match location filename:line_number must match the regular expression; use to filter by filename or line number."));
+  ui->msgRegExpEdit->setToolTip(tr("Match based on the unformatted message text."));
+
+  ui->nameEdit->setToolTip(tr("User recognizable name for this object to pick it out in a list."));
 
   enableButtons();
 }
@@ -161,37 +192,69 @@ void LogRoutingInfoDialog::currentMessageCategoryRowChanged(const QModelIndex &c
 void LogRoutingInfoDialog::closeRequested()
 {
   // TODO: Validate
-  QString s = ui->regExpEdit->displayText();
+  QString s = ui->locRegExpEdit->displayText();
   if (!s.isEmpty())
   {
     QRegExp regExp(s);
     if (!regExp.isValid())
     {
-      QPalette pal = ui->regExpEdit->palette();
+      QPalette pal = ui->locRegExpEdit->palette();
       pal.setColor(QPalette::Text, Qt::red);
-      ui->regExpEdit->setPalette(pal);
+      ui->locRegExpEdit->setPalette(pal);
 
-      QMessageBox::warning(this, tr("ERROR"), tr("Invalid Regular Expression"));
+      QMessageBox::warning(this, tr("ERROR"), tr("Invalid Location Regular Expression"));
       return;
     }
   }
-  ui->regExpEdit->setBackgroundRole(QPalette::NoRole);
+  ui->locRegExpEdit->setBackgroundRole(QPalette::NoRole);
+
+  s = ui->msgRegExpEdit->displayText();
+  if (!s.isEmpty())
+  {
+    QRegExp regExp(s);
+    if (!regExp.isValid())
+    {
+      QPalette pal = ui->msgRegExpEdit->palette();
+      pal.setColor(QPalette::Text, Qt::red);
+      ui->msgRegExpEdit->setPalette(pal);
+
+      QMessageBox::warning(this, tr("ERROR"), tr("Invalid Location Regular Expression"));
+      return;
+    }
+  }
+  ui->msgRegExpEdit->setBackgroundRole(QPalette::NoRole);
 
   accept();
 }
 
 QString LogRoutingInfoDialog::isValid() const
 {
-  QString s = ui->regExpEdit->displayText();
+  QString errorString = "";
+  QString s = ui->locRegExpEdit->displayText();
   if (!s.isEmpty())
   {
     QRegExp regExp(s);
     if (!regExp.isValid())
     {
-      return tr("Invalid Regular Expression");
+      errorString = tr("Invalid location Regular Expression.");
     }
   }
-  return "";
+
+  s = ui->msgRegExpEdit->displayText();
+  if (!s.isEmpty())
+  {
+    QRegExp regExp(s);
+    if (!regExp.isValid())
+    {
+      if (errorString.length() > 0)
+      {
+        errorString = errorString + " ";
+      }
+      errorString = errorString + tr("Invalid message Regular Expression.");
+    }
+  }
+
+  return errorString;
 }
 
 void LogRoutingInfoDialog::testMessage()

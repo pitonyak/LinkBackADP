@@ -92,6 +92,7 @@ public:
    *  \param [in] routing The logger / appender to add.
    ***************************************************************************/
   void addRouting(const SimpleLoggerRoutingInfo& routing);
+  void addRouting(const QList<SimpleLoggerRoutingInfo>& routings);
 
   QList<SimpleLoggerRoutingInfo> & getRouting() {return m_routing;}
   const QList<SimpleLoggerRoutingInfo> & getRouting() const {return m_routing;}

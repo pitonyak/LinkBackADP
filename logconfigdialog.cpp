@@ -2,6 +2,7 @@
 #include "logroutinginfotablemodel.h"
 #include "linkbackfilterdelegate.h"
 #include "checkboxonlydelegate.h"
+#include "logroutinginfodialog.h"
 
 #include <QSettings>
 #include <QVBoxLayout>
@@ -93,6 +94,9 @@ void LogConfigDialog::buildDialog()
   button = new QPushButton(tr("Add"));
   connect(button, SIGNAL(clicked()), this, SLOT(addRouting()));
   vLayout->addWidget(button);
+  button = new QPushButton(tr("Copy"));
+  connect(button, SIGNAL(clicked()), this, SLOT(copyRouting()));
+  vLayout->addWidget(button);
   button = new QPushButton(tr("Delete"));
   connect(button, SIGNAL(clicked()), this, SLOT(delSelectedRouting()));
   vLayout->addWidget(button);
@@ -167,27 +171,63 @@ QString LogConfigDialog::getConfigFilePath() const
   return (m_configFilePath != nullptr) ? m_configFilePath->text() : "";
 }
 
+bool LogConfigDialog::isRoutingSelected() const
+{
+  return m_tableModel != nullptr && m_routingTableView != nullptr && m_tableModel->count() > 0 && m_routingTableView->currentIndex().row() >= 0;
+}
+
+int LogConfigDialog::getSelectedRouting() const
+{
+  return m_routingTableView->currentIndex().row();
+}
+
 void LogConfigDialog::configureLogger(SimpleLoggerADP& logger)
 {
-  setConfigFilePath(logger.getFileName());
-  // TODO:
+  if (m_logFilePath != nullptr)
+  {
+    logger.setFileName(m_logFilePath->text());
+  }
+  else
+  {
+    logger.setFileName("");
+  }
+  if (m_tableModel != nullptr)
+  {
+    logger.clearRouting();
+    logger.addRouting(m_tableModel->getRoutings());
+  }
 }
 
 void LogConfigDialog::editSelectedRouting()
 {
-  // TODO:
+  if (isRoutingSelected())
+  {
+    LogRoutingInfoDialog dlg(m_tableModel->getRoutings().at(getSelectedRouting()));
+    if (dlg.exec() == QDialog::Accepted)
+    {
+      m_tableModel->updateRouting(getSelectedRouting(), dlg.getRoutingInfo());
+    }
+  }
 }
 
 void LogConfigDialog::delSelectedRouting()
 {
+  if (isRoutingSelected())
+  {
+    m_tableModel->removeRouting(getSelectedRouting());
+  }
+}
 
+void LogConfigDialog::copyRouting()
+{
+  m_tableModel->copyRouting(getSelectedRouting());
 }
 
 void LogConfigDialog::addRouting()
 {
-  // TODO:
+  SimpleLoggerRoutingInfo info;
+  m_tableModel->insertRouting(getSelectedRouting(), info);
 }
-
 
 void LogConfigDialog::loadLogConfiguration()
 {
