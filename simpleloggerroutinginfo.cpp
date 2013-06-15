@@ -478,12 +478,12 @@ QXmlStreamWriter& SimpleLoggerRoutingInfo::write(QXmlStreamWriter& writer) const
 QXmlStreamReader& SimpleLoggerRoutingInfo::read(QXmlStreamReader& reader)
 {
   internalClear();
-  qDebug("Ready SimpleLoggerRoutingInfo::read");
+  //qDebug("Ready SimpleLoggerRoutingInfo::read");
   QString name;
   while (!reader.atEnd()) {
     if (reader.isStartElement()) {
       name = reader.name().toString();
-      qDebug(qPrintable(QString("Found start element thingy name %1").arg(name)));
+      //qDebug(qPrintable(QString("Found start element thingy name %1").arg(name)));
       if (QString::compare(name, "SimpleLoggerRoutingInfo", Qt::CaseInsensitive) == 0) {
         readInternals(reader, "1");
         return reader;
@@ -518,7 +518,7 @@ void SimpleLoggerRoutingInfo::readInternals(QXmlStreamReader& reader, const QStr
       attributeValue = "";
       name = reader.name().toString();
       foundCharacters = false;
-      qDebug(qPrintable(QString("Found start element %1").arg(name)));
+      //qDebug(qPrintable(QString("Found start element %1").arg(name)));
 
       if (QString::compare(name, "LocationRegEx", Qt::CaseInsensitive) == 0)
       {
@@ -550,7 +550,7 @@ void SimpleLoggerRoutingInfo::readInternals(QXmlStreamReader& reader, const QStr
     else if (reader.isCharacters() && !name.isEmpty())
     {
       QString value = reader.text().toString();
-      qDebug(qPrintable(QString("Found characters for name %1 and value (%2)").arg(name, value)));
+      //qDebug(qPrintable(QString("Found characters for name %1 and value (%2)").arg(name, value)));
       if (name.compare("Enabled", Qt::CaseInsensitive) == 0)
       {
         m_enabled = XMLUtility::stringToBoolean(value);

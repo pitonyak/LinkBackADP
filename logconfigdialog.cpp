@@ -13,6 +13,10 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QTableView>
+#include <QFileDialog>
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
+#include <QMessageBox>
 
 LogConfigDialog::LogConfigDialog(QWidget *parent) :
   QDialog(parent), m_configFilePath(nullptr), m_logFilePath(nullptr), m_routingTableView(nullptr)
@@ -25,8 +29,6 @@ LogConfigDialog::~LogConfigDialog()
   QSettings settings;
   settings.setValue("LogConfigDialogGeometry", saveGeometry());
   settings.setValue("LogConfigDialogLastConfigPath", getConfigFilePath());
-  //m_routingTableView
-  // m_tableModel
   if (m_tableModel != nullptr && m_routingTableView != nullptr)
   {
     QString s;
@@ -171,6 +173,19 @@ QString LogConfigDialog::getConfigFilePath() const
   return (m_configFilePath != nullptr) ? m_configFilePath->text() : "";
 }
 
+void LogConfigDialog::setLogFilePath(const QString& path)
+{
+  if (m_logFilePath != nullptr)
+  {
+    m_logFilePath->setText(path);
+  }
+}
+
+QString LogConfigDialog::getLogFilePath() const
+{
+  return (m_logFilePath != nullptr) ? m_logFilePath->text() : "";
+}
+
 bool LogConfigDialog::isRoutingSelected() const
 {
   return m_tableModel != nullptr && m_routingTableView != nullptr && m_tableModel->count() > 0 && m_routingTableView->currentIndex().row() >= 0;
@@ -231,19 +246,93 @@ void LogConfigDialog::addRouting()
 
 void LogConfigDialog::loadLogConfiguration()
 {
-  SimpleLoggerADP logger;
-  // TODO: read the logger
-  configureDialog(logger);
+  QString fileExtension;
+  QString s = QFileDialog::getOpenFileName(this, tr("Select Log Configuration File To Open"), getConfigFilePath(), tr("XML(*.xml);;Text(*.txt);;All(*.*)"), &fileExtension, QFileDialog::DontUseNativeDialog);
+  if (s.length() > 0)
+  {
+    setConfigFilePath(s);
+    QFile file(s);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+      QMessageBox::warning(this, tr("ERROR"), tr("Failed to open file for reading."));
+    }
+    else
+    {
+      QXmlStreamReader reader(&file);
+      if (reader.hasError())
+      {
+        QMessageBox::warning(this, tr("ERROR"), tr("Failed to create output stream for reading logger."));
+      }
+      else
+      {
+        SimpleLoggerADP logger;
+        logger.read(reader);
+        configureDialog(logger);
+      }
+      file.close();
+    }
+  }
 }
 
 void LogConfigDialog::saveLogConfiguration()
 {
-  SimpleLoggerADP logger;
-  configureLogger(logger);
-  // TODO: Save the logger
+  QString fileExtension;
+  QString s = QFileDialog::getSaveFileName(this, tr("Save To"), getConfigFilePath(), tr("XML(*.xml);;Text(*.txt);;All(*.*)"), &fileExtension, QFileDialog::DontUseNativeDialog);
+  if (s.length() > 0)
+  {
+    if (!s.contains('.'))
+    {
+      if (fileExtension.compare(tr("XML(*.xml)"), Qt::CaseInsensitive) == 0)
+      {
+        s = s + ".xml";
+      }
+      else if (fileExtension.compare(tr("Text(*.txt)"), Qt::CaseInsensitive) == 0)
+      {
+        s = s + ".txt";
+      }
+    }
+    setConfigFilePath(s);
+    QFile file(s);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+      QMessageBox::warning(this, tr("ERROR"), tr("Failed to open file for writing."));
+    }
+    else
+    {
+      QXmlStreamWriter writer(&file);
+      if (writer.hasError())
+      {
+        QMessageBox::warning(this, tr("ERROR"), tr("Failed to create output stream for writing logger."));
+      }
+      else
+      {
+        writer.setAutoFormatting(true);
+        SimpleLoggerADP logger;
+        configureLogger(logger);
+        logger.write(writer);
+      }
+      file.close();
+    }
+  }
 }
 
 void LogConfigDialog::selectLogFile()
 {
-  // TODO: Select log file for logging to it.
+  QString fileExtension;
+  QString s = QFileDialog::getSaveFileName(this, tr("Write Log To"), getLogFilePath(), tr("Log(*.log);;Text(*.txt);;All(*.*)"), &fileExtension, QFileDialog::DontUseNativeDialog);
+  if (s.length() > 0)
+  {
+    if (!s.contains('.'))
+    {
+      if (fileExtension.compare(tr("Log(*.log)"), Qt::CaseInsensitive) == 0)
+      {
+        s = s + ".log";
+      }
+      else if (fileExtension.compare(tr("Text(*.txt)"), Qt::CaseInsensitive) == 0)
+      {
+        s = s + ".txt";
+      }
+      setLogFilePath(s);
+    }
+  }
 }

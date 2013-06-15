@@ -31,6 +31,9 @@ public:
   void setConfigFilePath(const QString& path);
   QString getConfigFilePath() const;
 
+  void setLogFilePath(const QString& path);
+  QString getLogFilePath() const;
+
   bool isRoutingSelected() const;
   int getSelectedRouting() const;
 
