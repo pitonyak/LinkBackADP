@@ -1,15 +1,20 @@
 #ifndef XMLUTILITY_H
 #define XMLUTILITY_H
 
- #include <QString>
+#include <QString>
 #include <QRegExp>
 
 class QXmlStreamWriter;
 class QXmlStreamReader;
 
 //**************************************************************************
-//! Utility methods used while reading and writing XML.
-/*!
+/*! \class XMLUtility
+ * \brief Utility methods used while reading and writing XML.
+ *
+ * While serializing data to/from XML, I was repeatedly writing the same code.
+ * So, I encapsualted the most common things into this class. Not earth shattering,
+ * but helpful. Most of the routines are focused on writing XML to a QXmlStreamWriter.
+ *
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
  * \date 2011-2013
@@ -46,7 +51,9 @@ public:
     static QString caseToString(Qt::CaseSensitivity sensitivity);
 
     //**************************************************************************
-    /*! \brief Ignoring case, convert "insensitive" to be CaseInsensitive, all other values to CaseSensitive.
+    /*! \brief Ignoring case, convert any string that contains "insensitive" to be CaseInsensitive, all other values to CaseSensitive.
+     *
+     * The comparison to "insensitive" is not case sensitive.
      *
      *  \param [in] sensitivity String to convert
      *  \return Qt::CaseSensitivity valeu represented by the string.
@@ -89,6 +96,8 @@ public:
 
     //**************************************************************************
     /*! \brief Shortcut to quickly write an elment with no attribute.
+     *
+     * The primary purpose is to write an empty tag (such as <X/>) when there is no element value.
      *
      *  \param [in, out] writer XML Writer to which the data is written.
      *  \param [in] elementName XML Element Name. If empty, nothing is written.
