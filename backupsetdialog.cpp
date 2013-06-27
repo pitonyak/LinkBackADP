@@ -8,6 +8,7 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QSettings>
 
 BackupSetDialog::BackupSetDialog(QWidget *parent) : QDialog(parent), ui(new Ui::BackupSetDialog)
 {
@@ -32,41 +33,41 @@ void BackupSetDialog::setConfigFilePath(const QString &path)
 
 BackupSet BackupSetDialog::getBackupSet() const
 {
-    BackupSet backupSet;
-    backupSet.setCriteria(m_criteriaForFileMatchTableModel.getCriteria());
-    backupSet.setFilters(m_filterTableModel.getFilters());
-    backupSet.setToPath(ui->toRootLineEdit->text());
-    backupSet.setFromPath(ui->fromRootLineEdit->text());
-    backupSet.setHashMethod(ui->hashComboBox->currentText());
-    backupSet.setPriority(ui->priorityComboBox->currentText());
-    return backupSet;
+  BackupSet backupSet;
+  backupSet.setCriteria(m_criteriaForFileMatchTableModel.getCriteria());
+  backupSet.setFilters(m_filterTableModel.getFilters());
+  backupSet.setToPath(ui->toRootLineEdit->text());
+  backupSet.setFromPath(ui->fromRootLineEdit->text());
+  backupSet.setHashMethod(ui->hashComboBox->currentText());
+  backupSet.setPriority(ui->priorityComboBox->currentText());
+  return backupSet;
 }
 
 void BackupSetDialog::setBackupSet(const BackupSet& backupSet)
 {
-    TRACE_MSG("Setting filters", 10);
-    m_filterTableModel.setFilters(backupSet.getFilters());
-    TRACE_MSG("Setting Criteria", 10);
-    m_criteriaForFileMatchTableModel.setCriteria(backupSet.getCriteria());
-    TRACE_MSG("Setting line edits", 10);
-    ui->toRootLineEdit->setText(backupSet.getToPath());
-    ui->fromRootLineEdit->setText(backupSet.getFromPath());
-    QString hashMethod = backupSet.getHashMethod();
-    TRACE_MSG("Setting hash combo box", 10);
-    for (int i=0; i<ui->hashComboBox->count(); ++i) {
-        if (QString::compare(hashMethod, ui->hashComboBox->itemText(i), Qt::CaseInsensitive) == 0) {
-            ui->hashComboBox->setCurrentIndex(i);
-            break;
-        }
+  TRACE_MSG("Setting filters", 10);
+  m_filterTableModel.setFilters(backupSet.getFilters());
+  TRACE_MSG("Setting Criteria", 10);
+  m_criteriaForFileMatchTableModel.setCriteria(backupSet.getCriteria());
+  TRACE_MSG("Setting line edits", 10);
+  ui->toRootLineEdit->setText(backupSet.getToPath());
+  ui->fromRootLineEdit->setText(backupSet.getFromPath());
+  QString hashMethod = backupSet.getHashMethod();
+  TRACE_MSG("Setting hash combo box", 10);
+  for (int i=0; i<ui->hashComboBox->count(); ++i) {
+    if (QString::compare(hashMethod, ui->hashComboBox->itemText(i), Qt::CaseInsensitive) == 0) {
+      ui->hashComboBox->setCurrentIndex(i);
+      break;
     }
+  }
 
-    for (int i=0; i<ui->priorityComboBox->count(); ++i) {
-        if (QString::compare(backupSet.getPriority(), ui->priorityComboBox->itemText(i), Qt::CaseInsensitive) == 0) {
-            ui->priorityComboBox->setCurrentIndex(i);
-            break;
-        }
+  for (int i=0; i<ui->priorityComboBox->count(); ++i) {
+    if (QString::compare(backupSet.getPriority(), ui->priorityComboBox->itemText(i), Qt::CaseInsensitive) == 0) {
+      ui->priorityComboBox->setCurrentIndex(i);
+      break;
     }
-    TRACE_MSG("Leaving setBackupSet", 10);
+  }
+  TRACE_MSG("Leaving setBackupSet", 10);
 }
 
 void BackupSetDialog::initialize()
@@ -97,7 +98,7 @@ void BackupSetDialog::initialize()
 
   for (const QCryptographicHash::Algorithm algorithm : EnhancedQCryptographicHash::getAlgorithmList())
   {
-      ui->hashComboBox->addItem(EnhancedQCryptographicHash::toAlgorithmString(algorithm));
+    ui->hashComboBox->addItem(EnhancedQCryptographicHash::toAlgorithmString(algorithm));
   }
 
   ui->priorityComboBox->addItems(BackupSet::getAllPriorities());
@@ -132,8 +133,8 @@ void BackupSetDialog::enableButtons()
 
 BackupSetDialog::~BackupSetDialog()
 {
-    delete ui;
-    ui = 0;
+  delete ui;
+  ui = 0;
 }
 
 int BackupSetDialog::getSelectedFilterRow() const
@@ -225,46 +226,56 @@ void BackupSetDialog::selectHashMethod(const QString&)
 
 void BackupSetDialog::saveBackupSet()
 {
-    QString defaultExtension = tr("XML files (*.xml)");
-    QString filePath = QFileDialog::getSaveFileName(this, tr("Save File"), ui->configFileLineEdit->text(), tr("Text files (*.txt);;XML files (*.xml)"), &defaultExtension);
-    if (!filePath.isEmpty())
+  QString defaultExtension = tr("XML files (*.xml)");
+  QString filePath = QFileDialog::getSaveFileName(this, tr("Save File"), getConfigFilePath(), tr("Text files (*.txt);;XML files (*.xml)"), &defaultExtension);
+  if (!filePath.isEmpty())
+  {
+    setConfigFilePath(filePath);
+    BackupSet backupSet = getBackupSet();
+    if (backupSet.writeFile(filePath))
     {
-        ui->configFileLineEdit->setText(filePath);
-        BackupSet backupSet = getBackupSet();
-        if (backupSet.writeFile(filePath))
-        {
-            //QMessageBox::information(this, tr("File Saved"), QString(tr("Saved file to %1").arg(filePath)));
-        }
-        else
-        {
-            QMessageBox::warning(this, tr("File NOT Saved"), QString(tr("Failed to save file %1").arg(filePath)));
-        }
+      QSettings settings;
+      settings.setValue("LastBackupSetConfigPath", filePath);
+      //QMessageBox::information(this, tr("File Saved"), QString(tr("Saved file to %1").arg(filePath)));
     }
+    else
+    {
+      QMessageBox::warning(this, tr("File NOT Saved"), QString(tr("Failed to save file %1").arg(filePath)));
+    }
+  }
 }
 
 void BackupSetDialog::loadBackupSet()
 {
-    TRACE_MSG("Enter BackupSetDialog::loadBackupSet", 10);
-    QString defaultExtension = tr("XML files (*.xml)");
-    QString filePath = QFileDialog::getOpenFileName(this, "Open File", ui->configFileLineEdit->text(), tr("Text files (*.txt);;XML files (*.xml)"), &defaultExtension);
-    if (!filePath.isEmpty())
+  TRACE_MSG("Enter BackupSetDialog::loadBackupSet", 10);
+  QString defaultExtension = tr("XML files (*.xml)");
+  QString currentPath = getConfigFilePath();
+  if (currentPath.isEmpty())
+  {
+    QSettings settings;
+    currentPath = settings.value("LastBackupSetConfigPath").toString();
+  }
+  QString filePath = QFileDialog::getOpenFileName(this, "Open File", currentPath, tr("Text files (*.txt);;XML files (*.xml)"), &defaultExtension);
+  if (!filePath.isEmpty())
+  {
+    setConfigFilePath(filePath);
+    BackupSet backupSet;
+    TRACE_MSG("Read backup set file", 10);
+    if (backupSet.readFile(filePath))
     {
-        ui->configFileLineEdit->setText(filePath);
-        BackupSet backupSet;
-        TRACE_MSG("Read backup set file", 10);
-        if (backupSet.readFile(filePath))
-        {
-            TRACE_MSG("Done reading backup set file", 10);
-            setBackupSet(backupSet);
-            TRACE_MSG("Backup set configured", 10);
-            //QMessageBox::information(this, tr("File Read"), QString(tr("Read file from, %1").arg(filePath)));
-        }
-        else
-        {
-            QMessageBox::warning(this, tr("File NOT Read"), QString(tr("Failed to read from %1").arg(filePath)));
-        }
+      QSettings settings;
+      settings.setValue("LastBackupSetConfigPath", filePath);
+      TRACE_MSG("Done reading backup set file", 10);
+      setBackupSet(backupSet);
+      TRACE_MSG("Backup set configured", 10);
+      //QMessageBox::information(this, tr("File Read"), QString(tr("Read file from, %1").arg(filePath)));
     }
-    TRACE_MSG("Leaving loadBackupSet", 10);
+    else
+    {
+      QMessageBox::warning(this, tr("File NOT Read"), QString(tr("Failed to read from %1").arg(filePath)));
+    }
+  }
+  TRACE_MSG("Leaving loadBackupSet", 10);
 }
 
 void BackupSetDialog::currentFilterRowChanged ( const QModelIndex & current, const QModelIndex &)
