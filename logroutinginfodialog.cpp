@@ -155,7 +155,7 @@ void LogRoutingInfoDialog::copyMessageCategory()
 
 void LogRoutingInfoDialog::insertMessageCategory()
 {
-  const QPair<SimpleLoggerRoutingInfo::MessageComponent, QString> component(SimpleLoggerRoutingInfo::MessageText, "");
+  const QPair<SimpleLoggerRoutingInfo::MessageComponent, QString> component(SimpleLoggerRoutingInfo::ConstantText, "");
   m_messageComponentTableModel.insertMessageComponent(ui->componentTableView->currentIndex().row(), component);
 }
 

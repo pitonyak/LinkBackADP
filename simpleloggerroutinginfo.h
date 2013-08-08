@@ -45,7 +45,7 @@ public:
   };
   Q_DECLARE_FLAGS(MessageCategorys, MessageCategory)
 
-  enum MessageComponent {DateTimeComponent, MessageTypeComponent, MessageTextComponent, MessageLocationComponent, MessageText};
+  enum MessageComponent {MessageDateTime, MessageType, MessageText, MessageLocation, ConstantText};
 
   enum MessageRouting   {
       RouteFile = 0x1,

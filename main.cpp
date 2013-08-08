@@ -50,14 +50,14 @@ void configureTheLogger()
     // Add routing specific to the display. Keep it smaller so that it does not fill up.
     SimpleLoggerRoutingInfo routing_01;
     //routing_01.addMessageFormat(SimpleLoggerRoutingInfo::DateTimeComponent, "");
-    //routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " ");
+    //routing_01.addMessageFormat(SimpleLoggerRoutingInfo::StraightText, " ");
 
     // A string of length 1 forces just a single letter to be printed rather than the entire string.
-    routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageTypeComponent, "X");
-    routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " ");
-    routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageLocationComponent, "");
-    routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " | ");
-    routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageTextComponent, "");
+    routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageType, "X");
+    routing_01.addMessageFormat(SimpleLoggerRoutingInfo::ConstantText, " ");
+    routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageLocation, "");
+    routing_01.addMessageFormat(SimpleLoggerRoutingInfo::ConstantText, " | ");
+    routing_01.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, "");
 
     //routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::TraceMessage, logLevel);
     routing_01.setCategoryLevel(SimpleLoggerRoutingInfo::DebugMessage, logLevel);
@@ -71,13 +71,13 @@ void configureTheLogger()
 
     // Messages for the log file and also for the console (through QDebug).
     SimpleLoggerRoutingInfo routing_02;
-    routing_02.addMessageFormat(SimpleLoggerRoutingInfo::DateTimeComponent, "");
-    routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " ");
-    routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageTypeComponent, "X");
-    routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " ");
-    routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageLocationComponent, "");
-    routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, " | ");
-    routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageTextComponent, "");
+    routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageDateTime, "");
+    routing_02.addMessageFormat(SimpleLoggerRoutingInfo::ConstantText, " ");
+    routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageType, "X");
+    routing_02.addMessageFormat(SimpleLoggerRoutingInfo::ConstantText, " ");
+    routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageLocation, "");
+    routing_02.addMessageFormat(SimpleLoggerRoutingInfo::ConstantText, " | ");
+    routing_02.addMessageFormat(SimpleLoggerRoutingInfo::MessageText, "");
 
     logLevel = 1;
 

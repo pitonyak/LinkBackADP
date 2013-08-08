@@ -274,7 +274,7 @@ QString SimpleLoggerRoutingInfo::formatMessage(const QString& message, const QSt
     const QPair<MessageComponent, QString>& pair(m_format[i]);
     switch(pair.first)
     {
-    case DateTimeComponent:
+    case MessageDateTime:
       if (pair.second.length() == 0)
       {
         s.append(dateTime.toString(Qt::ISODate));
@@ -284,13 +284,13 @@ QString SimpleLoggerRoutingInfo::formatMessage(const QString& message, const QSt
         s.append(dateTime.toString(pair.second));
       }
       break;
-    case MessageTypeComponent:
+    case MessageType:
       s.append(categoryToString(category, pair.second.length()));
       break;
-    case MessageTextComponent:
+    case MessageText:
       s.append(message);
       break;
-    case MessageLocationComponent:
+    case MessageLocation:
       // The file macro used to get the location sometimes contains path information.
       // This is related to the target build directory, so if the object files are not
       // in the same directory as the source files, a path like "../LinkBackAPD/helper.cpp" is used.
@@ -308,7 +308,7 @@ QString SimpleLoggerRoutingInfo::formatMessage(const QString& message, const QSt
         s.append(location);
       }
       break;
-    case MessageText:
+    case ConstantText:
       s.append(pair.second);
       break;
     default:
