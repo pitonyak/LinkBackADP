@@ -15,8 +15,8 @@ void RestoreBackup::buildDialog()
   m_BackupTreeview = new QTreeView();
 
   QFileSystemModel *model = new QFileSystemModel;
-  //model->setRootPath(QDir::currentPath());
-  model->setRootPath("/andrew0/home/andy/Devsrc/Qt/");
+  model->setRootPath(QDir::currentPath());
+  //model->setRootPath("/andrew0/home/andy/Devsrc/Qt/");
   m_BackupTreeview->setModel(model);
 
   QHBoxLayout *hLayout = new QHBoxLayout();

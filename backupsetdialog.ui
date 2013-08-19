@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Configure Backup</string>
   </property>
   <widget class="QLineEdit" name="fromRootLineEdit">
    <property name="geometry">

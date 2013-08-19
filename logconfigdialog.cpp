@@ -49,6 +49,7 @@ LogConfigDialog::~LogConfigDialog()
 
 void LogConfigDialog::buildDialog()
 {
+  setWindowTitle(tr("Configure Logging"));
   QPushButton* button;
   QVBoxLayout *vLayout;
   QHBoxLayout *hLayout;

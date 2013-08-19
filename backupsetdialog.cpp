@@ -72,6 +72,7 @@ void BackupSetDialog::setBackupSet(const BackupSet& backupSet)
 
 void BackupSetDialog::initialize()
 {
+  setWindowTitle(tr("Configure Backup"));
   ui->setupUi(this);
   ui->filtersTableView->setModel(&(m_filterTableModel));
   LinkBackFilterDelegate* delegate = new LinkBackFilterDelegate(ui->filtersTableView);
