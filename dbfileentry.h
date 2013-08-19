@@ -8,7 +8,7 @@ class QTextStream;
 class QFileInfo;
 
 //**************************************************************************
-//! Encapsulate the data about a single used to determine if it matches another. This includes file's size, time, full path, hash value, and the link type on disk in the backup location.
+//! Encapsulate the data about a single file used to determine if it matches another. This includes file's size, time, full path, hash value, and the link type on disk in the backup location.
 /*!
  *
  * \author Andrew Pitonyak
@@ -97,17 +97,17 @@ public:
     void setTime(const QDateTime& dateTime);
 
     //**************************************************************************
-    //! Get the relative path to the file from the backup start point.
+    //! Get the relative path to the file from the backup start point. Includes the file name.
     /*!
-     * \returns Relative path to the file from the backup start point.
+     * \returns Relative path to the file from the backup start point. Includes the file name.
      *
      ***************************************************************************/
     const QString& getPath() const;
 
     //**************************************************************************
-    //! Set the relative path to the file from the backup start point.
+    //! Set the relative path to the file from the backup start point. Includes the file name.
     /*!
-     * \param path Relative path to the file from the backup start point.
+     * \param path Relative path to the file from the backup start point. Includes the file name.
      *
      ***************************************************************************/
     void setPath(const QString& path);
@@ -131,6 +131,8 @@ public:
     //**************************************************************************
     //! Populate the values in this class from the stream.
     /*!
+     * This is tolerant to a field separator in the path because the path is written
+     * last. A field separator in other fields (such as the time stamp) is a problem.
      * \param [in,out] stream The entry is filled by reading this stream.
      * \returns True if successful, false otherwise.
      *
@@ -140,12 +142,12 @@ public:
     //**************************************************************************
     //! Persist this object to the stream.
     /*!
+     * Path is written last so a "field separator" in the path will not break things.
      * \param [in,out] stream Stream to which this object is written.
      * \returns True if successful, false otherwise.
      *
      ***************************************************************************/
     bool writeLine(QTextStream& stream);
-
 
 private:
     /*! \brief File size. */
@@ -157,7 +159,7 @@ private:
     /*! \brief File date/time */
     QDateTime m_time;
 
-    /*! \brief Path to file relative to backup root directory. */
+    /*! \brief Path to file relative to backup root directory. Includes the file name. */
     QString m_path;
 
     /*! \brief Hash value. */
@@ -166,7 +168,7 @@ private:
     /*! \brief Format for the date/time. */
     static QString dateTimeFormat;
 
-    /*! \brief Character used to separate files in the produced file. This character had better not be written to the file. Current value is a comma, so a file with a comma in the file name will cause a problem. */
+    /*! \brief Character used to separate files in the produced file. This character had better not be written to the file in any field other than the path and filename. Current value is a comma. */
     static QChar fieldSeparator;
 };
 
