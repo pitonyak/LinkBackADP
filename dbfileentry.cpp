@@ -12,6 +12,11 @@ DBFileEntry::DBFileEntry() : m_size(0), m_linkType('C')
 {
 }
 
+DBFileEntry::DBFileEntry(const DBFileEntry& entry) : DBFileEntry()
+{
+   // TODO: Finish the copy constructor.
+}
+
 DBFileEntry::DBFileEntry(const QFileInfo& info, const QString& rootPath) : m_size(info.size()), m_time(info.lastModified()), m_path(info.canonicalFilePath())
 {
   if (rootPath.length() > 0)
