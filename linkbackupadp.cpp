@@ -9,6 +9,7 @@
 
 #include "backupsetdialog.h"
 #include "ui_backupsetdialog.h"
+#include "restorebackup.h"
 
 #include <QDir>
 #include <QFileInfoList>
@@ -163,3 +164,16 @@ void LinkBackupADP::on_actionConfigureLog_triggered()
     msgBox.exec();
   }
 }
+
+void LinkBackupADP::on_actionRestore_triggered()
+{
+  //QMessageBox msgBox;
+  //msgBox.setText(tr("Nothing to restore"));
+  //msgBox.setInformativeText("Info Here");
+  //msgBox.setStandardButtons(QMessageBox::Ok);
+  //msgBox.setDefaultButton(QMessageBox::Ok);
+  //msgBox.exec();
+  RestoreBackup restore(this);
+  restore.exec();
+}
+

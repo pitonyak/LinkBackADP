@@ -77,6 +77,9 @@ private slots:
 
   void on_actionConfigureLog_triggered();
 
+  void on_actionRestore_triggered();
+
+
 private:
   /*!  \brief The User Interface portion of the GUI. */
   Ui::LinkBackupADP *ui;
