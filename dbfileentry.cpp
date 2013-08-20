@@ -14,7 +14,7 @@ DBFileEntry::DBFileEntry() : m_size(0), m_linkType('C')
 
 DBFileEntry::DBFileEntry(const DBFileEntry& entry) : DBFileEntry()
 {
-   // TODO: Finish the copy constructor.
+  operator=(entry);
 }
 
 DBFileEntry::DBFileEntry(const QFileInfo& info, const QString& rootPath) : m_size(info.size()), m_time(info.lastModified()), m_path(info.canonicalFilePath())
@@ -30,6 +30,11 @@ DBFileEntry::DBFileEntry(const QFileInfo& info, const QString& rootPath) : m_siz
     }
   }
 }
+
+DBFileEntry::~DBFileEntry()
+{
+}
+
 
 bool DBFileEntry::readLine(QTextStream& stream)
 {
@@ -70,4 +75,17 @@ bool DBFileEntry::writeLine(QTextStream& stream)
   stream << m_size << fieldSeparator;
   stream << m_path << "\n";
   return (stream.status() == QTextStream::Ok);
+}
+
+const DBFileEntry& DBFileEntry::operator=(const DBFileEntry& entry)
+{
+  if (&entry != this)
+  {
+    m_size = entry.m_size;
+    m_linkType = entry.m_linkType;
+    m_time = entry.m_time;
+    m_path = entry.m_path;
+    m_hash = entry.m_hash;
+  }
+  return *this;
 }

@@ -26,12 +26,18 @@ public:
     DBFileEntry();
 
     //**************************************************************************
+    //! Destructor.
+    /*!
+     * Only exists so that I can make this virtual.
+     ***************************************************************************/
+    virtual ~DBFileEntry();
+
+    //**************************************************************************
     //! Copy Constructor.
     /*!
      *
      ***************************************************************************/
     DBFileEntry(const DBFileEntry& entry);
-
 
     //**************************************************************************
     //! Constructor that sets data available from the QFileInfo object, but does not set the hash.
@@ -156,6 +162,9 @@ public:
      *
      ***************************************************************************/
     bool writeLine(QTextStream& stream);
+
+    const DBFileEntry& operator=(const DBFileEntry& entry);
+
 
 private:
     /*! \brief File size. */
