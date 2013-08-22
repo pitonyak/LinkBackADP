@@ -55,6 +55,13 @@ public:
      */
     const DBFileEntry* findEntry(const QList<CriteriaForFileMatch>& criteria, DBFileEntry* entry, const QString& matchInitialPath) const;
 
+    /*! \brief Get an entry by index; useful to get all entries.
+     *
+     *  \param [in] index.
+     *  \return Pointer to the file entry, or null if the index is out of range.
+     */
+    const DBFileEntry* value(const int index) const;
+
     /*! \brief Determine if an external entry matches an internal entry based on the provided criteria.
      *
      *  \param [in] criteria Specifies how to match a file entry.
@@ -110,6 +117,11 @@ private:
 inline int DBFileEntries::count() const
 {
   return m_entries.count();
+}
+
+inline const DBFileEntry* DBFileEntries::value(const int index) const
+{
+    return m_entries.value(index, nullptr);
 }
 
 
