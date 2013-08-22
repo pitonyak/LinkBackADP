@@ -6,6 +6,7 @@
 #include "linkbackupglobals.h"
 #include "logroutinginfodialog.h"
 #include "logconfigdialog.h"
+#include "dbfileentries.h"
 
 #include "backupsetdialog.h"
 #include "ui_backupsetdialog.h"
@@ -17,6 +18,7 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QTimer>
+#include <QFileDialog>
 
 LinkBackupADP::LinkBackupADP(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::LinkBackupADP), m_backupThread(0),
@@ -173,7 +175,36 @@ void LinkBackupADP::on_actionRestore_triggered()
   //msgBox.setStandardButtons(QMessageBox::Ok);
   //msgBox.setDefaultButton(QMessageBox::Ok);
   //msgBox.exec();
-  RestoreBackup restore(this);
-  restore.exec();
+
+  // TODO:
+  // Get Last "restore from" directory
+  // Select file
+  // Display Backup
+
+  QString defaultExtension = tr("Text files (*.txt)");
+
+  QSettings settings;
+  QString currentPath = settings.value("LastRestoreBasePath").toString();
+  QString filePath = QFileDialog::getOpenFileName(this, "Open File", currentPath, tr("Text files (*.txt);;XML files (*.xml)"), &defaultExtension);
+  if (!filePath.isEmpty())
+  {
+    DBFileEntries *fileEntries = DBFileEntries::read(filePath);
+    TRACE_MSG("Read file entries", 10);
+    if (fileEntries != nullptr)
+    {
+      settings.setValue("LastRestoreBasePath", filePath);
+      delete fileEntries;
+      fileEntries = nullptr;
+      //RestoreBackup restore(this);
+      //restore.exec();
+    }
+    else
+    {
+      QMessageBox::warning(this, tr("File NOT Read"), QString(tr("Failed to read from %1").arg(filePath)));
+    }
+  }
+  TRACE_MSG("Leaving loadBackupSet", 10);
+
+
 }
 

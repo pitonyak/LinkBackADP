@@ -35,7 +35,6 @@ public:
    ***************************************************************************/
   virtual ~DBFileEntryTreeItem();
 
-
   //**************************************************************************
   //! Copy Constructor.
   /*!
@@ -70,7 +69,8 @@ public:
   /*!
    * This object takes ownership of the child and later deletes it. nullptr is not added.
    * Parent is automatically set on this child when it is added.
-   * \param [in] child Child to append to the list.
+   *
+   * \param [in] child Added to the end of the list.
    *
    ***************************************************************************/
   void appendChild(DBFileEntryTreeItem *child);
@@ -88,6 +88,18 @@ public:
 
   int columnCount() const {return 3;}
 
+  //**************************************************************************
+  //! Get the data based on the author's arbitrary decision for order.
+  /*!
+   * column = 0 is Name
+   * column = 1 is Size
+   * column = 2 is Time
+   * column = 3 is Link Type
+   * column = 4 is Hash
+   * \param [in] column indicates the column of interst.
+   * \returns The index of this object in the parent's child list or 0 if there is no parent.
+   *
+   ***************************************************************************/
   QVariant data(const int column) const;
 
   //**************************************************************************
@@ -114,6 +126,7 @@ private:
   /*! \brief File name portion on which this field is sorted (so it has a value for a directory as well). */
   QString m_fileName;
 
+  /*! \brief List of child items that are owned by this object.. */
   QList<DBFileEntryTreeItem*> m_children;
 
 };

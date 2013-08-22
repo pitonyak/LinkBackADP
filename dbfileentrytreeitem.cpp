@@ -90,6 +90,7 @@ QVariant DBFileEntryTreeItem::data(const int column) const
     return getFileName();
     break;
   case 1:
+    // TODO: Convert to pretty human readable text.
     return getSize();
     break;
   case 2:
