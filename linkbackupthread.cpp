@@ -220,6 +220,7 @@ void LinkBackupThread::processDir(QDir& currentFromDir, QDir& currentToDir)
           else
           {
             ERROR_MSG(QString(tr("EL %1")).arg(currentEntry->getPath()), 1);
+            ERROR_MSG(QString(tr("(%1)(%2)(%3)")).arg(pathToLinkFile, linkEntry->getPath(), m_toDirRoot), 1);
           }
         }
         if (currentEntry != nullptr)
