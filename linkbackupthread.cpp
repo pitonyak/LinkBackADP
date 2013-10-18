@@ -97,13 +97,14 @@ void LinkBackupThread::run()
   toDirLocation.cd(topFromDirName);
 
   DEBUG_MSG(QString(tr("toDirRoot:%1 topFromDirName:%2 m_fromDir:%3")).arg(m_toDirRoot, topFromDirName, canonicalPath), 1);
+  INFO_MSG(QString(tr("toDirRoot:%1 topFromDirName:%2 m_fromDir:%3")).arg(m_toDirRoot, topFromDirName, canonicalPath), 0);
 
   processDir(topFromDir, toDirLocation);
   TRACE_MSG(QString("Ready to write final hash summary %1").arg(m_toDirRoot + "/" + m_backupSet.getHashMethod() + ".txt"), 1);
   m_currentEntries->write(m_toDirRoot + "/" + m_backupSet.getHashMethod() + ".txt");
 
-  INFO_MSG(QString(tr("Backup finished.")), 1);
-  INFO_MSG(::getCopyLinkUtil().getStats(), 1);
+  INFO_MSG(QString(tr("Backup finished.")), 0);
+  INFO_MSG(::getCopyLinkUtil().getStats(), 0);
 }
 
 void LinkBackupThread::processDir(QDir& currentFromDir, QDir& currentToDir)
