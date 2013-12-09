@@ -36,7 +36,7 @@ class LinkBackFilter : public QObject
 
 public:
     //**************************************************************************
-    /*! \brief Enumerate the supported comparisons such as Less and Less Equal. */
+    /*! \brief Enumerate the supported comparisons such as Less and Less Equal.*/
     //**************************************************************************
     enum CompareType {Less, LessEqual, Equal, GreaterEqual, Greater, NotEqual, RegularExpression, FileSpec, Contains};
 

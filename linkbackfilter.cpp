@@ -789,6 +789,7 @@ void LinkBackFilter::readInternals(QXmlStreamReader& reader, const QString&)
           setCompareTypeDefault();
         } else {
           //TRACE_MSG(QString("Setting CompareType (%1) for filter").arg(value), 1);
+          // ??? indexIn >= 0 is a partial match.
           setCompareType(static_cast<LinkBackFilter::CompareType>(metaObj->enumerator(metaObj->indexOfEnumerator("CompareType")).keyToValue(qPrintable(value))));
         }
       } else if (QString::compare(name, "CompareField", Qt::CaseInsensitive) == 0) {

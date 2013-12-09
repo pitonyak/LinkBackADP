@@ -8,7 +8,7 @@
         <Filter>
             <CompareType>Equal</CompareType>
             <CompareField>Name</CompareField>
-            <Value>tmp,temp,cache,VMWare,NetworkTestData,MUSIC,Downloads,Komodo-Edit-7,LearningWCF,cxoffice,OO_Source,.ccache,netbeans-7.3,.recoll</Value>
+            <Value>tmp,temp,cache,VMWare,NetworkTestData,MUSIC,Downloads,Komodo-Edit-8,LearningWCF,cxoffice,OO_Source,.ccache,.recoll,glassfish3,Old_SVN,netbeans-7.4,apache-tomcat-7.0.34</Value>
             <CaseSensitive>False</CaseSensitive>
             <Invert>False</Invert>
             <Accept>False</Accept>
@@ -19,7 +19,7 @@
         <Filter>
             <CompareType>RegularExpression</CompareType>
             <CompareField>FullPath</CompareField>
-            <Value>\/Devsrc\/.*\.o$,\/Devsrc\/.*\/moc_,\/Devsrc\/.*\.class$,\/glassfish-.*$,\/apache-tomcat-.*$</Value>
+            <Value>\/Devsrc\/.*\.o$,\/Devsrc\/.*\/moc_,\/Devsrc\/.*\.class$</Value>
             <CaseSensitive>False</CaseSensitive>
             <Invert>False</Invert>
             <Accept>False</Accept>
