@@ -103,6 +103,9 @@ LinkBackFilter* LinkBackFilter::clone(QObject *parent) const
 
 void LinkBackFilter::setCompareType(CompareType compareType)
 {
+    if (compareType == LinkBackFilter::RegularExpression) {
+        compareType = LinkBackFilter::RegExpFull;
+    }
   if (compareType != m_compareType)
   {
     m_compareType = compareType;
@@ -247,7 +250,7 @@ void LinkBackFilter::createRegularExpressions()
       {
         m_expressions->append(new QRegExp(value.toRegExp()));
       }
-      else if (m_compareType == LinkBackFilter::RegularExpression)
+      else if (m_compareType == LinkBackFilter::RegularExpression || m_compareType == LinkBackFilter::RegExpFull || m_compareType == LinkBackFilter::RegExpPartial)
       {
         m_expressions->append(new QRegExp(value.toString(), m_caseSensitivity, QRegExp::RegExp2));
       }
@@ -350,11 +353,21 @@ bool LinkBackFilter::compareValues(const qlonglong aSize) const
 {
   switch (m_compareType)
   {
+  case LinkBackFilter::RegExpFull:
   case LinkBackFilter::RegularExpression:
   case LinkBackFilter::FileSpec:
     foreach (QRegExp* expression, *m_expressions)
     {
       if ((expression != nullptr) && expression->exactMatch(QString::number(aSize)))
+      {
+        return true;
+      }
+    }
+    break;
+  case LinkBackFilter::RegExpPartial:
+    foreach (QRegExp* expression, *m_expressions)
+    {
+      if ((expression != nullptr) && (expression->indexIn(QString::number(aSize)) >= 0))
       {
         return true;
       }
@@ -421,11 +434,21 @@ bool LinkBackFilter::compareValues(const QTime& aTime) const
 {
   switch (m_compareType)
   {
+  case LinkBackFilter::RegExpFull:
   case LinkBackFilter::RegularExpression:
   case LinkBackFilter::FileSpec:
     foreach (QRegExp* expression, *m_expressions)
     {
       if ((expression != nullptr) && expression->exactMatch(aTime.toString(Qt::TextDate)))
+      {
+        return true;
+      }
+    }
+    break;
+  case LinkBackFilter::RegExpPartial:
+    foreach (QRegExp* expression, *m_expressions)
+    {
+      if ((expression != nullptr) && (expression->indexIn(aTime.toString(Qt::TextDate)) >= 0))
       {
         return true;
       }
@@ -490,11 +513,21 @@ bool LinkBackFilter::compareValues(const QDate& aDate) const
 {
   switch (m_compareType)
   {
+  case LinkBackFilter::RegExpFull:
   case LinkBackFilter::RegularExpression:
   case LinkBackFilter::FileSpec:
     foreach (QRegExp* expression, *m_expressions)
     {
       if ((expression != nullptr) && expression->exactMatch(aDate.toString(Qt::TextDate)))
+      {
+        return true;
+      }
+    }
+    break;
+  case LinkBackFilter::RegExpPartial:
+    foreach (QRegExp* expression, *m_expressions)
+    {
+      if ((expression != nullptr) && (expression->indexIn(aDate.toString(Qt::TextDate)) >= 0))
       {
         return true;
       }
@@ -559,11 +592,21 @@ bool LinkBackFilter::compareValues(const QDateTime& aDateTime) const
 {
   switch (m_compareType)
   {
+  case LinkBackFilter::RegExpFull:
   case LinkBackFilter::RegularExpression:
   case LinkBackFilter::FileSpec:
     foreach (QRegExp* expression, *m_expressions)
     {
       if ((expression != nullptr) && expression->exactMatch(aDateTime.toString(Qt::TextDate)))
+      {
+        return true;
+      }
+    }
+    break;
+  case LinkBackFilter::RegExpPartial:
+    foreach (QRegExp* expression, *m_expressions)
+    {
+      if ((expression != nullptr) && (expression->indexIn(aDateTime.toString(Qt::TextDate)) >= 0))
       {
         return true;
       }
@@ -629,12 +672,13 @@ bool LinkBackFilter::compareValues(const QString& filePortion) const
   int i;
   switch (m_compareType)
   {
+  case LinkBackFilter::RegExpFull:
   case LinkBackFilter::RegularExpression:
   case LinkBackFilter::FileSpec:
     for (i=0; i<m_expressions->size(); ++i)
     {
       QRegExp* expression = m_expressions->at(i);
-      TRACE_MSG(QString("Checking fileportion (%1) against (%2)").arg(filePortion, m_values->at(i).toString()), 5);
+      TRACE_MSG(QString("Checking fileportion (%1) against (%2)").arg(filePortion, m_values->at(i).toString()), 6);
       if ((expression != nullptr) && expression->exactMatch(filePortion))
       {
         TRACE_MSG(QString("PASSED fileportion (%1) against (%2)").arg(filePortion, m_values->at(i).toString()), 5);
@@ -643,6 +687,15 @@ bool LinkBackFilter::compareValues(const QString& filePortion) const
       else
       {
         TRACE_MSG(QString("FAILED fileportion (%1) against (%2)").arg(filePortion, m_values->at(i).toString()), 5);
+      }
+    }
+    break;
+  case LinkBackFilter::RegExpPartial:
+    foreach (QRegExp* expression, *m_expressions)
+    {
+      if ((expression != nullptr) && (expression->indexIn(filePortion) >= 0))
+      {
+        return true;
       }
     }
     break;

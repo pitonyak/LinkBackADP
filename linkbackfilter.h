@@ -38,7 +38,7 @@ public:
     //**************************************************************************
     /*! \brief Enumerate the supported comparisons such as Less and Less Equal.*/
     //**************************************************************************
-    enum CompareType {Less, LessEqual, Equal, GreaterEqual, Greater, NotEqual, RegularExpression, FileSpec, Contains};
+    enum CompareType {Less, LessEqual, Equal, GreaterEqual, Greater, NotEqual, RegularExpression, FileSpec, Contains, RegExpPartial, RegExpFull};
 
     //**************************************************************************
     /*! \brief Enumerate the parts of a file that can be compared. */
