@@ -6,6 +6,17 @@
     <Priority>Idle</Priority>
     <Filters>
         <Filter>
+            <CompareType>Greater</CompareType>
+            <CompareField>Size</CompareField>
+            <Value>209715200</Value>
+            <CaseSensitive>False</CaseSensitive>
+            <Invert>False</Invert>
+            <Accept>False</Accept>
+            <Files>True</Files>
+            <MultiValued>False</MultiValued>
+            <Directories>False</Directories>
+        </Filter>
+        <Filter>
             <CompareType>Equal</CompareType>
             <CompareField>Name</CompareField>
             <Value>tmp,temp,cache,VMWare,NetworkTestData,MUSIC,Downloads,Komodo-Edit-8,LearningWCF,cxoffice,OO_Source,.ccache,.recoll,glassfish3,Old_SVN,netbeans-7.4,apache-tomcat-7.0.34</Value>
@@ -17,7 +28,7 @@
             <Directories>True</Directories>
         </Filter>
         <Filter>
-            <CompareType>RegularExpression</CompareType>
+            <CompareType>RegExpFull</CompareType>
             <CompareField>FullPath</CompareField>
             <Value>\/Devsrc\/.*\.o$,\/Devsrc\/.*\/moc_,\/Devsrc\/.*\.class$</Value>
             <CaseSensitive>False</CaseSensitive>
