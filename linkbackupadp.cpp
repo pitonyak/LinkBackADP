@@ -33,7 +33,7 @@ LinkBackupADP::LinkBackupADP(QWidget *parent)
     restoreState(settings.value("mainWindowState").toByteArray());
 
     // Connect the timer to the processing timer every two seconds.
-    QTimer* logProcessingTimer = new QTimer();
+    QTimer* logProcessingTimer = new QTimer(this);
     connect(logProcessingTimer, SIGNAL(timeout()), &getLogger(), SLOT(processQueuedMessages()));
     logProcessingTimer->start(2000);
     getLogger().enableMessageQueue();
