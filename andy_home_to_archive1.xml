@@ -6,6 +6,17 @@
     <Priority>Inherit</Priority>
     <Filters>
         <Filter>
+            <CompareType>Greater</CompareType>
+            <CompareField>Size</CompareField>
+            <Value>2500000000</Value>
+            <CaseSensitive>False</CaseSensitive>
+            <Invert>False</Invert>
+            <Accept>False</Accept>
+            <Files>True</Files>
+            <MultiValued>False</MultiValued>
+            <Directories>True</Directories>
+        </Filter>
+        <Filter>
             <CompareType>Equal</CompareType>
             <CompareField>Name</CompareField>
             <Value>tmp,temp,cache,ISO,VMWare,Download,.ccache,netbeans-7.3</Value>

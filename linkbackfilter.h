@@ -248,6 +248,8 @@ private:
     bool m_filterFiles;
     bool m_filterDirs;
     bool m_multiValued;
+
+    /*! \brief Single value representation of this filter. */
     QVariant m_value;
 
     //QRegExp* m_regularExpression;
