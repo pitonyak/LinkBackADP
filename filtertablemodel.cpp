@@ -305,7 +305,7 @@ QVariant FilterTableModel::data( const QModelIndex &index, int role ) const
       return tr("The filter will act on this field for the file or directory in question.");
       break;
     case methodColumn:
-      return tr("How the file propery is compared to the filter value.");
+      return tr("How the file propery is compared to the filter value. Checks against the entire value, so, a regular expression must match the entire value.");
     case valueColumn:
       return tr("Value compared against the file property.");
       break;

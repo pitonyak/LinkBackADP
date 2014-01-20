@@ -72,6 +72,11 @@ void CopyLinkUtil::resetStats()
     m_millisLinked = 0;
     m_millisHashed = 0;
     m_millisCopiedHashed = 0;
+    if (m_timer != nullptr)
+    {
+      delete m_timer;
+      m_timer = nullptr;
+    }
     m_timer = new QElapsedTimer();
     m_cancelRequested = false;
 }
