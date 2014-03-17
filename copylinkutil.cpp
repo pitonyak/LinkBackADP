@@ -233,7 +233,7 @@ bool CopyLinkUtil::generateHash(const QString& copyFromPath)
     {
       lastReportByteCount =  totalRead;
       // TODO: Log message here
-      qDebug(qPrintable(QString("Read %1/%2 from %3").arg(getBPS(totalRead, 0)).arg(fileToRead.size()).arg(fileInfo.fileName())));
+      qDebug(qPrintable(QString("Read %1/%2 from %3").arg(getBPS(totalRead, 0)).arg(getBPS(fileToRead.size(), 0)).arg(fileInfo.fileName())));
     }
     numRead = fileToRead.read(m_buffer, m_bufferSize);
   }
@@ -323,7 +323,7 @@ bool CopyLinkUtil::internalCopyFile(const QString& copyFromPath, const QString& 
     {
       lastReportByteCount =  totalRead;
       // TODO: Log message here
-      qDebug(qPrintable(QString("Copied %1/%2 from %3").arg(getBPS(totalRead, 0)).arg(fileToRead.size()).arg(fileInfo.fileName())));
+      qDebug(qPrintable(QString("Copied %1/%2 from %3").arg(getBPS(totalRead, 0)).arg(getBPS(fileToRead.size(), 0)).arg(fileInfo.fileName())));
     }
     numRead = fileToRead.read(m_buffer, m_bufferSize);
 
