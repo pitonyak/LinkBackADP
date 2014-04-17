@@ -19,7 +19,7 @@
         <Filter>
             <CompareType>Equal</CompareType>
             <CompareField>Name</CompareField>
-            <Value>tmp,temp,cache,VMWare,NetworkTestData,MUSIC,Downloads,Komodo-Edit-8,LearningWCF,cxoffice,OO_Source,.ccache,.recoll,glassfish3,Old_SVN,netbeans-7.4,apache-tomcat-7.0.34</Value>
+            <Value>tmp,temp,cache,VMWare,NetworkTestData,MUSIC,Downloads,Komodo-Edit-8,LearningWCF,cxoffice,OO_Source,.ccache,.recoll,glassfish3,Old_SVN,netbeans-7.4,apache-tomcat-7.0.34,Programs</Value>
             <CaseSensitive>False</CaseSensitive>
             <Invert>False</Invert>
             <Accept>False</Accept>
