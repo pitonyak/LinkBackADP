@@ -333,7 +333,7 @@ QVariant FilterTableModel::data( const QModelIndex &index, int role ) const
     }
     break;
   default:
-    return QVariant();
+    break;
   }
   return QVariant();
 }

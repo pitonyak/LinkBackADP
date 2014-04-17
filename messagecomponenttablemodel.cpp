@@ -182,7 +182,7 @@ QVariant MessageComponentTableModel::data( const QModelIndex &index, int role ) 
     }
     break;
   default:
-    return QVariant();
+    break;
   }
   return QVariant();
 }

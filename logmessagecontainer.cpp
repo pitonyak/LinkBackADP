@@ -1,6 +1,7 @@
 #include "logmessagecontainer.h"
 
-LogMessageContainer::LogMessageContainer()
+LogMessageContainer::LogMessageContainer()  :
+  m_category(SimpleLoggerRoutingInfo::InformationMessage), m_level(0)
 {
 }
 

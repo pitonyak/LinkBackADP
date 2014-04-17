@@ -152,9 +152,6 @@ QVariant LogRoutingInfoTableModel::data( const QModelIndex &index, int role ) co
       break;
     case levelsColumn:
       return info.getLevelsAsString();
-    {
-
-    }
       break;
     default:
       // No other column is valid

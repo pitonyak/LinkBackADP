@@ -7,7 +7,11 @@
 
 SimpleLoggerRoutingInfo SimpleLoggerRoutingInfo::privateObjectForMetaData;
 
-SimpleLoggerRoutingInfo::SimpleLoggerRoutingInfo(QObject *parent) : QObject(parent), m_levels(nullptr), m_routing(nullptr), m_locationRegExp(nullptr), m_messageRegExp(nullptr), m_locationRegExpPatternSyntax(QRegExp::RegExp2), m_messageRegExpPatternSyntax(QRegExp::RegExp2), m_enabled(true)
+SimpleLoggerRoutingInfo::SimpleLoggerRoutingInfo(QObject *parent) :
+  QObject(parent), m_levels(nullptr), m_routing(nullptr), m_locationRegExp(nullptr), m_messageRegExp(nullptr),
+  m_locationRegExpPatternSyntax(QRegExp::RegExp2), m_messageRegExpPatternSyntax(QRegExp::RegExp2),
+  m_locRegExpCaseSensitivity(Qt::CaseInsensitive), m_messageRegExpCaseSensitivity(Qt::CaseInsensitive),
+  m_enabled(true)
 {
   const QMetaObject* metaObj = metaObject();
   QMetaEnum metaEnum = metaObj->enumerator(metaObj->indexOfEnumerator("MessageCategory"));
@@ -26,7 +30,11 @@ SimpleLoggerRoutingInfo::SimpleLoggerRoutingInfo(QObject *parent) : QObject(pare
   }
 }
 
-SimpleLoggerRoutingInfo::SimpleLoggerRoutingInfo(const SimpleLoggerRoutingInfo& obj, QObject *parent) : QObject(parent), m_levels(nullptr), m_routing(nullptr), m_locationRegExp(nullptr), m_messageRegExp(nullptr)
+SimpleLoggerRoutingInfo::SimpleLoggerRoutingInfo(const SimpleLoggerRoutingInfo& obj, QObject *parent) :
+  QObject(parent), m_levels(nullptr), m_routing(nullptr), m_locationRegExp(nullptr), m_messageRegExp(nullptr),
+  m_locationRegExpPatternSyntax(QRegExp::RegExp2), m_messageRegExpPatternSyntax(QRegExp::RegExp2),
+  m_locRegExpCaseSensitivity(Qt::CaseInsensitive), m_messageRegExpCaseSensitivity(Qt::CaseInsensitive),
+  m_enabled(true)
 {
   m_levels = new QMap<MessageCategory, int>();
   m_routing = new QMap<MessageRouting, bool>();

@@ -73,7 +73,7 @@ QVariant CriteriaForFileMatchTableModel::data( const QModelIndex &index, int rol
     }
     break;
   default:
-    return QVariant();
+    break;
   }
   return QVariant();
 }
