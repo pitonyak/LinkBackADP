@@ -18,7 +18,7 @@
  *
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
- * \date 2011-2013
+ * \date 2011-2014
  *
  ***************************************************************************/
 
@@ -167,10 +167,27 @@ public:
      */
     bool passes(const QFileInfo& info) const;
 
-    static QString priorityToString(QThread::Priority priority);
+    /*! \brief Convert a QThread::Priority to a string for use in saving the priority to a configuration file or for pretty printing.
+     *
+     *  \param [in] priority Priority to convert to a string.
+     *  \return A string representation of of the priority. Text strings such as: High, Low, and Time Critical.
+     */
+    static QString priorityToString(const QThread::Priority priority);
 
-    static QThread::Priority stringToPriority(const QString& priority, QThread::Priority defaultPriority = QThread::InheritPriority);
+    /*! \brief Convert a string to a QThread::Priority. Used to convert a value stored in a configuration file to a usable value.
+     *
+     * The comparison is case insensitive.
+     *
+     *  \param [in] priority String value to convert.
+     *  \param [in] defaultPriority Value to use if the string is not recognized.
+     *  \return The value represented by the string.
+     */
+    static QThread::Priority stringToPriority(const QString& priority, const QThread::Priority defaultPriority = QThread::InheritPriority);
 
+    /*! \brief Get a list of all supported values as strings. Intended use is for the GUI to allow the user to choose from a list.
+     *
+     *  \return List of all valid priority values (as strings).
+     */
     static QStringList getAllPriorities();
 
 private:

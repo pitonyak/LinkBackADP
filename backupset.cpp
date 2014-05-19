@@ -263,7 +263,7 @@ bool BackupSet::passes(const QFileInfo& info) const
   return false;
 }
 
-QString BackupSet::priorityToString(QThread::Priority priority)
+QString BackupSet::priorityToString(const QThread::Priority priority)
 {
   switch(priority)
   {
@@ -286,7 +286,7 @@ QString BackupSet::priorityToString(QThread::Priority priority)
   }
 }
 
-QThread::Priority BackupSet::stringToPriority(const QString &priority, QThread::Priority defaultPriority)
+QThread::Priority BackupSet::stringToPriority(const QString &priority, const QThread::Priority defaultPriority)
 {
   if (priority.compare("Idle", Qt::CaseInsensitive) == 0) {
     return QThread::IdlePriority;

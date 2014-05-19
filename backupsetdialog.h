@@ -20,7 +20,7 @@ class BackupSetDialog;
  *
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
- * \date 2011-2013
+ * \date 2011-2014
  ***************************************************************************/
 
 class BackupSetDialog : public QDialog
@@ -142,8 +142,13 @@ public slots:
     void currentCriteriaRowChanged ( const QModelIndex & current, const QModelIndex &    previous );
 
 private:
+    /*! \brief The QT implementation object that you edit in QT Creator. */
     Ui::BackupSetDialog *ui;
+
+    /*! \brief Model for what passes the filter (back it up or do not). */
     FilterTableModel m_filterTableModel;
+
+    /*! \brief Criteria for how two decide if a file should be copied or linked. */
     CriteriaForFileMatchTableModel m_criteriaForFileMatchTableModel;
 
 };

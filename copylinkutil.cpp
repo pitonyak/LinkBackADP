@@ -15,7 +15,6 @@ CopyLinkUtil::CopyLinkUtil() : m_bytesCopied(0), m_bytesLinked(0), m_bytesHashed
   m_timer = new QElapsedTimer();
 }
 
-// I can only do this because I am using C++11, otherwise I could not use the default constructor.
 CopyLinkUtil::CopyLinkUtil(const CopyLinkUtil& obj) : m_bytesCopied(obj.m_bytesCopied), m_bytesLinked(obj.m_bytesLinked), m_bytesHashed(obj.m_bytesHashed), m_bytesCopiedHashed(obj.m_bytesCopiedHashed), m_millisCopied(obj.m_millisCopied), m_millisLinked(obj.m_millisLinked), m_millisHashed(obj.m_millisHashed), m_millisCopiedHashed(obj.m_millisCopiedHashed), m_buffer(nullptr), m_bufferSize(0), m_hashGenerator(nullptr), m_timer(nullptr), m_cancelRequested(false), m_useHardLink(true), m_hashMethod(obj.m_hashMethod)
 {
   m_timer = new QElapsedTimer();
