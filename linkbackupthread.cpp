@@ -3,6 +3,7 @@
 #include "linkbackupglobals.h"
 #include <QDir>
 #include <QCryptographicHash>
+#include <QMessageBox>
 
 LinkBackupThread::LinkBackupThread(QObject *parent) : QThread(parent), m_cancelRequested(false), m_currentEntries(nullptr), m_oldEntries(nullptr)
 {
@@ -109,6 +110,18 @@ void LinkBackupThread::run()
 
 void LinkBackupThread::processDir(QDir& currentFromDir, QDir& currentToDir)
 {
+  long numErrors = getLogger().errorCount();
+  if (numErrors > 1000)
+  {
+    QString errorMessage = QString("%1 errors found, quit?");
+    QMessageBox::StandardButton reply = QMessageBox::question(nullptr, "Test", errorMessage, QMessageBox::Yes|QMessageBox::No);
+      if (reply == QMessageBox::Yes) {
+        requestCancel();
+      } else {
+        getLogger().clearErrorCount();
+      }
+  }
+
   TRACE_MSG(QString("Processing directory %1").arg(currentFromDir.canonicalPath()), 1);
   // Process directories, then process files.
   QList<QFileInfo> list = currentFromDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks | QDir::Hidden | QDir::Readable);

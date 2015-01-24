@@ -60,6 +60,11 @@ void LinkBackupADP::on_actionEditBackup_triggered()
   if (dlg.exec() == QDialog::Accepted) {
     m_backupSet = dlg.getBackupSet();
     m_configFilePath = dlg.getConfigFilePath();
+
+    QString message = validateSourceAndDestinationPath();
+    if (!message.isEmpty()) {
+      QMessageBox::warning(nullptr, "Warning", message);
+    }
   }
 }
 
@@ -70,10 +75,57 @@ void LinkBackupADP::on_actionStartBackup_triggered()
     delete m_backupThread;
     m_backupThread = 0;
   }
-  m_backupThread = new LinkBackupThread(m_backupSet, this);
 
-  m_backupThread->start(m_backupSet.stringToPriority(m_backupSet.getPriority(), QThread::InheritPriority));
+  getLogger().clearErrorCount();
+
+  // Do not run the backup if the source or destination has a problem.
+  QString message = validateSourceAndDestinationPath();
+  if (!message.isEmpty()) {
+    QMessageBox::critical(nullptr, "Error", message);
+  } else {
+    m_backupThread = new LinkBackupThread(m_backupSet, this);
+    m_backupThread->start(m_backupSet.stringToPriority(m_backupSet.getPriority(), QThread::InheritPriority));
+  }
 }
+
+QString LinkBackupADP::validateSourcePath() const
+{
+  if (m_backupSet.getFromPath().isEmpty()) {
+    return "Source path is empty.";
+  }
+  if (QDir(m_backupSet.getFromPath()).exists()) {
+    return "";
+  }
+  return QString("Source directory '%1' does not exist.").arg(m_backupSet.getFromPath());
+}
+
+QString LinkBackupADP::validateDestinationPath() const
+{
+  if (m_backupSet.getToPath().isEmpty()) {
+    return "Destination path is empty.";
+  }
+  if (QDir(m_backupSet.getToPath()).exists()) {
+    return "";
+  }
+  return QString("Destination directory '%1' does not exist.").arg(m_backupSet.getToPath());
+}
+
+QString LinkBackupADP::validateSourceAndDestinationPath() const
+{
+  QString sourceError = validateSourcePath();
+  QString destinationError = validateDestinationPath();
+  if (sourceError.isEmpty())
+  {
+    return destinationError;
+  }
+  if (destinationError.isEmpty())
+  {
+    return sourceError;
+  }
+  return QString("%1\n%2").arg(sourceError).arg(destinationError);
+}
+
+
 
 void LinkBackupADP::on_actionCancelBackup_triggered()
 {
@@ -138,7 +190,6 @@ void LinkBackupADP::formattedMessage(const QString& formattedMessage, const Simp
     } catch(...) {
         m_editorMutex.unlock();
     }
-
 }
 
 

@@ -4,7 +4,7 @@
 #include <QMapIterator>
 #include <QTextStream>
 
-SimpleLoggerADP::SimpleLoggerADP(QObject *parent) : QObject(parent), m_messageQueue(nullptr), m_logFile(nullptr), m_textStream(nullptr)
+SimpleLoggerADP::SimpleLoggerADP(QObject *parent) : QObject(parent), m_numErrors(0), m_messageQueue(nullptr), m_logFile(nullptr), m_textStream(nullptr)
 {
 }
 
@@ -79,6 +79,10 @@ QString SimpleLoggerADP::getFileName() const
 
 void SimpleLoggerADP::receiveMessage(const QString& message, const QString& location, const QDateTime dateTime, const SimpleLoggerRoutingInfo::MessageCategory category, const int level)
 {
+  if (category == SimpleLoggerRoutingInfo::ErrorMessage)
+  {
+    ++m_numErrors;
+  }
   if (m_messageQueue == nullptr)
   {
     processOneMessage(LogMessageContainer(message, location, dateTime, category, level));

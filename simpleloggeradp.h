@@ -139,6 +139,16 @@ public:
    ***************************************************************************/
   void enableMessageQueue();
 
+  //**************************************************************************
+  /*! \brief Get the number of error messages logged in a non thread safe way.
+   ***************************************************************************/
+  long errorCount() const { return m_numErrors; }
+
+  //**************************************************************************
+  /*! \brief Clear the number of errors logged in a non thread safe way.
+   ***************************************************************************/
+  void clearErrorCount() { m_numErrors = 0; }
+
 signals:
   void formattedMessage(const QString& formattedMessage, SimpleLoggerRoutingInfo::MessageCategory category);
 
@@ -172,7 +182,13 @@ private:
   void readInternals(QXmlStreamReader& reader, const QString& version);
 
   //**************************************************************************
-  /*! \brief
+  /*! \brief Used to track the number of error messages received.
+   *  This is used to attempt to track a large number of errors while creating a backup.
+   ***************************************************************************/
+  long m_numErrors;
+
+  //**************************************************************************
+  /*! \brief Allow incoming messages to be queued so that the text box is not flooded.
    ***************************************************************************/
   LogMessageQueue* m_messageQueue;
 

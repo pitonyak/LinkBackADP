@@ -44,6 +44,24 @@ public:
      ***************************************************************************/
     void cancelBackup();
 
+    //**************************************************************************
+    /*! \brief Validate that the source path exists.
+     *  \return Error message describing the error, or an empty string if no error.
+     ***************************************************************************/
+    QString validateSourcePath() const;
+
+    //**************************************************************************
+    /*! \brief Validate that the destination path exists.
+     *  \return Error message describing the error, or an empty string if no error.
+     ***************************************************************************/
+    QString validateDestinationPath() const;
+
+    //**************************************************************************
+    /*! \brief Validate that the source and destination path exists.
+     *  \return Error message describing the error, or an empty string if no error.
+     ***************************************************************************/
+    QString validateSourceAndDestinationPath() const;
+
 public slots:
     //**************************************************************************
     /*! \brief Display the message in the text editor.
