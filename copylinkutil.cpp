@@ -174,12 +174,16 @@ bool CopyLinkUtil::setHashType(QCryptographicHash::Algorithm hashType)
 }
 
 
-
+#include <iostream>
 
 bool CopyLinkUtil::linkFile(const QString& linkToThisFile, const QString& placeLinkHere)
 {
   bool noError = true;
   QFile existingFile(linkToThisFile);
+  if (placeLinkHere.startsWith("/home", Qt::CaseInsensitive) || placeLinkHere.startsWith(".", Qt::CaseInsensitive) || !placeLinkHere.startsWith("/", Qt::CaseInsensitive)) {
+      std::cout << qPrintable(QString("??? HELP: Linking to %1").arg(placeLinkHere)) << std::endl;
+      qDebug(qPrintable(QString("??? HELP: Linking to %1").arg(placeLinkHere)));
+  }
   m_timer->restart();
   if (isUseHardLink())
   {
@@ -267,6 +271,11 @@ bool CopyLinkUtil::internalCopyFile(const QString& copyFromPath, const QString& 
   QFile fileToWrite(copyToPath);
   QFileInfo fileInfoFileToWrite(copyToPath);
   QString pathToFileToWrite = fileInfoFileToWrite.absolutePath();
+
+  if (pathToFileToWrite.startsWith("/home", Qt::CaseInsensitive) || pathToFileToWrite.startsWith(".", Qt::CaseInsensitive) || !pathToFileToWrite.startsWith("/", Qt::CaseInsensitive)) {
+      std::cout << qPrintable(QString("??? HELP: Writing to %1").arg(pathToFileToWrite)) << std::endl;
+    qDebug(qPrintable(QString("??? HELP: Writing to %1").arg(pathToFileToWrite)));
+  }
 
   QDir dirFileToWrite(pathToFileToWrite);
   if (!dirFileToWrite.exists(pathToFileToWrite) && !dirFileToWrite.mkpath(pathToFileToWrite))

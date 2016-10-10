@@ -8,7 +8,7 @@
         <Filter>
             <CompareType>Equal</CompareType>
             <CompareField>Name</CompareField>
-            <Value>tmp,temp,cache,VMWare,.cache,.ccache,OO_Source,Programs,.recoll</Value>
+            <Value>tmp,temp,cache,VMWare,.cache,.ccache,OO_Source,.recoll,.svn</Value>
             <CaseSensitive>False</CaseSensitive>
             <Invert>False</Invert>
             <Accept>False</Accept>

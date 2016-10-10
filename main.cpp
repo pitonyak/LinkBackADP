@@ -4,6 +4,7 @@
 #include "simpleloggeradp.h"
 #include <QFile>
 #include <QTimer>
+#include <QLoggingCategory>
 
 static CopyLinkUtil globalCopyLinkUtil;
 
@@ -19,6 +20,14 @@ int main(int argc, char *argv[])
   globalCopyLinkUtil.setBufferSize(1024*1024*24);
 
   QApplication a(argc, argv);
+
+  // Fedora disables qDebug output at the moment
+  // New configuration thing, so, re-enable it as follows (if you want).
+  // But, you do NOT want all those mouse movement messages
+  QLoggingCategory::setFilterRules("*.debug=true\n"
+                                   "qt.qpa.input*.debug=false\n"
+                                   "qt.widgets.gestures*.debug=false");
+
   QCoreApplication::setOrganizationDomain("pitonyak.org");
   QCoreApplication::setOrganizationName("Pitonyak");
   QCoreApplication::setApplicationName("Link Backup ADP");
@@ -93,7 +102,7 @@ void configureTheLogger()
 
     // Example creating a log configuration file
     /**
-    QFile file3("/andrew0/home/andy/logger3.xml");
+    QFile file3("/home/andy/logger3.xml");
     if (file3.open(QIODevice::WriteOnly)) {
       QXmlStreamWriter writer(&file3);
       writer.setAutoFormatting(true);
