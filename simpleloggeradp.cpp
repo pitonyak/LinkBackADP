@@ -102,9 +102,10 @@ void SimpleLoggerADP::receiveMessage(const QString& message, const QString& loca
   {
     processOneMessage(LogMessageContainer(message, location, dateTime, category, level));
   }
-  else
+  else if (m_messageQueue->enqueue(new LogMessageContainer(message, location, dateTime, category, level)) > 100)
   {
-    m_messageQueue->enqueue(new LogMessageContainer(message, location, dateTime, category, level));
+    // What if this is HUGE?
+    processQueuedMessages();
   }
 }
 

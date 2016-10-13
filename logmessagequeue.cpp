@@ -18,19 +18,26 @@ void LogMessageQueue::enqueue(const QString &message, const QString &location, c
   enqueue(new LogMessageContainer(message, location , dateTime, category, level));
 }
 
-void LogMessageQueue::enqueue(LogMessageContainer* message)
+int LogMessageQueue::enqueue(LogMessageContainer* message)
 {
+  QMutexLocker locker(&m_mutex);
   if (message != nullptr)
   {
-    QMutexLocker locker(&m_mutex);
     m_queue.enqueue(message);
   }
+  return m_queue.isEmpty();
 }
 
 bool LogMessageQueue::isEmpty() const
 {
   QMutexLocker locker(&m_mutex);
   return m_queue.isEmpty();
+}
+
+int LogMessageQueue::queueSize() const
+{
+  QMutexLocker locker(&m_mutex);
+  return m_queue.size();
 }
 
 void LogMessageQueue::getAll(QQueue<LogMessageContainer *> &queue)

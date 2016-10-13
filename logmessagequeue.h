@@ -42,14 +42,17 @@ public:
   //**************************************************************************
   /*! \brief Receive a message and queue it for logging (pushes it into the queue). This is thread-safe.
    *  \param [in] message is the encapsulated message to log. The message is owned by the container.
+   *  \return Number of messages in the queue.
    ***************************************************************************/
-  void enqueue(LogMessageContainer* message);
+  int enqueue(LogMessageContainer* message);
 
   //**************************************************************************
   /*! \brief Determine if the queue is empty.
    *  \return True if the queue is empty, false otherwise.
    ***************************************************************************/
   bool isEmpty() const;
+
+  int queueSize() const;
 
   //**************************************************************************
   /*! \brief Take the contents of the contained queue and place them into the parameter.
