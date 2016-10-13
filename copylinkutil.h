@@ -35,7 +35,7 @@ public:
      *
      *  \param [in] hashType Set the hash type for future hash operations.
      ***************************************************************************/
-    CopyLinkUtil(const QString& hashType);
+    explicit CopyLinkUtil(const QString& hashType);
 
     //**************************************************************************
     /*! \brief Constructor.

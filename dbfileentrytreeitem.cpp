@@ -29,7 +29,7 @@ DBFileEntryTreeItem::DBFileEntryTreeItem(const DBFileEntry& entry) : DBFileEntry
   }
 }
 
-const DBFileEntryTreeItem& DBFileEntryTreeItem::operator=(const DBFileEntryTreeItem& entry)
+DBFileEntryTreeItem& DBFileEntryTreeItem::operator=(const DBFileEntryTreeItem& entry)
 {
   if (&entry != this)
   {

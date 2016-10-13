@@ -77,7 +77,7 @@ bool DBFileEntry::writeLine(QTextStream& stream)
   return (stream.status() == QTextStream::Ok);
 }
 
-const DBFileEntry& DBFileEntry::operator=(const DBFileEntry& entry)
+DBFileEntry& DBFileEntry::operator=(const DBFileEntry& entry)
 {
   if (&entry != this)
   {

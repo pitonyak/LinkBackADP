@@ -15,7 +15,7 @@ class QFile;
  * \brief Log object that handles all of the logging.
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
- * \date 2011-2013
+ * \date 2011-2016
  *
  * \code{.cpp}
 
@@ -78,7 +78,7 @@ class SimpleLoggerADP : public QObject
 
 public:
   /*! \brief Default constructor */
-  explicit SimpleLoggerADP(QObject *parent = 0);
+  explicit SimpleLoggerADP(QObject *parent = nullptr);
 
   /*! \brief Destructor */
   ~SimpleLoggerADP();
@@ -139,6 +139,8 @@ public:
    ***************************************************************************/
   void enableMessageQueue();
 
+  void disableMessageQueue();
+
   //**************************************************************************
   /*! \brief Get the number of error messages logged in a non thread safe way.
    ***************************************************************************/
@@ -180,6 +182,8 @@ private:
   bool isProcessing();
 
   void readInternals(QXmlStreamReader& reader, const QString& version);
+
+  long m_failedProcessingAttempts;
 
   //**************************************************************************
   /*! \brief Used to track the number of error messages received.

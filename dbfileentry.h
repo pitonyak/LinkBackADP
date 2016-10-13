@@ -163,7 +163,7 @@ public:
      ***************************************************************************/
     bool writeLine(QTextStream& stream);
 
-    const DBFileEntry& operator=(const DBFileEntry& entry);
+    DBFileEntry& operator=(const DBFileEntry& entry);
 
 
 private:

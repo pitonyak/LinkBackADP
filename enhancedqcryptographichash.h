@@ -26,7 +26,7 @@ public:
      * \param [in] algorithm Algorithm to implement.
      *
      ***************************************************************************/
-    EnhancedQCryptographicHash(const QCryptographicHash::Algorithm algorithm);
+    explicit EnhancedQCryptographicHash(const QCryptographicHash::Algorithm algorithm);
 
     //**************************************************************************
     //! Get the algorithm used in the constructor.

@@ -4,7 +4,7 @@
 #include <QMapIterator>
 #include <QTextStream>
 
-SimpleLoggerADP::SimpleLoggerADP(QObject *parent) : QObject(parent), m_numErrors(0), m_messageQueue(nullptr), m_logFile(nullptr), m_textStream(nullptr)
+SimpleLoggerADP::SimpleLoggerADP(QObject *parent) : QObject(parent), m_failedProcessingAttempts(0), m_numErrors(0), m_messageQueue(nullptr), m_logFile(nullptr), m_textStream(nullptr)
 {
 }
 
@@ -12,7 +12,16 @@ void SimpleLoggerADP::enableMessageQueue()
 {
   if (m_messageQueue == nullptr)
   {
+    // Auto deleted because the logger owns it.
     m_messageQueue = new LogMessageQueue(this);
+  }
+}
+
+void SimpleLoggerADP::disableMessageQueue()
+{
+  if (m_messageQueue != nullptr)
+  {
+    m_messageQueue = nullptr;
   }
 }
 
@@ -31,6 +40,12 @@ SimpleLoggerADP::~SimpleLoggerADP()
   {
     delete m_textStream;
     m_textStream = nullptr;
+  }
+  if (m_messageQueue != nullptr)
+  {
+    // The destructor will delete the contents.
+    delete m_messageQueue;
+    m_messageQueue = nullptr;
   }
 }
 
@@ -110,12 +125,26 @@ void SimpleLoggerADP::processQueuedMessages()
     // Sanity check before trying to take and hold the mutex.
     if (isProcessing())
     {
+      ++m_failedProcessingAttempts;
+      if (m_failedProcessingAttempts > 10) {
+        m_messageQueue = nullptr;
+        QString message("Too many failed attempts to process queued messages");
+        QString location("processQueuedMessages");
+        QDateTime dateTime = QDateTime::currentDateTime();
+        SimpleLoggerRoutingInfo::MessageCategory category = SimpleLoggerRoutingInfo::ErrorMessage;
+        int level = -1;
+        processOneMessage(LogMessageContainer(message, location, dateTime, category, level));
+      }
       return;
     }
+    m_failedProcessingAttempts = 0;
     QMutexLocker locker(&m_processingMutex);
 
     QQueue<LogMessageContainer*> queue;
     m_messageQueue->getAll(queue);
+    // We will no longer touch this message queue in this routine,
+    // so new messages can be added to the queue without affecting us.
+
     bool flushLog = false;
     QString msgs[] = {"", ""} ;
     SimpleLoggerRoutingInfo::MessageCategory cats[] = {SimpleLoggerRoutingInfo::InformationMessage, SimpleLoggerRoutingInfo::InformationMessage };

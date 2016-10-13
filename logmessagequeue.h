@@ -15,7 +15,7 @@
 /*!
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
- * \date 2011-2013
+ * \date 2011-2016
  ***************************************************************************/class LogMessageQueue : public QObject
 {
   Q_OBJECT
@@ -40,8 +40,8 @@ public:
   void enqueue(const QString& message, const QString& location, const QDateTime dateTime, const SimpleLoggerRoutingInfo::MessageCategory category, const int level);
 
   //**************************************************************************
-  /*! \brief Receive a message and queue it for logging. This is thread-safe.
-   *  \param [in] message is the encapsulated message to log. I own it, you don't.
+  /*! \brief Receive a message and queue it for logging (pushes it into the queue). This is thread-safe.
+   *  \param [in] message is the encapsulated message to log. The message is owned by the container.
    ***************************************************************************/
   void enqueue(LogMessageContainer* message);
 
@@ -77,6 +77,7 @@ public slots:
   void receiveMessage(const QString& message, const QString& location, const QDateTime dateTime, const SimpleLoggerRoutingInfo::MessageCategory category, const int level);
 
 private:
+  /*! \brief wraps access to m_queue **/
   mutable QMutex m_mutex;
   QQueue<LogMessageContainer*> m_queue;
 

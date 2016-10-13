@@ -1,5 +1,6 @@
 #include "criteriaforfilematchtablemodel.h"
 #include "linkbackupglobals.h"
+#include <cmath>
 
 CriteriaForFileMatchTableModel::CriteriaForFileMatchTableModel(QObject *parent) : QAbstractTableModel(parent)
 {

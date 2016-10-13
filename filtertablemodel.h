@@ -21,7 +21,7 @@ public:
   /*! Simple constructor.
    *  \param [in] parent Objects owner.
    ***************************************************************************/
-  FilterTableModel(QObject *parent = 0 );
+  explicit FilterTableModel(QObject *parent = nullptr );
 
   //**************************************************************************
   /*! \brief Returns the flags used to describe the item identified by the index.

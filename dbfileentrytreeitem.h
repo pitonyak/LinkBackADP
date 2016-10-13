@@ -49,7 +49,7 @@ public:
    * \param [in] entry Object to assign to this one. Always assumed to be a file.
    *
    ***************************************************************************/
-  DBFileEntryTreeItem(const DBFileEntry& entry);
+  explicit DBFileEntryTreeItem(const DBFileEntry& entry);
 
   const QString& getFileName() const { return m_fileName; }
 
@@ -62,7 +62,7 @@ public:
    * \returns Reference to this object.
    *
    ***************************************************************************/
-  const DBFileEntryTreeItem& operator=(const DBFileEntryTreeItem& entry);
+  DBFileEntryTreeItem& operator=(const DBFileEntryTreeItem& entry);
 
   //**************************************************************************
   //! Add a child to the list of children.
@@ -134,7 +134,7 @@ private:
 struct DBFileEntryTreeItemPtrLess
 {
   DBFileEntryTreeItemPtrLess() : m_column(DBFileEntryTreeItem::Name) {}
-  DBFileEntryTreeItemPtrLess(DBFileEntryTreeItem::Columns column) : m_column(column) {}
+  explicit DBFileEntryTreeItemPtrLess(DBFileEntryTreeItem::Columns column) : m_column(column) {}
 
   DBFileEntryTreeItem::Columns m_column;
 
