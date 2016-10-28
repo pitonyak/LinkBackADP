@@ -134,6 +134,8 @@ public:
    ***************************************************************************/
   void processOneMessage(const LogMessageContainer& message);
 
+  void processOneMessageInFailureMode(const LogMessageContainer& message);
+
   //**************************************************************************
   /*! \brief Create a message queue (if one does not already exist).
    ***************************************************************************/

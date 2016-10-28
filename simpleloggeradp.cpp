@@ -134,7 +134,10 @@ void SimpleLoggerADP::processQueuedMessages()
         QDateTime dateTime = QDateTime::currentDateTime();
         SimpleLoggerRoutingInfo::MessageCategory category = SimpleLoggerRoutingInfo::ErrorMessage;
         int level = -1;
-        processOneMessage(LogMessageContainer(message, location, dateTime, category, level));
+        // Do not call processOneMessage because it attempts to lock the mutex!
+        // At this point, too many failed attempts, to just dump it out!
+       //processOneMessage(LogMessageContainer(message, location, dateTime, category, level));
+        processOneMessageInFailureMode(LogMessageContainer(message, location, dateTime, category, level));
       }
       return;
     }
@@ -234,6 +237,35 @@ void SimpleLoggerADP::processQueuedMessages()
       emit formattedMessage(msgs[1], cats[1]);
     }
   }
+}
+
+void SimpleLoggerADP::processOneMessageInFailureMode(const LogMessageContainer& message)
+{
+    switch(message.getCategory()) {
+    case SimpleLoggerRoutingInfo::TraceMessage:
+    case SimpleLoggerRoutingInfo::DebugMessage:
+        qDebug(qPrintable(message.getMessage()));
+        break;
+
+    case SimpleLoggerRoutingInfo::UserMessage:
+    case SimpleLoggerRoutingInfo::InformationMessage:
+        qInfo(qPrintable(message.getMessage()));
+        break;
+
+    case SimpleLoggerRoutingInfo::WarningMessage:
+        qWarning(qPrintable(message.getMessage()));
+        break;
+
+    case SimpleLoggerRoutingInfo::ErrorMessage:
+        qCritical(qPrintable(message.getMessage()));
+        break;
+
+    default:
+        // qFatal exits I believe.
+        // qFatal(message.getMessage());
+        qCritical(qPrintable(message.getMessage()));
+        break;
+    }
 }
 
 void SimpleLoggerADP::processOneMessage(const LogMessageContainer& message)
