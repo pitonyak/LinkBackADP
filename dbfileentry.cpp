@@ -4,6 +4,7 @@
 #include <QTextStream>
 #include <QStringList>
 #include <QFileInfo>
+#include <QDebug>
 
 QString DBFileEntry::dateTimeFormat= "yyyyMMddThh:mm:ss.zzz";
 QChar DBFileEntry::fieldSeparator = ',';
@@ -26,7 +27,7 @@ DBFileEntry::DBFileEntry(const QFileInfo& info, const QString& rootPath) : m_siz
       m_path = m_path.right(m_path.length() - rootPath.length());
     } else {
       // Unsure how this happened, the full path should always contain the root path.
-      qDebug(qPrintable(QString("File path (%1) does not contain root path (%2)").arg(m_path, rootPath)));
+      qDebug() << QString("File path (%1) does not contain root path (%2)").arg(m_path, rootPath);
     }
   }
 }

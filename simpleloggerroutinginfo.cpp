@@ -253,14 +253,7 @@ void SimpleLoggerRoutingInfo::setMessageRegExpCaseSensitivity(const Qt::CaseSens
 
 bool SimpleLoggerRoutingInfo::passes(const QString& source, const MessageCategory& category, int level, const QString &message) const
 {
-  /**
-  qDebug(qPrintable(QString("Message level %1").arg(level)));
-  qDebug(qPrintable(QString("Contains %1").arg(m_levels->contains(category))));
-  int containedLevel = m_levels->value(category, 0);
-  qDebug(qPrintable(QString("Contained level %1").arg(containedLevel)));
-  **/
   bool rc = m_enabled && level <= m_levels->value(category, 0) && source.length() > 0 && (m_locationRegExp == nullptr || m_locationRegExp->indexIn(source) >= 0) && (m_messageRegExp == nullptr || m_messageRegExp->indexIn(message) >= 0);
-  // qDebug(qPrintable(QString("Passes %1").arg(rc)));
   return rc;
 }
 
@@ -486,12 +479,10 @@ QXmlStreamWriter& SimpleLoggerRoutingInfo::write(QXmlStreamWriter& writer) const
 QXmlStreamReader& SimpleLoggerRoutingInfo::read(QXmlStreamReader& reader)
 {
   internalClear();
-  //qDebug("Ready SimpleLoggerRoutingInfo::read");
   QString name;
   while (!reader.atEnd()) {
     if (reader.isStartElement()) {
       name = reader.name().toString();
-      //qDebug(qPrintable(QString("Found start element thingy name %1").arg(name)));
       if (QString::compare(name, "SimpleLoggerRoutingInfo", Qt::CaseInsensitive) == 0) {
         readInternals(reader, "1");
         return reader;
@@ -526,7 +517,6 @@ void SimpleLoggerRoutingInfo::readInternals(QXmlStreamReader& reader, const QStr
       attributeValue = "";
       name = reader.name().toString();
       foundCharacters = false;
-      //qDebug(qPrintable(QString("Found start element %1").arg(name)));
 
       if (QString::compare(name, "LocationRegEx", Qt::CaseInsensitive) == 0)
       {
@@ -558,7 +548,6 @@ void SimpleLoggerRoutingInfo::readInternals(QXmlStreamReader& reader, const QStr
     else if (reader.isCharacters() && !name.isEmpty())
     {
       QString value = reader.text().toString();
-      //qDebug(qPrintable(QString("Found characters for name %1 and value (%2)").arg(name, value)));
       if (name.compare("Enabled", Qt::CaseInsensitive) == 0)
       {
         m_enabled = XMLUtility::stringToBoolean(value);

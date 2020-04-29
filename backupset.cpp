@@ -5,7 +5,6 @@
 #include <QMetaObject>
 #include <QMetaEnum>
 
-
 BackupSet::BackupSet()
 {
 }
@@ -161,7 +160,6 @@ void BackupSet::readInternals(QXmlStreamReader& reader)
       } else if (QString::compare(name, "Hash", Qt::CaseInsensitive) == 0) {
         //name = "Hash";
       } else if (QString::compare(name, "Priority", Qt::CaseInsensitive) == 0) {
-        //qDebug(qPrintable(QString("?? readInternals Just found (%1)").arg(name)));
         //name = "Priority";
       } else if (QString::compare(name, "Filters", Qt::CaseInsensitive) == 0) {
         readFilters(reader);

@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QMapIterator>
 #include <QTextStream>
+#include <QDebug>
 
 SimpleLoggerADP::SimpleLoggerADP(QObject *parent) : QObject(parent), m_failedProcessingAttempts(0), m_numErrors(0), m_messageQueue(nullptr), m_logFile(nullptr), m_textStream(nullptr)
 {
@@ -167,7 +168,7 @@ void SimpleLoggerADP::processQueuedMessages()
             if (message->getCategory() != cats[0])
             {
               if (!msgs[0].isEmpty()) {
-                qDebug(qPrintable(msgs[0]));
+                qDebug() << msgs[0];
               }
               cats[0] = message->getCategory();
               msgs[0] = finalMessage;
@@ -200,7 +201,7 @@ void SimpleLoggerADP::processQueuedMessages()
               {
                 delete m_logFile;
                 m_logFile = nullptr;
-                qDebug(qPrintable(QString("Failed to open File to write : %1").arg(getFileName())));
+                qDebug() << QString("Failed to open File to write : %1").arg(getFileName());
                 routing.setRoutingOff(SimpleLoggerRoutingInfo::RouteFile);
               }
               else
@@ -230,7 +231,7 @@ void SimpleLoggerADP::processQueuedMessages()
     }
     if (!msgs[0].isEmpty())
     {
-      qDebug(qPrintable(msgs[0]));
+      qDebug() << msgs[0];
     }
     if (!msgs[1].isEmpty())
     {
@@ -244,7 +245,7 @@ void SimpleLoggerADP::processOneMessageInFailureMode(const LogMessageContainer& 
     switch(message.getCategory()) {
     case SimpleLoggerRoutingInfo::TraceMessage:
     case SimpleLoggerRoutingInfo::DebugMessage:
-        qDebug(qPrintable(message.getMessage()));
+        qDebug() << message.getMessage();
         break;
 
     case SimpleLoggerRoutingInfo::UserMessage:
@@ -279,7 +280,7 @@ void SimpleLoggerADP::processOneMessage(const LogMessageContainer& message)
       QString finalMessage = routing.formatMessage(message.getMessage(), message.getLocation(), message.getDateTime(), message.getCategory(), message.getLevel());
       if (routing.isRoutingOn(SimpleLoggerRoutingInfo::RouteQDebug))
       {
-        qDebug(qPrintable(finalMessage));
+        qDebug() << finalMessage;
       }
       if (routing.isRoutingOn(SimpleLoggerRoutingInfo::RouteEmit))
       {
@@ -293,7 +294,7 @@ void SimpleLoggerADP::processOneMessage(const LogMessageContainer& message)
           {
             delete m_logFile;
             m_logFile = nullptr;
-            qDebug(qPrintable(QString("Failed to open File to write : %1").arg(getFileName())));
+            qDebug() << QString("Failed to open File to write : %1").arg(getFileName());
             routing.setRoutingOff(SimpleLoggerRoutingInfo::RouteFile);
           }
           else

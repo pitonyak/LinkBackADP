@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
+#include <QDebug>
 #include <unistd.h>  // Contains the "link" method.
 
 // Report every 2GB of data.
@@ -155,7 +156,7 @@ bool CopyLinkUtil::setHashType(const QString& hashType)
   {
     delete m_hashGenerator;
     m_hashGenerator = nullptr;
-    qDebug(qPrintable(QString("Unsupported hash type %1").arg(hashType)));
+    qDebug() << QString("Unsupported hash type %1").arg(hashType);
     return false;
   }
   return true;
@@ -182,7 +183,7 @@ bool CopyLinkUtil::linkFile(const QString& linkToThisFile, const QString& placeL
   QFile existingFile(linkToThisFile);
   if (placeLinkHere.startsWith("/home", Qt::CaseInsensitive) || placeLinkHere.startsWith(".", Qt::CaseInsensitive) || !placeLinkHere.startsWith("/", Qt::CaseInsensitive)) {
       std::cout << qPrintable(QString("??? HELP: Linking to %1").arg(placeLinkHere)) << std::endl;
-      qDebug(qPrintable(QString("??? HELP: Linking to %1").arg(placeLinkHere)));
+      qDebug() << QString("??? HELP: Linking to %1").arg(placeLinkHere);
   }
   m_timer->restart();
   if (isUseHardLink())
@@ -220,7 +221,7 @@ bool CopyLinkUtil::generateHash(const QString& copyFromPath)
 
   if (!fileToRead.exists() || !fileToRead.open(QIODevice::ReadOnly))
   {
-    qDebug(qPrintable(QString("Failed to open file to read: %1").arg(copyFromPath)));
+    qDebug() << QString("Failed to open file to read: %1").arg(copyFromPath);
     return false;
   }
 
@@ -236,7 +237,7 @@ bool CopyLinkUtil::generateHash(const QString& copyFromPath)
     {
       lastReportByteCount =  totalRead;
       // TODO: Log message here
-      qDebug(qPrintable(QString("Read %1/%2 from %3").arg(getBPS(totalRead, 0)).arg(getBPS(fileToRead.size(), 0)).arg(fileInfo.fileName())));
+      qDebug() << QString("Read %1/%2 from %3").arg(getBPS(totalRead, 0)).arg(getBPS(fileToRead.size(), 0)).arg(fileInfo.fileName());
     }
     numRead = fileToRead.read(m_buffer, m_bufferSize);
   }
@@ -261,8 +262,8 @@ bool CopyLinkUtil::copyFileGenerateHash(const QString& copyFromPath, const QStri
 
 bool CopyLinkUtil::internalCopyFile(const QString& copyFromPath, const QString& copyToPath, const bool doHash)
 {
-  //qDebug(qPrintable(QString("Ready to read from : %1").arg(copyFromPath)));
-  //qDebug(qPrintable(QString("Ready to write to  : %1").arg(copyToPath)));
+  //qDebug() << qPrintable(QString("Ready to read from : %1").arg(copyFromPath);
+  //qDebug() << qPrintable(QString("Ready to write to  : %1").arg(copyToPath);
   QFile fileToRead(copyFromPath);
 
   QFileInfo fileInfo(copyFromPath);
@@ -274,7 +275,7 @@ bool CopyLinkUtil::internalCopyFile(const QString& copyFromPath, const QString& 
 
   if (pathToFileToWrite.startsWith("/home", Qt::CaseInsensitive) || pathToFileToWrite.startsWith(".", Qt::CaseInsensitive) || !pathToFileToWrite.startsWith("/", Qt::CaseInsensitive)) {
       std::cout << qPrintable(QString("??? HELP: Writing to %1").arg(pathToFileToWrite)) << std::endl;
-    qDebug(qPrintable(QString("??? HELP: Writing to %1").arg(pathToFileToWrite)));
+    qDebug() << QString("??? HELP: Writing to %1").arg(pathToFileToWrite);
   }
 
   QDir dirFileToWrite(pathToFileToWrite);
@@ -282,7 +283,7 @@ bool CopyLinkUtil::internalCopyFile(const QString& copyFromPath, const QString& 
   {
     // Failed to create the path to the file.
     // Generate error and get out.
-    qDebug(qPrintable(QString("Failed to create backup directory %1").arg(pathToFileToWrite)));
+    qDebug() << QString("Failed to create backup directory %1").arg(pathToFileToWrite);
     return false;
   }
 
@@ -292,25 +293,25 @@ bool CopyLinkUtil::internalCopyFile(const QString& copyFromPath, const QString& 
   }
 
   if (fileToWrite.exists()) {
-    qDebug(qPrintable(QString("File to write does exist: %1").arg(copyToPath)));
+    qDebug() << QString("File to write does exist: %1").arg(copyToPath);
     return false;
   }
 
   if (isCancelRequested())
   {
-    qDebug("Cancel Requested, ending copy.");
+    qDebug() << "Cancel Requested, ending copy.";
     return false;
   }
 
   if (!fileToWrite.open(QIODevice::WriteOnly))
   {
-    qDebug(qPrintable(QString("Failed to open File to write : %1").arg(copyToPath)));
+    qDebug() << QString("Failed to open File to write : %1").arg(copyToPath);
     return false;
   }
 
   if (!fileToRead.exists() || !fileToRead.open(QIODevice::ReadOnly))
   {
-    qDebug(qPrintable(QString("Failed to open file to read: %1").arg(copyFromPath)));
+    qDebug() << QString("Failed to open file to read: %1").arg(copyFromPath);
     fileToWrite.close();
     fileToWrite.remove();
     return false;
@@ -331,14 +332,14 @@ bool CopyLinkUtil::internalCopyFile(const QString& copyFromPath, const QString& 
     {
       lastReportByteCount =  totalRead;
       // TODO: Log message here
-      qDebug(qPrintable(QString("Copied %1/%2 from %3").arg(getBPS(totalRead, 0)).arg(getBPS(fileToRead.size(), 0)).arg(fileInfo.fileName())));
+      qDebug() << QString("Copied %1/%2 from %3").arg(getBPS(totalRead, 0)).arg(getBPS(fileToRead.size(), 0)).arg(fileInfo.fileName());
     }
     numRead = fileToRead.read(m_buffer, m_bufferSize);
 
   }
   if (fileToRead.error() != QFile::NoError || fileToWrite.error() != QFile::NoError || isCancelRequested())
   {
-    qDebug(qPrintable(QString("Removing file because error encountered : %1").arg(copyToPath)));
+    qDebug() << QString("Removing file because error encountered : %1").arg(copyToPath);
     fileToWrite.close();
     fileToRead.close();
     fileToWrite.remove();

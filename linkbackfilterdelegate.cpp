@@ -118,7 +118,6 @@ void LinkBackFilterDelegate::setModelData(QWidget *editor, QAbstractItemModel *m
   }
   if (QString::compare(s, currentModelValue.toString(), Qt::CaseSensitive) != 0)
   {
-    //qDebug(qPrintable(QString("Setting data (%1) current model (%2) index %3").arg(s, currentModelValue.toString(), QString::number(index.column()))));
     model->setData(index, s, Qt::EditRole);
   }
 }
