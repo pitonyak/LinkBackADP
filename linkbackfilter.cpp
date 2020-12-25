@@ -2,6 +2,7 @@
 #include "linkbackupglobals.h"
 
 #include <QFileInfo>
+#include <QDebug>
 #include <QDir>
 #include <QRegExp>
 #include <QRegExp>
@@ -341,7 +342,7 @@ bool LinkBackFilter::passes(const QFileInfo& fileInfo) const
     break;
   default:
     // An invalid compare will never pass, even for an inverted filter.
-    qDebug("Invalid compare field");
+    qDebug() << "Invalid compare field";
     return false;
     break;
   }

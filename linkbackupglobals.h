@@ -5,6 +5,11 @@
 #include "simpleloggeradp.h"
 #include "qtenummapper.h"
 #include <QDateTime>
+#include <QLoggingCategory>
+
+
+Q_DECLARE_LOGGING_CATEGORY(log)
+
 
 //**************************************************************************
 /*! \brief Get the single global instance of the copy link file utility class.

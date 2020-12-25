@@ -1,4 +1,5 @@
 #include "stringhelper.h"
+#include <QDebug>
 
 StringHelper::StringHelper()
 {
@@ -71,14 +72,14 @@ bool StringHelper::FNMatch(const QChar* str, const QChar* wild, Qt::CaseSensitiv
 if ( str == nullptr )
   {
     //throw ArgumentNullException("source string is null", FILE_LOC());
-    qDebug("source string is null in StringHelper::FNMatch");
+    qDebug() << "source string is null in StringHelper::FNMatch";
     return false;
   }
 
   if ( wild == nullptr )
   {
     //throw ArgumentNullException("wild card string is null", FILE_LOC());
-    qDebug("wild is null in StringHelper::FNMatch");
+    qDebug() << "wild is null in StringHelper::FNMatch";
     return false;
   }
 

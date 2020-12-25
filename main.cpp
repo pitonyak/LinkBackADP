@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QTimer>
 #include <QLoggingCategory>
+#include <iostream>
 
 static CopyLinkUtil globalCopyLinkUtil;
 
@@ -13,6 +14,34 @@ QtEnumMapper enumMapper;
 
 void configureTheLogger();
 
+void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    // Ignore the qt events but allow my events to still be printed.
+    if (type == QtDebugMsg && context.category != nullptr) {
+      QString catStr(context.category);
+      if (catStr.startsWith("qt.")) {
+        return;
+      }
+    }
+
+    // consider these:
+    //const char *file = context.file ? context.file : "";
+    //const char *function = context.function ? context.function : "";
+
+    // Write the date of recording
+    std::cout << qPrintable(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz "));
+    // By type determine to what level belongs message
+    switch (type)
+    {
+    case QtInfoMsg:     std::cout << "INF "; break;
+    case QtDebugMsg:    std::cout << "DBG "; break;
+    case QtWarningMsg:  std::cout << "WRN "; break;
+    case QtCriticalMsg: std::cout << "CRT "; break;
+    case QtFatalMsg:    std::cout << "FTL "; break;
+    }
+    // Write to the output category of the message and the message itself
+    std::cout << context.category << ": " << qPrintable(msg) << std::endl;
+}
 
 int main(int argc, char *argv[])
 {
@@ -20,6 +49,7 @@ int main(int argc, char *argv[])
   globalCopyLinkUtil.setBufferSize(1024*1024*24);
 
   QApplication a(argc, argv);
+  qInstallMessageHandler(messageHandler);
 
   // Fedora disables qDebug output at the moment
   // New configuration thing, so, re-enable it as follows (if you want).
