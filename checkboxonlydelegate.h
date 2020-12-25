@@ -4,14 +4,14 @@
 #include <QStyledItemDelegate>
 
 //**************************************************************************
-//! Provides display and editing capabilitye interpreting booling data to be viewed and edited as a checkbox.
-/*!
+/*! \class CheckBoxOnlyDelegate
+ * \brief Provides display and editing capabilitye interpreting booling data to be viewed and edited as a checkbox.
  * A normal check box includes text to the right of the checkbox.
  * This delegate displays only the checkbox without the text.
  *
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
- * \date 2011-2013
+ * \date 2011-2020
  ***************************************************************************/
 
 class CheckBoxOnlyDelegate : public QStyledItemDelegate

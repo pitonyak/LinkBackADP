@@ -4,12 +4,12 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QDir>
-#include <QRegExp>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QMetaObject>
 #include <QMetaEnum>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
+#include <QDebug>
 
 #include "stringhelper.h"
 
@@ -70,7 +70,7 @@ void LinkBackFilter::clearLists(bool deleteLists, bool createIfDoNotExist)
     }
     if (m_expressions == nullptr)
     {
-      m_expressions = new QList<QRegExp*>();
+      m_expressions = new QList<QRegularExpression*>();
     }
   }
 }
@@ -130,7 +130,13 @@ void LinkBackFilter::setCaseSensitivity(Qt::CaseSensitivity caseSensitivity)
     m_caseSensitivity = caseSensitivity;
     for (int i=0; i<m_expressions->size(); ++i)
     {
-      m_expressions->at(i)->setCaseSensitivity(m_caseSensitivity);
+      if (m_caseSensitivity == Qt::CaseInsensitive) {
+        m_expressions->at(i)->setPatternOptions(QRegularExpression::CaseInsensitiveOption);
+      } else {
+        QRegularExpression* re = new QRegularExpression(m_expressions->at(i)->pattern());
+        delete m_expressions->at(i);
+        m_expressions->replace(i, re);
+      }
     }
     emit caseSensitivityChanged(caseSensitivity);
   }
@@ -226,13 +232,13 @@ void LinkBackFilter::setValue(const QVariant& value)
 void LinkBackFilter::createLists()
 {
   clearLists(false, true);
-  if (!isMultiValued() || m_value.type() != QVariant::String)
+  if (!isMultiValued() || m_value.metaType() != QMetaType(QMetaType::QString))
   {
     m_values->append(m_value);
   }
   else
   {
-    QStringList list = m_value.toString().split(',', QString::SkipEmptyParts);
+    QStringList list = m_value.toString().split(',', Qt::SkipEmptyParts);
     foreach (QString s, list)
     {
       m_values->append(QVariant(s));
@@ -241,23 +247,28 @@ void LinkBackFilter::createLists()
   createRegularExpressions();
 }
 
+QRegularExpression::PatternOptions LinkBackFilter::getCaseSensitivytOption() const
+{
+  return QRegularExpression::PatternOptions((m_caseSensitivity == Qt::CaseInsensitive) ? QRegularExpression::CaseInsensitiveOption : QRegularExpression::NoPatternOption);
+}
+
 void LinkBackFilter::createRegularExpressions()
 {
   foreach (QVariant value, *m_values)
   {
     if (value.isValid() && !value.isNull())
     {
-      if (value.type() == QVariant::RegExp)
+      if (value.metaType() == QMetaType(QMetaType::QRegularExpression))
       {
-        m_expressions->append(new QRegExp(value.toRegExp()));
+        m_expressions->append(new QRegularExpression(value.toRegularExpression()));
       }
       else if (m_compareType == LinkBackFilter::RegularExpression || m_compareType == LinkBackFilter::RegExpFull || m_compareType == LinkBackFilter::RegExpPartial)
       {
-        m_expressions->append(new QRegExp(value.toString(), m_caseSensitivity, QRegExp::RegExp2));
+        m_expressions->append(new QRegularExpression(value.toString(), getCaseSensitivytOption()));
       }
       else if (m_compareType == LinkBackFilter::FileSpec)
       {
-        m_expressions->append(new QRegExp(value.toString(), m_caseSensitivity, QRegExp::WildcardUnix));
+        m_expressions->append(new QRegularExpression(QRegularExpression::fromWildcard(value.toString(), m_caseSensitivity, QRegularExpression::DefaultWildcardConversion)));
       }
       else
       {
@@ -357,18 +368,10 @@ bool LinkBackFilter::compareValues(const qlonglong aSize) const
   case LinkBackFilter::RegExpFull:
   case LinkBackFilter::RegularExpression:
   case LinkBackFilter::FileSpec:
-    foreach (QRegExp* expression, *m_expressions)
-    {
-      if ((expression != nullptr) && expression->exactMatch(QString::number(aSize)))
-      {
-        return true;
-      }
-    }
-    break;
   case LinkBackFilter::RegExpPartial:
-    foreach (QRegExp* expression, *m_expressions)
+    foreach (QRegularExpression* expression, *m_expressions)
     {
-      if ((expression != nullptr) && (expression->indexIn(QString::number(aSize)) >= 0))
+      if ((expression != nullptr) && expression->match(QString::number(aSize)).hasMatch())
       {
         return true;
       }
@@ -438,18 +441,10 @@ bool LinkBackFilter::compareValues(const QTime& aTime) const
   case LinkBackFilter::RegExpFull:
   case LinkBackFilter::RegularExpression:
   case LinkBackFilter::FileSpec:
-    foreach (QRegExp* expression, *m_expressions)
-    {
-      if ((expression != nullptr) && expression->exactMatch(aTime.toString(Qt::TextDate)))
-      {
-        return true;
-      }
-    }
-    break;
   case LinkBackFilter::RegExpPartial:
-    foreach (QRegExp* expression, *m_expressions)
+    foreach (QRegularExpression* expression, *m_expressions)
     {
-      if ((expression != nullptr) && (expression->indexIn(aTime.toString(Qt::TextDate)) >= 0))
+      if ((expression != nullptr) && expression->match(aTime.toString(Qt::TextDate)).hasMatch())
       {
         return true;
       }
@@ -517,18 +512,10 @@ bool LinkBackFilter::compareValues(const QDate& aDate) const
   case LinkBackFilter::RegExpFull:
   case LinkBackFilter::RegularExpression:
   case LinkBackFilter::FileSpec:
-    foreach (QRegExp* expression, *m_expressions)
-    {
-      if ((expression != nullptr) && expression->exactMatch(aDate.toString(Qt::TextDate)))
-      {
-        return true;
-      }
-    }
-    break;
   case LinkBackFilter::RegExpPartial:
-    foreach (QRegExp* expression, *m_expressions)
+    foreach (QRegularExpression* expression, *m_expressions)
     {
-      if ((expression != nullptr) && (expression->indexIn(aDate.toString(Qt::TextDate)) >= 0))
+      if ((expression != nullptr) && expression->match(aDate.toString(Qt::TextDate)).hasMatch())
       {
         return true;
       }
@@ -596,18 +583,10 @@ bool LinkBackFilter::compareValues(const QDateTime& aDateTime) const
   case LinkBackFilter::RegExpFull:
   case LinkBackFilter::RegularExpression:
   case LinkBackFilter::FileSpec:
-    foreach (QRegExp* expression, *m_expressions)
-    {
-      if ((expression != nullptr) && expression->exactMatch(aDateTime.toString(Qt::TextDate)))
-      {
-        return true;
-      }
-    }
-    break;
   case LinkBackFilter::RegExpPartial:
-    foreach (QRegExp* expression, *m_expressions)
+    foreach (QRegularExpression* expression, *m_expressions)
     {
-      if ((expression != nullptr) && (expression->indexIn(aDateTime.toString(Qt::TextDate)) >= 0))
+      if ((expression != nullptr) && expression->match(aDateTime.toString(Qt::TextDate)).hasMatch())
       {
         return true;
       }
@@ -670,33 +649,27 @@ bool LinkBackFilter::compareValues(const QDateTime& aDateTime) const
 
 bool LinkBackFilter::compareValues(const QString& filePortion) const
 {
+  //qDebug() << "?? bool LinkBackFilter::compareValues(const QString& " << filePortion << ") const";
   int i;
   switch (m_compareType)
   {
   case LinkBackFilter::RegExpFull:
   case LinkBackFilter::RegularExpression:
   case LinkBackFilter::FileSpec:
+  case LinkBackFilter::RegExpPartial:
     for (i=0; i<m_expressions->size(); ++i)
     {
-      QRegExp* expression = m_expressions->at(i);
+      QRegularExpression* expression = m_expressions->at(i);
       TRACE_MSG(QString("Checking fileportion (%1) against (%2)").arg(filePortion, m_values->at(i).toString()), 6);
-      if ((expression != nullptr) && expression->exactMatch(filePortion))
+      if ((expression != nullptr) && expression->match(filePortion).hasMatch())
       {
+        //qDebug() << "Return true 1 for regular expression " << expression->pattern();
         TRACE_MSG(QString("PASSED fileportion (%1) against (%2)").arg(filePortion, m_values->at(i).toString()), 5);
         return true;
       }
       else
       {
         TRACE_MSG(QString("FAILED fileportion (%1) against (%2)").arg(filePortion, m_values->at(i).toString()), 5);
-      }
-    }
-    break;
-  case LinkBackFilter::RegExpPartial:
-    foreach (QRegExp* expression, *m_expressions)
-    {
-      if ((expression != nullptr) && (expression->indexIn(filePortion) >= 0))
-      {
-        return true;
       }
     }
     break;

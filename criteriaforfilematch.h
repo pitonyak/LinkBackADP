@@ -14,9 +14,13 @@
  * This object specifies the criteria, but does not perform the comparison.
  * Usually, more than one criteria is set; for example, file size and file hash
  *
+ * With an update to QT 6.0, some calls are made to the STL that are NOT able to recognize
+ * constructors using default parameters. To avoid this problem, I removed some default parameters
+ * and added multiple methods that directly call other constructors. (12/25/2020).
+ *
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
- * \date 2011-2013
+ * \date 2011-2020
  *
  ***************************************************************************/
 
@@ -35,7 +39,8 @@ public:
    * \param [in] parent This is a QObject, so you can set a parent that will control the lifetime of this object.
    *
    ***************************************************************************/
-  explicit CriteriaForFileMatch(QObject *parent = 0);
+  explicit CriteriaForFileMatch(QObject *parent);
+  explicit CriteriaForFileMatch() : CriteriaForFileMatch(nullptr) {}
 
   //**************************************************************************
   //! Copy Constructor
@@ -44,7 +49,9 @@ public:
    * \param parent This is a QObject, so you can set a parent that will control the lifetime of this object.
    *
    ***************************************************************************/
-  explicit CriteriaForFileMatch(const CriteriaForFileMatch& criteria, QObject *parent = 0);
+  explicit CriteriaForFileMatch(const CriteriaForFileMatch& criteria, QObject *parent);
+  CriteriaForFileMatch(const CriteriaForFileMatch& criteria) : CriteriaForFileMatch(criteria, nullptr) {}
+
 
   //**************************************************************************
   /*! \brief Destructor

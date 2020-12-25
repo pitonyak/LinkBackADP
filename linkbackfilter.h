@@ -4,19 +4,19 @@
 #include <QObject>
 #include <QVariant>
 #include <QDate>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 
 class QFileInfo;
-class QRegExp;
+class QRegularExpression;
 
 //**************************************************************************
 /*! \class LinkBackFilter
  * \brief Filter to decide if a specific file or directory matches some criteria.
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
- * \date 2011-2013
+ * \date 2011-2020
  ***************************************************************************/
 
 class LinkBackFilter : public QObject
@@ -129,6 +129,7 @@ public:
     Qt::CaseSensitivity getCaseSensitivity() const;
     void setCaseSensitivity(Qt::CaseSensitivity caseSensitivity=Qt::CaseInsensitive);
     void setCaseSensitivityDefault();
+    QRegularExpression::PatternOptions getCaseSensitivytOption() const;
 
     //**************************************************************************
     /*! \brief Determine if the filter criteria is inverted before determining acceptance.
@@ -197,7 +198,7 @@ public:
     void setValue(const QTime&);
     void setValue(const QDateTime&);
     void setValue(const QString&);
-    void setValue(const QRegExp&);
+    void setValue(const QRegularExpression&);
 
     QString getMainValueAsString() const;
 
@@ -252,9 +253,8 @@ private:
     /*! \brief Single value representation of this filter. */
     QVariant m_value;
 
-    //QRegExp* m_regularExpression;
     QList<QVariant>* m_values;
-    QList<QRegExp*>* m_expressions;
+    QList<QRegularExpression*>* m_expressions;
 
 };
 
@@ -334,14 +334,14 @@ inline void LinkBackFilter::setValue(const QString& x)
   setValue(QVariant(x));
 }
 
-inline void LinkBackFilter::setValue(const QRegExp& x)
+inline void LinkBackFilter::setValue(const QRegularExpression& x)
 {
   setValue(QVariant(x));
 }
 
 inline QString LinkBackFilter::getMainValueAsString() const
 {
-  if (m_value.canConvert(QVariant::String))
+  if (m_value.canConvert(QMetaType(QMetaType::QString)))
   {
     return m_value.toString();
   } else {

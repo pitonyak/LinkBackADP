@@ -1,7 +1,7 @@
 
 <BackupSet version="1">
-    <From>/home/andy/Devsrc/Qt/Proj/LinkBackADP/LinkBackADP</From>
-    <To>/home/andy/Devsrc/Qt/Proj/LinkBackADP/test</To>
+    <From>/andrew0/home/andy/Devsrc/Qt/Projects/LinkBackADP/LinkBackADP</From>
+    <To>/andrew0/home/andy/Devsrc/Qt/Projects/LinkBackADP/test</To>
     <Hash>Sha1</Hash>
     <Priority>Idle</Priority>
     <Filters>

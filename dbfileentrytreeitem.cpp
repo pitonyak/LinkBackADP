@@ -1,5 +1,7 @@
 #include "dbfileentrytreeitem.h"
 
+#include <algorithm>
+
 DBFileEntryTreeItem::DBFileEntryTreeItem() : DBFileEntry(), m_parent(nullptr), m_isFile(true)
 {
 }
@@ -121,7 +123,7 @@ void DBFileEntryTreeItem::sort(Columns column)
 
 void DBFileEntryTreeItem::sort(DBFileEntryTreeItemPtrLess& lessThan)
 {
-  qSort(m_children.begin(), m_children.end(), lessThan);
+  std::sort(m_children.begin(), m_children.end(), lessThan);
   QListIterator<DBFileEntryTreeItem*> i(m_children);
   while (i.hasNext())
   {

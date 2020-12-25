@@ -126,7 +126,7 @@ QXmlStreamReader& BackupSet::operator>>(QXmlStreamReader& reader)
 QXmlStreamReader& BackupSet::readFilter(QXmlStreamReader& reader)
 {
   setAllDefault();
-  QString version = "1";
+  //QString version = "1";
   QString name;
   while (!reader.atEnd()) {
     if (reader.isStartElement()) {
@@ -170,7 +170,7 @@ void BackupSet::readInternals(QXmlStreamReader& reader)
         name = "";
       }
       // What to do here?
-      name = name;
+      //name = name;
     } else if (reader.isCharacters()) {
       if (QString::compare(name, "From", Qt::CaseInsensitive) == 0) {
         setFromPath(reader.text().toString());

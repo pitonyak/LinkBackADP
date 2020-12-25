@@ -32,7 +32,7 @@ QVariant DBFileEntriesTreeModel::data(const QModelIndex &index, const int role) 
 Qt::ItemFlags DBFileEntriesTreeModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
-         return 0;
+         return QFlag(0);
 
      return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }

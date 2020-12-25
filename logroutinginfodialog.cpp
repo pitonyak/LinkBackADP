@@ -103,20 +103,20 @@ void LogRoutingInfoDialog::initialize()
   ui->msgCaseSensitive->addItem(tr("Case Insensitive"), Qt::CaseInsensitive);
   ui->msgCaseSensitive->setToolTip(tr("Set location regular expression case sensitivity."));
 
-  ui->locSyntax->addItem(tr("Perl No Greedy"), QRegExp::RegExp);
-  ui->locSyntax->addItem(tr("Perl Greedy"), QRegExp::RegExp2);
-  ui->locSyntax->addItem(tr("Wildcard"), QRegExp::Wildcard);
-  ui->locSyntax->addItem(tr("Wildcard Unix"), QRegExp::WildcardUnix);
-  ui->locSyntax->addItem(tr("String"), QRegExp::FixedString);
-  ui->locSyntax->addItem(tr("W3C XML"), QRegExp::W3CXmlSchema11);
+  // ?? TODO: ui->locSyntax->addItem(tr("Perl No Greedy"), QRegExp::RegExp);
+  // ?? TODO: ui->locSyntax->addItem(tr("Perl Greedy"), QRegExp::RegExp2);
+  // ?? TODO: ui->locSyntax->addItem(tr("Wildcard"), QRegExp::Wildcard);
+  // ?? TODO: ui->locSyntax->addItem(tr("Wildcard Unix"), QRegExp::WildcardUnix);
+  // ?? TODO: ui->locSyntax->addItem(tr("String"), QRegExp::FixedString);
+  // ?? TODO: ui->locSyntax->addItem(tr("W3C XML"), QRegExp::W3CXmlSchema11);
   ui->locSyntax->setToolTip(tr("Set location regular expression pattern syntax."));
 
-  ui->msgSyntax->addItem(tr("Perl No Greedy"), QRegExp::RegExp);
-  ui->msgSyntax->addItem(tr("Perl Greedy"), QRegExp::RegExp2);
-  ui->msgSyntax->addItem(tr("Wildcard"), QRegExp::Wildcard);
-  ui->msgSyntax->addItem(tr("Wildcard Unix"), QRegExp::WildcardUnix);
-  ui->msgSyntax->addItem(tr("String"), QRegExp::FixedString);
-  ui->msgSyntax->addItem(tr("W3C XML"), QRegExp::W3CXmlSchema11);
+  // ?? TODO: ui->msgSyntax->addItem(tr("Perl No Greedy"), QRegExp::RegExp);
+  // ?? TODO: ui->msgSyntax->addItem(tr("Perl Greedy"), QRegExp::RegExp2);
+  // ?? TODO: ui->msgSyntax->addItem(tr("Wildcard"), QRegExp::Wildcard);
+  // ?? TODO: ui->msgSyntax->addItem(tr("Wildcard Unix"), QRegExp::WildcardUnix);
+  // ?? TODO: ui->msgSyntax->addItem(tr("String"), QRegExp::FixedString);
+  // ?? TODO: ui->msgSyntax->addItem(tr("W3C XML"), QRegExp::W3CXmlSchema11);
   ui->locSyntax->setToolTip(tr("Set unformatted message regular expression pattern syntax."));
 
   ui->locRegExpEdit->setToolTip(tr("Match location filename:line_number must match the regular expression; use to filter by filename or line number."));
@@ -155,7 +155,7 @@ void LogRoutingInfoDialog::copyMessageCategory()
 
 void LogRoutingInfoDialog::insertMessageCategory()
 {
-  const QPair<SimpleLoggerRoutingInfo::MessageComponent, QString> component(SimpleLoggerRoutingInfo::ConstantText, "");
+  const QPair<SimpleLoggerRoutingInfo::MessageComponent, QString> component(SimpleLoggerRoutingInfo::MessageText, "");
   m_messageComponentTableModel.insertMessageComponent(ui->componentTableView->currentIndex().row(), component);
 }
 
@@ -191,11 +191,10 @@ void LogRoutingInfoDialog::currentMessageCategoryRowChanged(const QModelIndex &c
 
 void LogRoutingInfoDialog::closeRequested()
 {
-  // TODO: Validate
   QString s = ui->locRegExpEdit->displayText();
   if (!s.isEmpty())
   {
-    QRegExp regExp(s);
+    QRegularExpression regExp(s);
     if (!regExp.isValid())
     {
       QPalette pal = ui->locRegExpEdit->palette();
@@ -211,7 +210,7 @@ void LogRoutingInfoDialog::closeRequested()
   s = ui->msgRegExpEdit->displayText();
   if (!s.isEmpty())
   {
-    QRegExp regExp(s);
+    QRegularExpression regExp(s);
     if (!regExp.isValid())
     {
       QPalette pal = ui->msgRegExpEdit->palette();
@@ -233,7 +232,7 @@ QString LogRoutingInfoDialog::isValid() const
   QString s = ui->locRegExpEdit->displayText();
   if (!s.isEmpty())
   {
-    QRegExp regExp(s);
+    QRegularExpression regExp(s);
     if (!regExp.isValid())
     {
       errorString = tr("Invalid location Regular Expression.");
@@ -243,7 +242,7 @@ QString LogRoutingInfoDialog::isValid() const
   s = ui->msgRegExpEdit->displayText();
   if (!s.isEmpty())
   {
-    QRegExp regExp(s);
+    QRegularExpression regExp(s);
     if (!regExp.isValid())
     {
       if (errorString.length() > 0)

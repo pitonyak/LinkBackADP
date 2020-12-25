@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QCryptographicHash>
 #include <QMessageBox>
+#include <QRegularExpression>
 
 LinkBackupThread::LinkBackupThread(QObject *parent) : QThread(parent), m_cancelRequested(false), m_currentEntries(nullptr), m_oldEntries(nullptr)
 {
@@ -264,10 +265,10 @@ QString LinkBackupThread::newestBackDirectory(const QString& parentPath)
   dir.setFilter(QDir::Dirs);
   dir.setSorting(QDir::Name | QDir::Reversed);
   QFileInfoList list = dir.entryInfoList();
-  QRegExp dirNameRegExp("^\\d{8}-\\d{6}$");
+  QRegularExpression dirNameRegExp("^\\d{8}-\\d{6}$");
   for (int i = 0; i < list.size(); ++i) {
     QFileInfo fileInfo = list.at(i);
-    if (dirNameRegExp.exactMatch(fileInfo.fileName())) {
+    if (dirNameRegExp.match(fileInfo.fileName()).hasMatch()) {
       return fileInfo.canonicalFilePath();
     }
   }
@@ -283,12 +284,11 @@ QString LinkBackupThread::findHashFileCaseInsensitive(const QString& parentPath,
     }
     dir.setFilter(QDir::Files);
     QFileInfoList list = dir.entryInfoList();
-    QRegExp dirNameRegExp(QString("^%1\\.txt$").arg(hashName));
-    dirNameRegExp.setCaseSensitivity(Qt::CaseInsensitive);
+    QRegularExpression dirNameRegExp(QString("^%1\\.txt$").arg(hashName), QRegularExpression::PatternOptions(QRegularExpression::CaseInsensitiveOption));
 
     for (int i = 0; i < list.size(); ++i) {
       QFileInfo fileInfo = list.at(i);
-      if (dirNameRegExp.exactMatch(fileInfo.fileName())) {
+      if (dirNameRegExp.match(fileInfo.fileName()).hasMatch()) {
         return fileInfo.canonicalFilePath();
       }
     }

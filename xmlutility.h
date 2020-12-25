@@ -2,7 +2,7 @@
 #define XMLUTILITY_H
 
 #include <QString>
-#include <QRegExp>
+#include <QRegularExpression>
 
 class QXmlStreamWriter;
 class QXmlStreamReader;
@@ -11,13 +11,16 @@ class QXmlStreamReader;
 /*! \class XMLUtility
  * \brief Utility methods used while reading and writing XML.
  *
+ * This class contains generic methods to do things such as converting strings to values.
+ * Also ability to write a regular expression object as safe XML.
+ *
  * While serializing data to/from XML, I was repeatedly writing the same code.
  * So, I encapsualted the most common things into this class. Not earth shattering,
  * but helpful. Most of the routines are focused on writing XML to a QXmlStreamWriter.
  *
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
- * \date 2011-2013
+ * \date 2011-2020
  ***************************************************************************/
 
 class XMLUtility
@@ -71,7 +74,7 @@ public:
      *  \param [in] regexp Regulra expression to write.
      *  \param [in] name Element name.
      ***************************************************************************/
-    static void write(QXmlStreamWriter& writer, const QRegExp& regexp, const QString& name);
+    static void write(QXmlStreamWriter& writer, const QRegularExpression& regexp, const QString& name);
 
     //**************************************************************************
     /*! \brief Read a regular expression object into a newly allocated regular expression object. You own it, delete it when you are finished.
@@ -81,7 +84,7 @@ public:
      *  \param [in, out] reader
      *  \return Pointer to the newly allocated regular expression object. You own it, delete it when you are finished.
      ***************************************************************************/
-    static QRegExp* readRegExp(QXmlStreamReader& reader);
+    static QRegularExpression* readRegExp(QXmlStreamReader& reader);
 
     //**************************************************************************
     /*! \brief Shortcut to quickly write an elment with one attribute.

@@ -23,10 +23,10 @@ void DBFileEntries::addEntry(DBFileEntry *entry)
     m_pathToEntry.insert(entry->getPath(), n);
     if (!m_hashToSizeToEntry.contains(entry->getHash())) {
       QMultiHash<quint64, int> *hash = new QMultiHash<quint64, int>();
-      hash->insertMulti(entry->getSize(), n);
+      hash->insert(entry->getSize(), n);
       m_hashToSizeToEntry.insert(entry->getHash(), hash);
     } else {
-      m_hashToSizeToEntry.value(entry->getHash())->insertMulti(entry->getSize(), n);
+      m_hashToSizeToEntry.value(entry->getHash())->insert(entry->getSize(), n);
     }
   }
 }

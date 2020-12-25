@@ -4,7 +4,7 @@
 #include <QMap>
 #include <QString>
 
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QList>
 
 //**************************************************************************
@@ -18,7 +18,7 @@
  *
  * \author Andrew Pitonyak
  * \copyright Andrew Pitonyak, but you may use without restriction.
- * \date 2011-2013
+ * \date 2011-2020
  ***************************************************************************/
 class QtEnumMapper
 {
@@ -30,12 +30,32 @@ public:
   int  stringToEnum(const QString& typeName, const QString& name, const int defaultValue = 0) const;
   QString enumToString(const QString& typeName, const int value, const QString& defaultName = "") const;
 
-  inline QRegExp::PatternSyntax stringToPatternSyntax(const QString& name, const QRegExp::PatternSyntax defaultValue = QRegExp::RegExp2) const {
-    return static_cast<QRegExp::PatternSyntax>(stringToEnum("PatternSyntax", name, defaultValue));
+  inline QRegularExpression::PatternOption stringToPatternOption(const QString& name, const QRegularExpression::PatternOption defaultValue = QRegularExpression::NoPatternOption) const {
+    return static_cast<QRegularExpression::PatternOption>(stringToEnum("PatternOption", name, defaultValue));
+  }
+
+  inline QRegularExpression::MatchOption stringToMatchOption(const QString& name, const QRegularExpression::MatchOption defaultValue = QRegularExpression::NoMatchOption) const {
+    return static_cast<QRegularExpression::MatchOption>(stringToEnum("MatchOption", name, defaultValue));
+  }
+
+  inline QRegularExpression::WildcardConversionOption stringToWildcardConversionOption(const QString& name, const QRegularExpression::WildcardConversionOption defaultValue = QRegularExpression::DefaultWildcardConversion) const {
+    return static_cast<QRegularExpression::WildcardConversionOption>(stringToEnum("WildcardConversionOption", name, defaultValue));
   }
 
   inline QString PatternSyntaxToString(const int value, const QString& defaultName = "Greedy Perl-Like") const {
     return enumToString("PatternSyntax", value, defaultName);
+  }
+
+  inline QString PatternOptionToString(const int value, const QString& defaultName = "NoPatternOption") const {
+    return enumToString("PatternOption", value, defaultName);
+  }
+
+  inline QString MatchOptionToString(const int value, const QString& defaultName = "NoMatchOption") const {
+    return enumToString("MatchOption", value, defaultName);
+  }
+
+  inline QString WildcardConversionOptionToString(const int value, const QString& defaultName = "DefaultWildcardConversion") const {
+    return enumToString("WildcardConversionOption", value, defaultName);
   }
 
 private:

@@ -14,7 +14,6 @@
 
 #include <QDir>
 #include <QFileInfoList>
-#include <QRegExp>
 #include <QMessageBox>
 #include <QSettings>
 #include <QTimer>
