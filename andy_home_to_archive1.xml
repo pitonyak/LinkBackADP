@@ -1,7 +1,7 @@
 
 <BackupSet version="1">
     <From>/andrew0/home</From>
-    <To>/archive1/adpLink/andy</To>
+    <To>/archive0/adpLink/andy</To>
     <Hash>Sha1</Hash>
     <Priority>Inherit</Priority>
     <Filters>
