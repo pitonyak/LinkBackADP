@@ -227,6 +227,9 @@ bool CopyLinkUtil::generateHash(const QString& copyFromPath)
 
   m_timer->restart();
   m_hashGenerator->reset();
+  m_hashGenerator->addData(&fileToRead);
+  qint64 totalRead = fileToRead.size();
+  /***
   qint64 totalRead = 0;
   qint64 numRead = fileToRead.read(m_buffer, m_bufferSize);
   while (numRead > 0 && fileToRead.error() == QFile::NoError && !isCancelRequested())
@@ -241,6 +244,7 @@ bool CopyLinkUtil::generateHash(const QString& copyFromPath)
     }
     numRead = fileToRead.read(m_buffer, m_bufferSize);
   }
+***/
   if (fileToRead.error() != QFile::NoError || isCancelRequested())
   {
     fileToRead.close();
@@ -318,16 +322,30 @@ bool CopyLinkUtil::internalCopyFile(const QString& copyFromPath, const QString& 
   }
 
   m_timer->restart();
+  if (doHash) {
+      m_hashGenerator->addData(&fileToRead);
+      fileToRead.close();
+      if (!fileToRead.open(QIODevice::ReadOnly)) {
+          qDebug() << QString("Failed to open file to read/copy: %1").arg(copyFromPath);
+          fileToWrite.close();
+          fileToWrite.remove();
+          return false;
+      }
+  }
+
   qint64 totalRead = 0;
   qint64 numRead = fileToRead.read(m_buffer, m_bufferSize);
   while (numRead > 0 && fileToRead.error() == QFile::NoError && fileToWrite.error() == QFile::NoError && !isCancelRequested())
   {
     totalRead += numRead;
     fileToWrite.write(m_buffer, numRead);
-    if (doHash)
-    {
-      m_hashGenerator->addData(m_buffer, numRead);
-    }
+    // QT Deprecated addData in this way so do it first
+    // Takes longer but not worth the trouble to figure out
+    // how to do this efficiently using a QByteArrayView
+    //if (doHash)
+    //{
+    //  m_hashGenerator->addData(m_buffer, numRead);
+    //}
     if (totalRead - lastReportByteCount > s_readReportBytes)
     {
       lastReportByteCount =  totalRead;

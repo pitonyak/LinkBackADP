@@ -21,11 +21,11 @@ QWidget *LinkBackFilterDelegate::createEditor(QWidget *parent, const QStyleOptio
     return nullptr;
   }
   QVariant qvar = index.model()->data(index, Qt::EditRole);
-  if (qvar.type() == QVariant::StringList)
+  if (qvar.typeId() == QMetaType::QStringList)
   {
     return new QComboBox(parent);
   }
-  else if (qvar.type() == QVariant::Bool)
+  else if (qvar.typeId() == QMetaType::Bool)
   {
     QCheckBox* checkBox = new QCheckBox(parent);
     checkBox->setTristate(false);
@@ -50,7 +50,7 @@ void LinkBackFilterDelegate::setEditorData(QWidget *editor, const QModelIndex &i
     return;
   }
   QVariant qvar = index.model()->data(index, Qt::EditRole);
-  if (qvar.type() == QVariant::StringList)
+  if (qvar.typeId() == QMetaType::QStringList)
   {
     QComboBox* comboBox = dynamic_cast<QComboBox*>(editor);
     QStringList qsl = qvar.toStringList();
@@ -75,7 +75,7 @@ void LinkBackFilterDelegate::setEditorData(QWidget *editor, const QModelIndex &i
       comboBox->setCurrentIndex(0);
     }
   }
-  else if (qvar.type() == QVariant::Bool)
+  else if (qvar.typeId() == QMetaType::Bool)
   {
     QCheckBox* checkBox = dynamic_cast<QCheckBox*>(editor);
     checkBox->setChecked(qvar.toBool());

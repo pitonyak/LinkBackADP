@@ -55,13 +55,14 @@ int main(int argc, char *argv[])
   // New configuration thing, so, re-enable it as follows (if you want).
   // But, you do NOT want all those mouse movement messages
   QLoggingCategory::setFilterRules("*.debug=true\n"
-                                    "qt.qpa.input*.debug=false\n"
-                                    "qt.qpa.events*.debug=false\n"
-                                    "qt.pointer*.debug=false\n"
-                                    "qt.accessibility*.debug=false\n"
-                                    "qt.text.layout*.debug=false\n"
-                                    "qt.text*.debug=false\n"
-                                    "qt.widgets.gestures*.debug=false");
+                                   "qt.gui.*=false\n"
+                                   "qt.qpa.*=false\n"
+                                   "qt.pointer*.debug=false\n"
+                                   "qt.accessibility*.debug=false\n"
+                                   "qt.text.layout*.debug=false\n"
+                                   "qt.text*.debug=false\n"
+                                   "qt.svg.timing=false\n"
+                                   "qt.widgets.gestures*.debug=false");
 
 
 
